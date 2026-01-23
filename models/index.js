@@ -17,4 +17,7 @@ const sequelize = new Sequelize({
     logging: false,
 });
 
+/**
+ * Central Sequelize instance for database operations.
+ */
 module.exports = sequelize;
