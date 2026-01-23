@@ -46,7 +46,10 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Aptitude Master API is running' });
 });
 
-// Catch-all: serve index.html for client-side routing
+/**
+ * Catch-all route to serve the SPA index.html for client-side routing.
+ * @route GET *
+ */
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
