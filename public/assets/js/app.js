@@ -32,6 +32,10 @@ const AppState = {
         this.session = sessionStr ? JSON.parse(sessionStr) : null;
     },
 
+    /**
+     * Updates the current user state and persists it to local storage.
+     * @param {Object} user - The user profile object.
+     */
     setUser(user) {
         this.user = user;
         localStorage.setItem('user', JSON.stringify(user));
