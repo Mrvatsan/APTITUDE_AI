@@ -117,7 +117,10 @@ router.post('/answer', authMiddleware, (req, res) => {
     });
 });
 
-// Get session result and stats (protected route)
+/**
+ * Compiles and returns the final statistics for a completed session.
+ * @route GET /api/session/result/:sessionId
+ */
 router.get('/result/:sessionId', authMiddleware, (req, res) => {
     const { sessionId } = req.params;
     const session = sessions[sessionId];
