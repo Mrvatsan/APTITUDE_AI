@@ -158,9 +158,10 @@ router.post('/login', async (req, res) => {
     });
 });
 
-// Get user profile (protected)
-const authMiddleware = require('../middleware/auth');
-
+/**
+ * Retrieves the current authenticated user's profile.
+ * @route GET /api/auth/profile
+ */
 router.get('/profile', authMiddleware, (req, res) => {
     const user = users[req.user.id];
     if (!user) {
