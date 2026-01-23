@@ -102,7 +102,10 @@ router.post('/register', async (req, res) => {
     console.log(`[Auth] New user registered: ${username}`);
 });
 
-// Login endpoint
+/**
+ * User login endpoint.
+ * @route POST /api/auth/login
+ */
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
