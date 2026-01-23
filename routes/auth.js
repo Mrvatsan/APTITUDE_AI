@@ -46,7 +46,10 @@ function getBadge(xp) {
 // Authentication Endpoints
 // ==========================================
 
-// Register endpoint
+/**
+ * User registration endpoint.
+ * @route POST /api/auth/register
+ */
 router.post('/register', async (req, res) => {
     const { username, email, password, goal, selectedMilestones } = req.body;
 
