@@ -1,7 +1,7 @@
 /* ===== CSS Design System for Aptitude Practice App ===== */
 
 :root {
-  /* Color Palette */
+  /* Core Color Palette - Defining the brand identity */
   --primary: #6366f1;
   --primary-dark: #4f46e5;
   --primary-light: #818cf8;
