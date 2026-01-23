@@ -8,6 +8,9 @@
  * @version 1.0.0
  */
 
+/**
+ * Base URL for all backend API endpoints.
+ */
 const API_BASE = '/api';
 
 /**
