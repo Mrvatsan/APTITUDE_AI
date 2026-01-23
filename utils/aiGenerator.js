@@ -218,16 +218,15 @@ function getFallbackQuestions(category, n, difficulty) {
 }
 
 /**
- * Generates aptitude multiple-choice questions using the Google Gemini AI model.
- * If the AI generation fails (e.g., API quota exceeded), it gracefully 
- * falls back to a high-quality, category-specific question bank.
+ * Primary interface for generating aptitude questions.
+ * Attempts AI generation with a robust fallback to a local question bank on failure.
  * 
- * @param {Object} params - Generation parameters.
- * @param {string} params.category - The topic name (e.g., "Number System").
- * @param {string} params.milestone - The associated milestone name.
+ * @param {Object} params - Generation configuration.
+ * @param {string} params.category - The topic name.
+ * @param {string} params.milestone - Associated milestone name.
  * @param {number} params.n - Number of questions to generate.
- * @param {string} params.difficulty - Desired difficulty level ("easy", "medium", "hard", "mixed").
- * @returns {Promise<Object>} Object containing the session details and the list of questions.
+ * @param {string} params.difficulty - Desired difficulty level.
+ * @returns {Promise<Object>} Formatted session object containing questions.
  */
 async function generateQuestions({ category, milestone, n, difficulty }) {
     const systemMessage = `You are an expert aptitude trainer. Generate ${n} MCQs for "${category}". Rules:
