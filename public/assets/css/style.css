@@ -201,7 +201,7 @@ a:hover {
   font-size: 1.125rem;
 }
 
-/* ===== Option Buttons (for quiz) ===== */
+/* ===== Option Buttons - Interactive elements for quiz selections ===== */
 .option-btn {
   display: block;
   width: 100%;
