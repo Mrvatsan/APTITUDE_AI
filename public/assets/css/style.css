@@ -275,7 +275,7 @@ a:hover {
   transition: width var(--transition-slow);
 }
 
-/* ===== Badge Styles ===== */
+/* ===== Badge Styles - Defining visual tiers for gamified achievement system ===== */
 .badge {
   display: inline-flex;
   align-items: center;
