@@ -30,6 +30,11 @@ const BADGE_TIERS = [
     { name: 'Master', minXP: 20000, maxXP: Infinity }
 ];
 
+/**
+ * Determines the badge name based on accumulated XP.
+ * @param {number} xp - The total experience points of the user.
+ * @returns {string} The name of the earned badge tier.
+ */
 function getBadge(xp) {
     for (const tier of BADGE_TIERS) {
         if (xp >= tier.minXP && xp <= tier.maxXP) return tier.name;
