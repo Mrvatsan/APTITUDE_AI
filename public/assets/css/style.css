@@ -321,7 +321,7 @@ a:hover {
   color: white;
 }
 
-/* ===== Streak Display ===== */
+/* ===== Streak Display - Visual representation of consecutive user activity days ===== */
 .streak {
   display: flex;
   align-items: center;
