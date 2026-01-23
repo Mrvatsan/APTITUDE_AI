@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question - Aptitude Master</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">🧠 Aptitude Master</a>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <span id="timer" class="text-muted">⏱️ 0:00</span>
+            <span id="progress-text" class="text-muted">1/10</span>
+        </div>
+    </nav>
+
+    <main class="container" style="max-width: 800px;">
+        <!-- Progress Bar -->
+        <div class="progress-bar mb-3">
+            <div class="fill" id="question-progress" style="width: 10%;"></div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="card mb-3" id="question-card">
+            <div class="text-muted mb-1" id="topic-label">Loading...</div>
+            <h2 id="question-text" style="font-size: 1.25rem; line-height: 1.6;">
+                Loading question...
+            </h2>
+        </div>
+
+        <!-- Options -->
+        <div id="options-container" class="mb-3">
+            <!-- Options populated by JS -->
+        </div>
+
+        <!-- Solution (hidden until answered) -->
+        <div id="solution-card" class="card hidden mb-3" style="border-left: 4px solid var(--success);">
+            <h4 class="text-success mb-1">💡 Solution</h4>
+            <p id="solution-text"></p>
+        </div>
+
+        <!-- Navigation -->
+        <div style="display: flex; gap: 1rem; justify-content: space-between;">
+            <button class="btn btn-secondary" id="skip-btn">Skip →</button>
+            <button class="btn btn-primary hidden" id="next-btn">Next Question →</button>
+            <button class="btn btn-success hidden" id="finish-btn">See Results 🎉</button>
+        </div>
+    </main>
+
+    <script>
+        let session = null;
+        let currentQuestion = null;
+        let selectedOption = null;
+        let answered = false;
+        let startTime = Date.now();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            session = JSON.parse(localStorage.getItem('currentSession'));
+            if (!session) {
+                window.location.href = 'practice.html';
+                return;
+            }
+
+            loadQuestion(session.currentIndex);
+            startTimer();
+        });
+
+        function startTimer() {
+            setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const mins = Math.floor(elapsed / 60);
+                const secs = elapsed % 60;
+                document.getElementById('timer').textContent = `⏱️ ${mins}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        async function loadQuestion(index) {
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch(`/api/session/question/${session.sessionId}/${index}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                currentQuestion = data;
+                answered = false;
+                selectedOption = null;
+
+                // Update UI
+                document.getElementById('topic-label').textContent = session.topic;
+                document.getElementById('question-text').textContent = data.question;
+                document.getElementById('progress-text').textContent = `${index + 1}/${session.totalQuestions}`;
+                document.getElementById('question-progress').style.width = `${((index + 1) / session.totalQuestions) * 100}%`;
+
+                // Render options
+                const optionsContainer = document.getElementById('options-container');
+                optionsContainer.innerHTML = data.options.map((opt, i) => `
+          <button class="option-btn" data-index="${i}" onclick="selectOption(${i})">
+            <span style="font-weight: 600; margin-right: 0.5rem;">${String.fromCharCode(65 + i)}.</span>
+            ${opt}
+          </button>
+        `).join('');
+
+                // Reset buttons
+                document.getElementById('solution-card').classList.add('hidden');
+                document.getElementById('next-btn').classList.add('hidden');
+                document.getElementById('finish-btn').classList.add('hidden');
+                document.getElementById('skip-btn').classList.remove('hidden');
+
+            } catch (err) {
+                console.error('Failed to load question', err);
+            }
+        }
+
+        function selectOption(index) {
+            if (answered) return;
+
+            selectedOption = index;
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                if (parseInt(btn.dataset.index) === index) {
+                    btn.classList.add('selected');
+                }
+            });
+
+            submitAnswer();
+        }
+
+        async function submitAnswer() {
+            if (selectedOption === null) return;
+
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch('/api/session/answer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        sessionId: session.sessionId,
+                        questionIndex: session.currentIndex,
+                        selectedOption
+                    })
+                });
+
+                const data = await res.json();
+                answered = true;
+
+                // Show correct/incorrect
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    const idx = parseInt(btn.dataset.index);
+                    btn.disabled = true;
+                    if (idx === data.correctOptionIndex) {
+                        btn.classList.add('correct');
+                    } else if (idx === selectedOption && !data.isCorrect) {
+                        btn.classList.add('incorrect');
+                    }
+                });
+
+                // Show solution
+                document.getElementById('solution-text').textContent = data.solution;
+                document.getElementById('solution-card').classList.remove('hidden');
+
+                // Update buttons
+                document.getElementById('skip-btn').classList.add('hidden');
+                if (data.isComplete) {
+                    document.getElementById('finish-btn').classList.remove('hidden');
+                } else {
+                    document.getElementById('next-btn').classList.remove('hidden');
+                }
+
+                session.currentIndex = data.nextIndex;
+                localStorage.setItem('currentSession', JSON.stringify(session));
+
+            } catch (err) {
+                console.error('Failed to submit answer', err);
+            }
+        }
+
+        // Skip button
+        document.getElementById('skip-btn').addEventListener('click', () => {
+            selectedOption = -1; // Skip marker
+            submitAnswer();
+        });
+
+        // Next button
+        document.getElementById('next-btn').addEventListener('click', () => {
+            loadQuestion(session.currentIndex);
+        });
+
+        // Finish button
+        document.getElementById('finish-btn').addEventListener('click', () => {
+            window.location.href = `result.html?session=${session.sessionId}`;
+        });
+    </script>
+</body>
+
+</html>
