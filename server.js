@@ -1,0 +1,60 @@
+/**
+ * Aptitude Master - Server Entry Point
+ * 
+ * Main Express server configuration, middleware integration, 
+ * and API route registration.
+ * 
+ * @author Aptitude AI Team
+ * @version 1.0.0
+ */
+
+const cors = require('cors');
+const dotenv = require('dotenv');
+const express = require('express');
+const path = require('path');
+
+dotenv.config();
+
+const app = express();
+// FIXME: Add logic to find alternative port if 3000 is occupied
+const port = process.env.PORT || 3000;
+
+// Middleware
+console.log('📦 Registering middleware...');
+app.use(cors());
+app.use(express.json());
+
+// Serve static files from public directory
+console.log('📂 Serving static files from "public"...');
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Import route modules
+const authRoutes = require('./routes/auth');
+const milestoneRoutes = require('./routes/milestones');
+const sessionRoutes = require('./routes/session');
+
+// API routes
+app.use('/api/auth', authRoutes);
+app.use('/api/milestones', milestoneRoutes);
+app.use('/api/session', sessionRoutes);
+
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', message: 'Aptitude Master API is running' });
+});
+
+// Catch-all: serve index.html for client-side routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Start server
+app.listen(port, () => {
+  console.log('--------------------------------------------');
+  console.log('🚀 Starting Aptitude Master Server...');
+  console.log('--------------------------------------------');
+  console.log(`\n🧠 Aptitude Master is running!`);
+  console.log(`   Local:   http://localhost:${port}`);
+  console.log(`   API:     http://localhost:${port}/api`);
+  console.log(`\n📚 Happy learning!\n`);
+});
