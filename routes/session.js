@@ -16,7 +16,10 @@ const authMiddleware = require('../middleware/auth');
 // In-memory store for sessions (placeholder - will use DB in production)
 const sessions = {};
 
-// Start a new session (protected route)
+/**
+ * Initializes a new practice session for a specific topic.
+ * @route POST /api/session/start
+ */
 router.post('/start', authMiddleware, async (req, res) => {
     const { topicId, topicName, milestoneName, numQuestions, difficulty } = req.body;
     const userId = req.user.id;
