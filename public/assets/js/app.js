@@ -41,6 +41,10 @@ const AppState = {
         localStorage.setItem('user', JSON.stringify(user));
     },
 
+    /**
+     * Stores the current active session and persists it to local storage.
+     * @param {Object} session - The active practice session configuration.
+     */
     setSession(session) {
         this.session = session;
         localStorage.setItem('currentSession', JSON.stringify(session));
