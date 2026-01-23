@@ -57,7 +57,10 @@ router.post('/start', authMiddleware, async (req, res) => {
     }
 });
 
-// Get next question in session
+/**
+ * Fetches a specific question from an active session by its index.
+ * @route GET /api/session/question/:sessionId/:index
+ */
 router.get('/question/:sessionId/:index', authMiddleware, (req, res) => {
     const { sessionId, index } = req.params;
     const session = sessions[sessionId];
