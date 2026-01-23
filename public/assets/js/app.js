@@ -50,6 +50,9 @@ const AppState = {
         localStorage.setItem('currentSession', JSON.stringify(session));
     },
 
+    /**
+     * Clears the active session from state and local storage.
+     */
     clearSession() {
         this.session = null;
         localStorage.removeItem('currentSession');
