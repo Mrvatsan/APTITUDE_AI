@@ -84,7 +84,10 @@ router.get('/question/:sessionId/:index', authMiddleware, (req, res) => {
     });
 });
 
-// Submit an answer for a question (protected route)
+/**
+ * Records a user's answer and provides immediate correctness feedback.
+ * @route POST /api/session/answer
+ */
 router.post('/answer', authMiddleware, (req, res) => {
     const { sessionId, questionIndex, selectedOption } = req.body;
     const session = sessions[sessionId];
