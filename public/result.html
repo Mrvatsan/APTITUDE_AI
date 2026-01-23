@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results - Aptitude Master</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">🧠 Aptitude Master</a>
+    </nav>
+
+    <!-- Confetti Container -->
+    <div id="confetti-container" class="confetti-container"></div>
+
+    <main class="container" style="max-width: 800px;">
+        <!-- Summary Card -->
+        <div class="card text-center mb-3" id="summary-card">
+            <h1 id="result-emoji" style="font-size: 4rem; margin-bottom: 0.5rem;">🎯</h1>
+            <h2 id="result-title">Session Complete!</h2>
+            <p class="text-muted" id="result-subtitle">Here's how you performed</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-3 mb-3">
+            <div class="card text-center">
+                <h4 class="text-muted mb-1">Accuracy</h4>
+                <div id="accuracy" style="font-size: 2rem; font-weight: 800; color: var(--success);">--%</div>
+            </div>
+            <div class="card text-center">
+                <h4 class="text-muted mb-1">Correct</h4>
+                <div id="correct-count" style="font-size: 2rem; font-weight: 800; color: var(--primary);">-/-</div>
+            </div>
+            <div class="card text-center">
+                <h4 class="text-muted mb-1">XP Earned</h4>
+                <div id="xp-earned" style="font-size: 2rem; font-weight: 800; color: var(--warning);">+0</div>
+            </div>
+        </div>
+
+        <!-- Badge Progress -->
+        <div class="card mb-3" id="badge-section">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div id="badge-display" class="badge badge-iron" style="font-size: 1.25rem; padding: 0.5rem 1rem;">
+                    🛡️ Iron
+                </div>
+                <div style="flex: 1;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                        <span class="text-muted">Progress to next badge</span>
+                        <span class="text-muted" id="xp-progress">0 / 500 XP</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="fill" id="badge-progress-bar" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Badge Upgrade Celebration -->
+        <div id="badge-upgrade" class="card hidden mb-3 text-center"
+            style="border: 2px solid var(--success); background: rgba(16, 185, 129, 0.1);">
+            <h2 style="color: var(--success);">🎉 Badge Upgrade!</h2>
+            <p>Congratulations! You've earned a new badge:</p>
+            <div id="new-badge" class="badge badge-bronze"
+                style="font-size: 1.5rem; padding: 0.75rem 1.5rem; margin: 1rem 0;">
+                🥉 Bronze
+            </div>
+        </div>
+
+        <!-- Question Review -->
+        <div class="mb-3">
+            <h3 class="mb-2">📝 Question Review</h3>
+            <div id="questions-review">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+            <a href="practice.html" class="btn btn-primary btn-lg">
+                🎯 Practice Another Topic
+            </a>
+            <a href="index.html" class="btn btn-secondary btn-lg">
+                🏠 Back to Dashboard
+            </a>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionId = urlParams.get('session');
+
+            if (!sessionId) {
+                window.location.href = 'practice.html';
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch(`/api/session/result/${sessionId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                displayResults(data);
+                updateUserXP(data.xpEarned);
+
+            } catch (err) {
+                console.error('Failed to load results', err);
+            }
+        });
+
+        function displayResults(data) {
+            // Summary
+            document.getElementById('accuracy').textContent = data.accuracy + '%';
+            document.getElementById('correct-count').textContent = `${data.correct}/${data.total}`;
+            document.getElementById('xp-earned').textContent = `+${data.xpEarned}`;
+
+            // Result emoji based on performance
+            const emoji = data.accuracy >= 80 ? '🏆' : data.accuracy >= 60 ? '🎯' : data.accuracy >= 40 ? '💪' : '📚';
+            const title = data.accuracy >= 80 ? 'Excellent Performance!' : data.accuracy >= 60 ? 'Good Job!' : data.accuracy >= 40 ? 'Keep Practicing!' : 'Room for Improvement';
+            document.getElementById('result-emoji').textContent = emoji;
+            document.getElementById('result-title').textContent = title;
+
+            // Question review
+            const reviewContainer = document.getElementById('questions-review');
+            reviewContainer.innerHTML = data.details.map((q, i) => `
+        <div class="card mb-2" style="border-left: 4px solid ${q.isCorrect ? 'var(--success)' : 'var(--error)'};">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div style="flex: 1;">
+              <p style="font-weight: 600; margin-bottom: 0.5rem;">Q${i + 1}. ${q.question}</p>
+              <p class="text-muted" style="font-size: 0.875rem;">
+                Your answer: <span style="color: ${q.isCorrect ? 'var(--success)' : 'var(--error)'};">
+                  ${q.userAnswer !== null ? q.options[q.userAnswer] : 'Skipped'}
+                </span>
+                ${!q.isCorrect ? `<br>Correct: <span class="text-success">${q.options[q.correctOptionIndex]}</span>` : ''}
+              </p>
+              <p class="text-muted" style="font-size: 0.875rem;">💡 ${q.solution}</p>
+            </div>
+            <span style="font-size: 1.5rem;">${q.isCorrect ? '✅' : '❌'}</span>
+          </div>
+        </div>
+      `).join('');
+
+            // Trigger confetti for good performance
+            if (data.accuracy >= 60) {
+                triggerConfetti();
+            }
+        }
+
+        async function updateUserXP(xpEarned) {
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch('/api/auth/update-xp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ xpGained: xpEarned })
+                });
+                const data = await res.json();
+
+                // Update user in localStorage
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                user.totalXP = data.totalXP;
+                user.currentBadge = data.currentBadge;
+                localStorage.setItem('user', JSON.stringify(user));
+
+                // Update badge display
+                const badgeEl = document.getElementById('badge-display');
+                badgeEl.className = `badge badge-${data.currentBadge.toLowerCase()}`;
+                badgeEl.innerHTML = getBadgeEmoji(data.currentBadge) + ' ' + data.currentBadge;
+
+                // Show badge upgrade if applicable
+                if (data.badgeUpgrade) {
+                    const upgradeEl = document.getElementById('badge-upgrade');
+                    upgradeEl.classList.remove('hidden');
+                    const newBadgeEl = document.getElementById('new-badge');
+                    newBadgeEl.className = `badge badge-${data.currentBadge.toLowerCase()}`;
+                    newBadgeEl.innerHTML = getBadgeEmoji(data.currentBadge) + ' ' + data.currentBadge;
+                    triggerConfetti();
+                }
+
+            } catch (err) {
+                console.error('Failed to update XP', err);
+            }
+        }
+
+        function getBadgeEmoji(badge) {
+            const emojis = {
+                Iron: '🛡️', Bronze: '🥉', Silver: '🥈', Gold: '🥇',
+                Elite: '💎', Expert: '🌟', Master: '👑'
+            };
+            return emojis[badge] || '🛡️';
+        }
+
+        function triggerConfetti() {
+            const container = document.getElementById('confetti-container');
+            const colors = ['#6366f1', '#22d3ee', '#f472b6', '#fbbf24', '#10b981'];
+
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                container.appendChild(confetti);
+            }
+
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        // Clear session
+        localStorage.removeItem('currentSession');
+    </script>
+</body>
+
+</html>
