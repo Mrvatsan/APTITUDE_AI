@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Master aptitude with AI-powered practice questions. Track your progress, build streaks, and earn badges.">
+  <title>Aptitude Master - AI-Powered Practice</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="logo">🧠 Aptitude Master</div>
+    <div class="nav-user">
+      <span class="streak" id="streak-display">
+        <span class="flame">🔥</span>
+        <span id="streak-count">0</span> day streak
+      </span>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Welcome Section -->
+    <section class="hero text-center mt-3 mb-3">
+      <h1>Welcome back, <span id="username">Learner</span>! 👋</h1>
+      <p class="text-muted">Ready to boost your aptitude skills today?</p>
+    </section>
+
+    <!-- Stats Overview -->
+    <div class="grid grid-3 mb-3">
+      <!-- Badge Card -->
+      <div class="card text-center">
+        <h4 class="text-muted mb-1">Current Badge</h4>
+        <div id="current-badge" class="badge badge-iron" style="font-size: 1.5rem; padding: 0.5rem 1rem;">
+          🛡️ Iron
+        </div>
+        <div class="mt-2">
+          <small class="text-muted">Next: <span id="next-badge">Bronze</span></small>
+          <div class="progress-bar mt-1">
+            <div class="fill" id="badge-progress" style="width: 0%;"></div>
+          </div>
+          <small class="text-muted"><span id="xp-to-next">500</span> XP to go</small>
+        </div>
+      </div>
+
+      <!-- XP Card -->
+      <div class="card text-center">
+        <h4 class="text-muted mb-1">Total XP</h4>
+        <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary);" id="total-xp">
+          0
+        </div>
+        <small class="text-muted">Keep practicing to earn more!</small>
+      </div>
+
+      <!-- Accuracy Card -->
+      <div class="card text-center">
+        <h4 class="text-muted mb-1">Average Accuracy</h4>
+        <div style="font-size: 2.5rem; font-weight: 800; color: var(--success);" id="avg-accuracy">
+          --
+        </div>
+        <small class="text-muted">Based on recent sessions</small>
+      </div>
+    </div>
+
+    <!-- Suggested Topic -->
+    <div class="card mb-3">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h3 style="margin-bottom: 0.25rem;">📌 Suggested for Today</h3>
+          <p class="text-muted" id="suggested-topic">Time & Work - Medium difficulty</p>
+        </div>
+        <a href="practice.html" class="btn btn-primary btn-lg">
+          🚀 Start Practice
+        </a>
+      </div>
+    </div>
+
+    <!-- Milestones Overview -->
+    <section class="mb-3">
+      <h2 class="mb-2">📊 Your Milestones</h2>
+      <div class="grid grid-2" id="milestones-grid">
+        <!-- Milestones will be populated by JS -->
+      </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="mb-3">
+      <h2 class="mb-2">⚡ Quick Actions</h2>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="practice.html?random=true" class="btn btn-secondary">
+          🎲 Random Topic
+        </a>
+        <a href="practice.html?focus=weak" class="btn btn-secondary">
+          🎯 Focus on Weak Areas
+        </a>
+        <a href="#" class="btn btn-secondary" id="review-btn">
+          📝 Review Past Sessions
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Login Modal (shown if not logged in) -->
+  <div id="auth-modal" class="modal hidden">
+    <div class="modal-content card" style="max-width: 400px; margin: 2rem auto;">
+      <h2 class="text-center mb-2">Welcome to Aptitude Master</h2>
+      <div id="login-form">
+        <div class="mb-2">
+          <label class="text-muted">Username</label>
+          <input type="text" id="login-username" class="input" placeholder="Enter username">
+        </div>
+        <div class="mb-2">
+          <label class="text-muted">Password</label>
+          <input type="password" id="login-password" class="input" placeholder="Enter password">
+        </div>
+        <button class="btn btn-primary" style="width: 100%;" id="login-btn">Login</button>
+        <p class="text-center mt-2 text-muted">
+          New here? <a href="onboarding.html">Create an account</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .hero {
+      padding: 2rem 0;
+    }
+  </style>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    // Check auth and load dashboard
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        document.getElementById('auth-modal').classList.remove('hidden');
+        return;
+      }
+      loadDashboard();
+    });
+
+    // Login handler
+    document.getElementById('login-btn').addEventListener('click', async () => {
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+      
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          document.getElementById('auth-modal').classList.add('hidden');
+          loadDashboard();
+        } else {
+          alert(data.error || 'Login failed');
+        }
+      } catch (err) {
+        alert('Login failed. Please try again.');
+      }
+    });
+
+    async function loadDashboard() {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      document.getElementById('username').textContent = user.username || 'Learner';
+      document.getElementById('streak-count').textContent = user.streakCount || 0;
+      document.getElementById('total-xp').textContent = user.totalXP || 0;
+      
+      // Update badge display
+      const badge = user.currentBadge || 'Iron';
+      const badgeEl = document.getElementById('current-badge');
+      badgeEl.className = `badge badge-${badge.toLowerCase()}`;
+      badgeEl.innerHTML = getBadgeEmoji(badge) + ' ' + badge;
+      
+      // Load milestones
+      try {
+        const res = await fetch('/api/milestones');
+        const data = await res.json();
+        renderMilestones(data.milestones);
+      } catch (err) {
+        console.error('Failed to load milestones', err);
+      }
+    }
+
+    function getBadgeEmoji(badge) {
+      const emojis = {
+        Iron: '🛡️',
+        Bronze: '🥉',
+        Silver: '🥈',
+        Gold: '🥇',
+        Elite: '💎',
+        Expert: '🌟',
+        Master: '👑'
+      };
+      return emojis[badge] || '🛡️';
+    }
+
+    function renderMilestones(milestones) {
+      const grid = document.getElementById('milestones-grid');
+      grid.innerHTML = milestones.map(m => `
+        <div class="card" style="cursor: pointer;" onclick="window.location='practice.html?milestone=${m.id}'">
+          <h3>${m.name}</h3>
+          <p class="text-muted">${m.topics.length} topics</p>
+          <div class="progress-bar mt-1">
+            <div class="fill" style="width: 0%;"></div>
+          </div>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>
