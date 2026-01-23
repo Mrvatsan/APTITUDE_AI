@@ -150,7 +150,10 @@ const BadgeHelpers = {
     }
 };
 
-// Confetti animation
+/**
+ * Triggers a confetti explosion animation on the screen.
+ * @param {HTMLElement} container - The element to append the confetti to.
+ */
 function triggerConfetti(container = document.body) {
     const confettiContainer = document.createElement('div');
     confettiContainer.className = 'confetti-container';
