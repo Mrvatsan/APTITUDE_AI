@@ -38,7 +38,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/milestones', milestoneRoutes);
 app.use('/api/session', sessionRoutes);
 
-// Health check
+/**
+ * Health check endpoint to verify server status.
+ * @route GET /api/health
+ */
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Aptitude Master API is running' });
 });
