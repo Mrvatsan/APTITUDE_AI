@@ -185,7 +185,10 @@ router.get('/profile', authMiddleware, (req, res) => {
     });
 });
 
-// Update XP (called after session completion)
+/**
+ * Updates the user's total XP and checks for badge upgrades.
+ * @route POST /api/auth/update-xp
+ */
 router.post('/update-xp', authMiddleware, (req, res) => {
     const { xpGained } = req.body;
     const user = users[req.user.id];
