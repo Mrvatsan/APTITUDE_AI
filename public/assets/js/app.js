@@ -21,6 +21,10 @@ const AppState = {
     user: null,
     session: null,
 
+    /**
+     * Initializes the application state by loading user and session 
+     * data from local storage.
+     */
     init() {
         const userStr = localStorage.getItem('user');
         const sessionStr = localStorage.getItem('currentSession');
