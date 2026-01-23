@@ -190,6 +190,13 @@ function shuffle(arr) {
 }
 
 // Get fallback questions
+/**
+ * Selects a set of high-quality fallback questions based on category and difficulty.
+ * @param {string} category - The question topic.
+ * @param {number} n - The number of questions requested.
+ * @param {string} difficulty - The desired difficulty level.
+ * @returns {Array} A randomized list of fallback questions.
+ */
 function getFallbackQuestions(category, n, difficulty) {
     console.log(`Fallback requested: Category="${category}", n=${n}, Difficulty="${difficulty}"`);
     let questions = fallbackQuestionBank[category] || defaultFallback;
