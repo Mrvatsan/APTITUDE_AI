@@ -234,3 +234,27 @@
             }
         }
     </script>
+    <style>
+        .milestone-option,
+        .goal-option {
+            display: block;
+            padding: 1rem;
+            background: var(--bg-glass);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-md);
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .milestone-option:hover,
+        .goal-option:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .milestone-option.selected,
+        .goal-option.selected {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
