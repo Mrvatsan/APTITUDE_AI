@@ -180,3 +180,21 @@
             }
             updateMilestoneCount();
         }
+        function nextStep(step) {
+            if (step === 2 && !selectedGoal) {
+                alert('Please select a goal to continue');
+                return;
+            }
+            if (step === 2 && (!document.getElementById('username').value || !document.getElementById('password').value)) {
+                alert('Please enter a username and password');
+                return;
+            }
+
+            document.querySelectorAll('.step').forEach(s => s.classList.add('hidden'));
+            document.getElementById('step-' + step).classList.remove('hidden');
+        }
+
+        function prevStep(step) {
+            document.querySelectorAll('.step').forEach(s => s.classList.add('hidden'));
+            document.getElementById('step-' + step).classList.remove('hidden');
+        }
