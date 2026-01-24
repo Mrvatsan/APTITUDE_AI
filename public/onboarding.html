@@ -198,3 +198,39 @@
             document.querySelectorAll('.step').forEach(s => s.classList.add('hidden'));
             document.getElementById('step-' + step).classList.remove('hidden');
         }
+        async function completeOnboarding() {
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (selectedMilestones.size === 0) {
+                alert('Please select at least one milestone');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username,
+                        email,
+                        password,
+                        goal: selectedGoal,
+                        selectedMilestones: Array.from(selectedMilestones)
+                    })
+                });
+
+                const data = await res.json();
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    nextStep('success');
+                } else {
+                    alert(data.error || 'Registration failed');
+                }
+            } catch (err) {
+                alert('Registration failed. Please try again.');
+            }
+        }
+    </script>
