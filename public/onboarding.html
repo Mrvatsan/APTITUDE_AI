@@ -89,3 +89,29 @@
             </div>
         </div>
     </main>
+    <script>
+        const selectedMilestones = new Set(); // Default selection empty
+        const MAX_MILESTONES = 4;
+        let selectedGoal = null;
+
+        const goals = [
+            { id: 'placements', name: 'Campus Placements', desc: 'Prepare for top companies (3-6 months)' },
+            { id: 'bank_exam', name: 'Bank Exams', desc: 'IBPS, SBI, RBI & other banking exams' },
+            { id: 'ssc', name: 'SSC / Gov Exams', desc: 'CGL, CHSL & other government roles' },
+            { id: 'cat', name: 'CAT / MBA', desc: 'Entrance exams for top business schools' },
+            { id: 'general', name: 'General Practice', desc: 'Improve your overall aptitude skills' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            renderGoalOptions();
+
+            // Load milestones for selection
+            try {
+                const res = await fetch('/api/milestones');
+                const data = await res.json();
+                renderMilestoneOptions(data.milestones);
+                updateMilestoneCount();
+            } catch (err) {
+                console.error('Failed to load milestones', err);
+            }
+        });
