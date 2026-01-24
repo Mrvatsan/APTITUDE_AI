@@ -13,6 +13,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
+const authMiddleware = require('../middleware/auth');
 
 // In-memory user store
 // FIXME: Replace with persistent storage (SQLite/Sequelize) for production use
