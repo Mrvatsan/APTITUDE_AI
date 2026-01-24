@@ -52,3 +52,24 @@
                     </button>
                 </div>
             </div>
+            <!-- Step 2: Milestone Selection -->
+            <div id="step-2" class="step hidden">
+                <div class="text-center mb-3">
+                    <h2>Select Your Focus Areas 📊 <span id="milestone-count"
+                            style="font-size: 1.2rem; color: var(--primary);">(0/4)</span></h2>
+                    <p class="text-muted">Pick up to 4 milestones you want to work on.</p>
+                </div>
+
+                <div id="milestone-options" class="mb-3">
+                    <!-- Populated by JS -->
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-secondary" style="flex: 1;" onclick="prevStep(1)">
+                        ← Back
+                    </button>
+                    <button class="btn btn-primary" style="flex: 2;" onclick="completeOnboarding()">
+                        Complete Setup ✅
+                    </button>
+                </div>
+            </div>
