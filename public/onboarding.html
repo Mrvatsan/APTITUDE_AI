@@ -135,3 +135,17 @@
             selectedGoal = id;
             renderGoalOptions();
         }
+        function renderMilestoneOptions(milestones) {
+            const container = document.getElementById('milestone-options');
+            container.innerHTML = milestones.map(m => `
+        <div class="milestone-option ${selectedMilestones.has(m.id) ? 'selected' : ''}" onclick="toggleMilestone(${m.id}, this)">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <strong>${m.name}</strong>
+              <div class="text-muted" style="font-size: 0.875rem;">${m.topics.map(t => t.name).slice(0, 3).join(', ')}...</div>
+            </div>
+            <span class="check-icon">${selectedMilestones.has(m.id) ? '✓' : ''}</span>
+          </div>
+        </div>
+      `).join('');
+        }
