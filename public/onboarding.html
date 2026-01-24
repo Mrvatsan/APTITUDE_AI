@@ -160,3 +160,23 @@
                 el.style.color = 'var(--primary)';
             }
         }
+        function toggleMilestone(id, el) {
+            if (selectedMilestones.has(id)) {
+                selectedMilestones.delete(id);
+                el.classList.remove('selected');
+                el.querySelector('.check-icon').textContent = '';
+            } else {
+                if (selectedMilestones.size >= MAX_MILESTONES) {
+                    // Shake animation or alert
+                    el.style.transform = 'translateX(5px)';
+                    setTimeout(() => el.style.transform = 'translateX(-5px)', 50);
+                    setTimeout(() => el.style.transform = 'translateX(5px)', 100);
+                    setTimeout(() => el.style.transform = 'translateX(0)', 150);
+                    return; // Stop selection
+                }
+                selectedMilestones.add(id);
+                el.classList.add('selected');
+                el.querySelector('.check-icon').textContent = '✓';
+            }
+            updateMilestoneCount();
+        }
