@@ -115,3 +115,19 @@
                 console.error('Failed to load milestones', err);
             }
         });
+        function renderGoalOptions() {
+            const container = document.getElementById('goal-options');
+            container.innerHTML = goals.map(g => `
+                <div class="goal-option ${selectedGoal === g.id ? 'selected' : ''}" onclick="selectGoal('${g.id}')">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>${g.name}</strong>
+                            <div class="text-muted" style="font-size: 0.85rem;">${g.desc}</div>
+                        </div>
+                        <div class="radio-circle">
+                            ${selectedGoal === g.id ? '<div class="radio-inner"></div>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
