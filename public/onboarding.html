@@ -149,3 +149,14 @@
         </div>
       `).join('');
         }
+        function updateMilestoneCount() {
+            const count = selectedMilestones.size;
+            const el = document.getElementById('milestone-count');
+            el.textContent = `(${count}/${MAX_MILESTONES})`;
+
+            if (count === MAX_MILESTONES) {
+                el.style.color = 'var(--success)';
+            } else {
+                el.style.color = 'var(--primary)';
+            }
+        }
