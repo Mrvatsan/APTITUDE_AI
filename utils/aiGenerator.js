@@ -223,7 +223,8 @@ const fallbackQuestionBank = {
         { question: 'No A is B. All C are A. Which is true?', options: ['No C is B', 'Some C is B', 'All C is B', 'None'], correctOptionIndex: 0, solution: 'Since all C are in A and no A is B, no C can be B.', difficulty: 'medium', category: 'Syllogism' }
     ],
     'Inequalities': [
-        { question: 'If A > B and B > C, then?', options: ['A > C', 'A < C', 'A = C', 'None'], correctOptionIndex: 0, solution: 'Transitive', difficulty: 'easy', category: 'Inequalities' }
+        { question: 'If A > B and B > C, then?', options: ['A > C', 'A < C', 'A = C', 'None'], correctOptionIndex: 0, solution: 'Transitive', difficulty: 'easy', category: 'Inequalities' },
+        { question: 'If X ≥ Y and Y > Z, find the relationship between X and Z.', options: ['X > Z', 'X < Z', 'X = Z', 'X ≤ Z'], correctOptionIndex: 0, solution: 'X ≥ Y > Z implies X > Z.', difficulty: 'medium', category: 'Inequalities' }
     ],
     'Analogy & Non-Verbal Reasoning': [
         { question: 'Doctor : Hospital :: Teacher : ?', options: ['School', 'Class', 'Student', 'Home'], correctOptionIndex: 0, solution: 'Place of work', difficulty: 'easy', category: 'Analogy & Non-Verbal Reasoning' }
