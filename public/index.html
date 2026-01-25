@@ -184,7 +184,24 @@
     });
 
     async function loadDashboard() {
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      // First, try to fetch fresh user data
+      let user = JSON.parse(localStorage.getItem('user') || '{}');
+      const token = localStorage.getItem('token');
+
+      if (token) {
+        try {
+          const profileRes = await fetch('/api/auth/profile', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          if (profileRes.ok) {
+            user = await profileRes.json();
+            localStorage.setItem('user', JSON.stringify(user));
+          }
+        } catch (e) {
+          console.warn('Failed to refresh user profile', e);
+        }
+      }
+
       document.getElementById('username').textContent = user.username || 'Learner';
       document.getElementById('streak-count').textContent = user.streakCount || 0;
       document.getElementById('total-xp').textContent = user.totalXP || 0;
@@ -199,7 +216,20 @@
       try {
         const res = await fetch('/api/milestones');
         const data = await res.json();
-        renderMilestones(data.milestones);
+
+        // Filter milestones based on user preferences
+        let milestonesToDisplay = data.milestones;
+
+        // Check if user has preferences and selected milestones
+        if (user.preferences && user.preferences.selectedMilestones &&
+          Array.isArray(user.preferences.selectedMilestones) &&
+          user.preferences.selectedMilestones.length > 0) {
+
+          const selectedIds = new Set(user.preferences.selectedMilestones.map(id => Number(id)));
+          milestonesToDisplay = data.milestones.filter(m => selectedIds.has(m.id));
+        }
+
+        renderMilestones(milestonesToDisplay);
       } catch (err) {
         console.error('Failed to load milestones', err);
       }
