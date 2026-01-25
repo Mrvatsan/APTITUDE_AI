@@ -195,6 +195,9 @@ const fallbackQuestionBank = {
     'Compound Interest': [
         { question: 'P=1000, R=10%, T=2 yrs. CI?', options: ['200', '210', '220', '250'], correctOptionIndex: 1, solution: 'A = 1000(1.1)^2 = 1210. CI = 210', difficulty: 'medium', category: 'Compound Interest' },
         { question: 'Difference between CI and SI for 2 yrs at 10% on 1000?', options: ['10', '20', '30', '0'], correctOptionIndex: 0, solution: 'SI=200, CI=210. Diff=10', difficulty: 'hard', category: 'Compound Interest' }
+    ],
+    'Seating Arrangement 1': [
+        { question: '5 people A,B,C,D,E in a row. C is in middle. A is left of B. B is left of C. Order?', options: ['ABCDE', 'BACDE', 'ABCED', 'ABDEC'], correctOptionIndex: 0, solution: 'A-B-C. Others flexible', difficulty: 'easy', category: 'Seating Arrangement 1' }
     ]
 };
 
