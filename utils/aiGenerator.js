@@ -158,6 +158,12 @@ const fallbackQuestionBank = {
         { question: 'Ram walks 10 km South, then turns left and walks 5 km. Which direction is he from the start?', options: ['South-East', 'South-West', 'North-East', 'North-West'], correctOptionIndex: 0, solution: 'South then Left (East) -> South-East', difficulty: 'medium', category: 'Directions' },
         { question: 'Sun rises in the East. If you face North, which direction is on your right?', options: ['West', 'South', 'East', 'North'], correctOptionIndex: 2, solution: 'Right of North is East', difficulty: 'easy', category: 'Directions' },
         { question: 'A starts from a point, walks 2 km North, turns right walks 2 km, turns right again, walks 2 km. Direction from start?', options: ['East', 'West', 'North', 'South'], correctOptionIndex: 0, solution: 'Final position is 2km East', difficulty: 'medium', category: 'Directions' }
+    ],
+    'Problems on Ages': [
+        { question: 'The age of father is 3 times his son. If son is 15, how old is father?', options: ['30', '40', '45', '50'], correctOptionIndex: 2, solution: '3 * 15 = 45', difficulty: 'easy', category: 'Problems on Ages' },
+        { question: 'A is 2 years older than B who is twice as old as C. If A+B+C = 27, how old is B?', options: ['7', '8', '9', '10'], correctOptionIndex: 3, solution: 'C=x, B=2x, A=2x+2. 5x+2=27, x=5. B=10', difficulty: 'medium', category: 'Problems on Ages' },
+        { question: 'Ratio of ages of A and B is 4:5. If sum is 81, find A\'s age.', options: ['36', '45', '35', '40'], correctOptionIndex: 0, solution: '9x = 81 -> x=9. A = 4*9 = 36', difficulty: 'easy', category: 'Problems on Ages' },
+        { question: 'Present ages of A and B are in ratio 5:6. Seven years hence ratio is 6:7. Present age of A?', options: ['35', '40', '30', '42'], correctOptionIndex: 0, solution: 'gap is 1 part = 7 years. A = 5 * 7 = 35', difficulty: 'medium', category: 'Problems on Ages' }
     ]
 };
 
