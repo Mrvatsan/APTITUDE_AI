@@ -212,6 +212,11 @@ const fallbackQuestionBank = {
     'Combination': [
         { question: 'Choose 2 from 5 players.', options: ['5', '10', '15', '20'], correctOptionIndex: 1, solution: '5C2 = 10', difficulty: 'easy', category: 'Combination' },
         { question: 'Handshakes in room of 10 people?', options: ['45', '50', '90', '100'], correctOptionIndex: 0, solution: '10C2 = 45', difficulty: 'medium', category: 'Combination' }
+    ],
+    'Probability': [
+        { question: 'Prob of getting Head in coin toss?', options: ['1/2', '1/3', '1/4', '1'], correctOptionIndex: 0, solution: '1/2', difficulty: 'easy', category: 'Probability' },
+        { question: 'Prob of 6 in die roll?', options: ['1/5', '1/6', '1/3', '1/2'], correctOptionIndex: 1, solution: '1/6', difficulty: 'easy', category: 'Probability' },
+        { question: 'Prob of Ace from deck?', options: ['1/13', '1/52', '1/4', '1/12'], correctOptionIndex: 0, solution: '4/52 = 1/13', difficulty: 'medium', category: 'Probability' }
     ]
 };
 
