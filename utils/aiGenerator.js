@@ -198,6 +198,9 @@ const fallbackQuestionBank = {
     ],
     'Seating Arrangement 1': [
         { question: '5 people A,B,C,D,E in a row. C is in middle. A is left of B. B is left of C. Order?', options: ['ABCDE', 'BACDE', 'ABCED', 'ABDEC'], correctOptionIndex: 0, solution: 'A-B-C. Others flexible', difficulty: 'easy', category: 'Seating Arrangement 1' }
+    ],
+    'Seating Arrangement 2': [
+        { question: '6 people in circle facing center. A opposite B. C between A and D. Who is opposite C?', options: ['D', 'E', 'F', 'B'], correctOptionIndex: 1, solution: 'Requires diagram. Usually implies symmetric placement', difficulty: 'hard', category: 'Seating Arrangement 2' }
     ]
 };
 
