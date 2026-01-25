@@ -1,0 +1,14 @@
+# Handle line endings automatically
+* text=auto
+
+# Ensure LF for code and text files
+*.js text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+
+# Denote binary files
+*.png binary
+*.jpg binary
+*.ico binary
