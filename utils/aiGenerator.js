@@ -220,6 +220,9 @@ const fallbackQuestionBank = {
     ],
     'Syllogism': [
         { question: 'All cats are dogs. All dogs are birds. Are all cats birds?', options: ['Yes', 'No', 'Maybe', 'Cannot say'], correctOptionIndex: 0, solution: 'Transitive property', difficulty: 'easy', category: 'Syllogism' }
+    ],
+    'Inequalities': [
+        { question: 'If A > B and B > C, then?', options: ['A > C', 'A < C', 'A = C', 'None'], correctOptionIndex: 0, solution: 'Transitive', difficulty: 'easy', category: 'Inequalities' }
     ]
 };
 
