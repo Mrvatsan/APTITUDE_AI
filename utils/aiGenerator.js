@@ -164,6 +164,11 @@ const fallbackQuestionBank = {
         { question: 'A is 2 years older than B who is twice as old as C. If A+B+C = 27, how old is B?', options: ['7', '8', '9', '10'], correctOptionIndex: 3, solution: 'C=x, B=2x, A=2x+2. 5x+2=27, x=5. B=10', difficulty: 'medium', category: 'Problems on Ages' },
         { question: 'Ratio of ages of A and B is 4:5. If sum is 81, find A\'s age.', options: ['36', '45', '35', '40'], correctOptionIndex: 0, solution: '9x = 81 -> x=9. A = 4*9 = 36', difficulty: 'easy', category: 'Problems on Ages' },
         { question: 'Present ages of A and B are in ratio 5:6. Seven years hence ratio is 6:7. Present age of A?', options: ['35', '40', '30', '42'], correctOptionIndex: 0, solution: 'gap is 1 part = 7 years. A = 5 * 7 = 35', difficulty: 'medium', category: 'Problems on Ages' }
+    ],
+    'Blood Relation': [
+        { question: 'A is the brother of B. B is the sister of C. How is A related to C?', options: ['Father', 'Brother', 'Uncle', 'Son'], correctOptionIndex: 1, solution: 'A is male (brother). A and B are siblings. B and C are siblings. So A is brother of C', difficulty: 'easy', category: 'Blood Relation' },
+        { question: 'Pointing to a photo, a man said "She is the daughter of my grandfather\'s only son". How is she related to him?', options: ['Sister', 'Cousin', 'Aunt', 'Mother'], correctOptionIndex: 0, solution: 'Grandfather\'s only son is father. Father\'s daughter is sister', difficulty: 'medium', category: 'Blood Relation' },
+        { question: 'A is B\'s sister. C is B\'s mother. D is C\'s father. How is A related to D?', options: ['Granddaughter', 'Daughter', 'Grandmother', 'Aunt'], correctOptionIndex: 0, solution: 'A is daughter of C. C is daughter of D. So A is granddaughter of D', difficulty: 'medium', category: 'Blood Relation' }
     ]
 };
 
