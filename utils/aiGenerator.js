@@ -179,6 +179,10 @@ const fallbackQuestionBank = {
         { question: 'If A:B=2:3 and B:C=4:5, find A:C', options: ['8:15', '2:5', '4:5', '6:15'], correctOptionIndex: 0, solution: 'A/B * B/C = A/C = 2/3 * 4/5 = 8/15', difficulty: 'easy', category: 'Ratio & Proportion' },
         { question: 'Divide 1000 in ratio 2:3', options: ['200:800', '400:600', '300:700', '500:500'], correctOptionIndex: 1, solution: 'Part 1 = 2/5 * 1000 = 400. Part 2 = 600', difficulty: 'easy', category: 'Ratio & Proportion' },
         { question: 'Fourth proportional to 4, 8, 12 is?', options: ['18', '20', '22', '24'], correctOptionIndex: 3, solution: '4/8 = 12/x. x=24', difficulty: 'medium', category: 'Ratio & Proportion' }
+    ],
+    'Mixture & Alligation': [
+        { question: 'In what ratio must rice at $10/kg be mixed with rice at $15/kg to get $12/kg?', options: ['3:2', '2:3', '1:1', '4:1'], correctOptionIndex: 0, solution: 'Alligation: (15-12):(12-10) = 3:2', difficulty: 'medium', category: 'Mixture & Alligation' },
+        { question: 'Milk and water in ratio 3:1. How much water to add to make it 1:1 if total is 40L?', options: ['10L', '20L', '30L', '5L'], correctOptionIndex: 1, solution: 'Milk=30, Water=10. New Water=30. Add 20L', difficulty: 'hard', category: 'Mixture & Alligation' }
     ]
 };
 
