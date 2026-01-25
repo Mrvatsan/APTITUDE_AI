@@ -5,7 +5,7 @@
  * and API route registration.
  * 
  * @author Aptitude AI Team
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 const cors = require('cors');
@@ -16,7 +16,7 @@ const path = require('path');
 dotenv.config();
 
 const app = express();
-// FIXME: Add logic to find alternative port if 3000 is occupied
+// Server port configuration (default: 3000)
 const port = process.env.PORT || 3000;
 
 // Middleware
