@@ -2,6 +2,15 @@
 
 A web application for AI-generated aptitude practice designed to help college students prepare for competitive exams and placements. The platform features gamified progress, Milestone-based learning, and category-specific interactive sessions.
 
+## ✨ Features
+
+- **32 Topic Categories** - Complete coverage from Number System to Syllogism
+- **AI-Powered Questions** - Dynamic question generation via Google Gemini
+- **Offline Fallback** - 150+ curated questions for uninterrupted practice
+- **Milestone-Based Learning** - Structured 6-milestone curriculum
+- **Gamification** - XP, Streaks, and Badge progression system
+- **Personalized Practice** - Filter milestones based on preferences
+
 ## 🚀 Tech Stack
 
 - **Frontend**: Vanilla HTML5, CSS3, JavaScript
