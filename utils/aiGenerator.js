@@ -227,7 +227,8 @@ const fallbackQuestionBank = {
         { question: 'If X ≥ Y and Y > Z, find the relationship between X and Z.', options: ['X > Z', 'X < Z', 'X = Z', 'X ≤ Z'], correctOptionIndex: 0, solution: 'X ≥ Y > Z implies X > Z.', difficulty: 'medium', category: 'Inequalities' }
     ],
     'Analogy & Non-Verbal Reasoning': [
-        { question: 'Doctor : Hospital :: Teacher : ?', options: ['School', 'Class', 'Student', 'Home'], correctOptionIndex: 0, solution: 'Place of work', difficulty: 'easy', category: 'Analogy & Non-Verbal Reasoning' }
+        { question: 'Doctor : Hospital :: Teacher : ?', options: ['School', 'Class', 'Student', 'Home'], correctOptionIndex: 0, solution: 'Place of work', difficulty: 'easy', category: 'Analogy & Non-Verbal Reasoning' },
+        { question: 'Bird : Fly :: Fish : ?', options: ['Swim', 'Walk', 'Run', 'Sing'], correctOptionIndex: 0, solution: 'Mode of movement', difficulty: 'easy', category: 'Analogy & Non-Verbal Reasoning' }
     ],
     'Problems on Trains': [
         { question: 'Train 100m long at 36kmph crosses pole in?', options: ['10s', '15s', '20s', '25s'], correctOptionIndex: 0, solution: 'Speed 10m/s. Time = 100/10 = 10', difficulty: 'medium', category: 'Problems on Trains' },
