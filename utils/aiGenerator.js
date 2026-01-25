@@ -11,7 +11,7 @@
 require('dotenv').config();
 const axios = require('axios');
 
-// Category-specific fallback questions (20+ per category)
+// Category-specific fallback questions bank - ensures offline support for all 32 topics
 const fallbackQuestionBank = {
     'Number System': [
         { question: 'What is the sum of the first 10 natural numbers?', options: ['45', '50', '55', '60'], correctOptionIndex: 2, solution: 'Sum = n(n+1)/2 = 10×11/2 = 55', difficulty: 'easy', category: 'Number System' },
