@@ -226,6 +226,10 @@ const fallbackQuestionBank = {
     ],
     'Analogy & Non-Verbal Reasoning': [
         { question: 'Doctor : Hospital :: Teacher : ?', options: ['School', 'Class', 'Student', 'Home'], correctOptionIndex: 0, solution: 'Place of work', difficulty: 'easy', category: 'Analogy & Non-Verbal Reasoning' }
+    ],
+    'Problems on Trains': [
+        { question: 'Train 100m long at 36kmph crosses pole in?', options: ['10s', '15s', '20s', '25s'], correctOptionIndex: 0, solution: 'Speed 10m/s. Time = 100/10 = 10', difficulty: 'medium', category: 'Problems on Trains' },
+        { question: 'Train crosses platform equal to its length in 20s. Speed 72kmph. Length?', options: ['100', '200', '300', '400'], correctOptionIndex: 1, solution: 'Speed 20m/s. Dist 400m. 2L=400. L=200', difficulty: 'hard', category: 'Problems on Trains' }
     ]
 };
 
