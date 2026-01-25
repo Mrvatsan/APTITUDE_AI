@@ -230,6 +230,9 @@ const fallbackQuestionBank = {
     'Problems on Trains': [
         { question: 'Train 100m long at 36kmph crosses pole in?', options: ['10s', '15s', '20s', '25s'], correctOptionIndex: 0, solution: 'Speed 10m/s. Time = 100/10 = 10', difficulty: 'medium', category: 'Problems on Trains' },
         { question: 'Train crosses platform equal to its length in 20s. Speed 72kmph. Length?', options: ['100', '200', '300', '400'], correctOptionIndex: 1, solution: 'Speed 20m/s. Dist 400m. 2L=400. L=200', difficulty: 'hard', category: 'Problems on Trains' }
+    ],
+    'Ranking & Ordering': [
+        { question: 'A is 5th from left, 6th from right. Total?', options: ['10', '11', '9', '12'], correctOptionIndex: 0, solution: '5+6-1 = 10', difficulty: 'easy', category: 'Ranking & Ordering' }
     ]
 };
 
