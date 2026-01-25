@@ -219,7 +219,8 @@ const fallbackQuestionBank = {
         { question: 'Prob of Ace from deck?', options: ['1/13', '1/52', '1/4', '1/12'], correctOptionIndex: 0, solution: '4/52 = 1/13', difficulty: 'medium', category: 'Probability' }
     ],
     'Syllogism': [
-        { question: 'All cats are dogs. All dogs are birds. Are all cats birds?', options: ['Yes', 'No', 'Maybe', 'Cannot say'], correctOptionIndex: 0, solution: 'Transitive property', difficulty: 'easy', category: 'Syllogism' }
+        { question: 'All cats are dogs. All dogs are birds. Are all cats birds?', options: ['Yes', 'No', 'Maybe', 'Cannot say'], correctOptionIndex: 0, solution: 'Transitive property', difficulty: 'easy', category: 'Syllogism' },
+        { question: 'No A is B. All C are A. Which is true?', options: ['No C is B', 'Some C is B', 'All C is B', 'None'], correctOptionIndex: 0, solution: 'Since all C are in A and no A is B, no C can be B.', difficulty: 'medium', category: 'Syllogism' }
     ],
     'Inequalities': [
         { question: 'If A > B and B > C, then?', options: ['A > C', 'A < C', 'A = C', 'None'], correctOptionIndex: 0, solution: 'Transitive', difficulty: 'easy', category: 'Inequalities' }
