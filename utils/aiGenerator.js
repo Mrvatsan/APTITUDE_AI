@@ -208,6 +208,10 @@ const fallbackQuestionBank = {
     'Permutation': [
         { question: 'Ways to arrange letters of CAT?', options: ['3', '6', '9', '12'], correctOptionIndex: 1, solution: '3! = 6', difficulty: 'easy', category: 'Permutation' },
         { question: 'Rank of WORD in dictionary?', options: ['20', '22', '24', '23'], correctOptionIndex: 3, solution: 'Common permutation problem type', difficulty: 'hard', category: 'Permutation' }
+    ],
+    'Combination': [
+        { question: 'Choose 2 from 5 players.', options: ['5', '10', '15', '20'], correctOptionIndex: 1, solution: '5C2 = 10', difficulty: 'easy', category: 'Combination' },
+        { question: 'Handshakes in room of 10 people?', options: ['45', '50', '90', '100'], correctOptionIndex: 0, solution: '10C2 = 45', difficulty: 'medium', category: 'Combination' }
     ]
 };
 
