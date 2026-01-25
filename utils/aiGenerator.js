@@ -151,6 +151,13 @@ const fallbackQuestionBank = {
         { question: 'A can do in 10 days, B in 15, C in 20. All together?', options: ['4.6', '5', '5.5', '6'], correctOptionIndex: 0, solution: '1/10+1/15+1/20 = 13/60. Days = 60/13 ≈ 4.6', difficulty: 'medium', category: 'Time & Work' },
         { question: 'If 8 men finish in 12 days working 6 hrs/day, 6 men working 8 hrs/day finish in?', options: ['10', '12', '14', '16'], correctOptionIndex: 1, solution: '8×12×6 = 6×x×8. x = 12 days', difficulty: 'medium', category: 'Time & Work' },
         { question: 'A takes 20% less time than B for same work. If B takes 25 days, A takes?', options: ['18', '20', '22', '24'], correctOptionIndex: 1, solution: 'A = 25 × 0.8 = 20 days', difficulty: 'easy', category: 'Time & Work' }
+    ],
+    'Directions': [
+        { question: 'A person walks 4 km North, then turns right and walks 3 km. How far is he from the starting point?', options: ['5 km', '7 km', '1 km', '12 km'], correctOptionIndex: 0, solution: 'Hypotenuse = √(4^2 + 3^2) = 5 km', difficulty: 'easy', category: 'Directions' },
+        { question: 'A man facing North turns 90 degrees clockwise. Which direction is he facing now?', options: ['North', 'East', 'South', 'West'], correctOptionIndex: 1, solution: 'North + 90° clockwise = East', difficulty: 'easy', category: 'Directions' },
+        { question: 'Ram walks 10 km South, then turns left and walks 5 km. Which direction is he from the start?', options: ['South-East', 'South-West', 'North-East', 'North-West'], correctOptionIndex: 0, solution: 'South then Left (East) -> South-East', difficulty: 'medium', category: 'Directions' },
+        { question: 'Sun rises in the East. If you face North, which direction is on your right?', options: ['West', 'South', 'East', 'North'], correctOptionIndex: 2, solution: 'Right of North is East', difficulty: 'easy', category: 'Directions' },
+        { question: 'A starts from a point, walks 2 km North, turns right walks 2 km, turns right again, walks 2 km. Direction from start?', options: ['East', 'West', 'North', 'South'], correctOptionIndex: 0, solution: 'Final position is 2km East', difficulty: 'medium', category: 'Directions' }
     ]
 };
 
