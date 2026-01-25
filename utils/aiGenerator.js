@@ -217,6 +217,9 @@ const fallbackQuestionBank = {
         { question: 'Prob of getting Head in coin toss?', options: ['1/2', '1/3', '1/4', '1'], correctOptionIndex: 0, solution: '1/2', difficulty: 'easy', category: 'Probability' },
         { question: 'Prob of 6 in die roll?', options: ['1/5', '1/6', '1/3', '1/2'], correctOptionIndex: 1, solution: '1/6', difficulty: 'easy', category: 'Probability' },
         { question: 'Prob of Ace from deck?', options: ['1/13', '1/52', '1/4', '1/12'], correctOptionIndex: 0, solution: '4/52 = 1/13', difficulty: 'medium', category: 'Probability' }
+    ],
+    'Syllogism': [
+        { question: 'All cats are dogs. All dogs are birds. Are all cats birds?', options: ['Yes', 'No', 'Maybe', 'Cannot say'], correctOptionIndex: 0, solution: 'Transitive property', difficulty: 'easy', category: 'Syllogism' }
     ]
 };
 
