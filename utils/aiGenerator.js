@@ -201,6 +201,9 @@ const fallbackQuestionBank = {
     ],
     'Seating Arrangement 2': [
         { question: '6 people in circle facing center. A opposite B. C between A and D. Who is opposite C?', options: ['D', 'E', 'F', 'B'], correctOptionIndex: 1, solution: 'Requires diagram. Usually implies symmetric placement', difficulty: 'hard', category: 'Seating Arrangement 2' }
+    ],
+    'Data Interpretation': [
+        { question: 'Pie chart 360 deg = 100%. Angle for 25%?', options: ['60', '90', '120', '45'], correctOptionIndex: 1, solution: '25/100 * 360 = 90 degrees', difficulty: 'easy', category: 'Data Interpretation' }
     ]
 };
 
