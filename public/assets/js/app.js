@@ -5,7 +5,11 @@
  * and persistent profile updates in the browser.
  * 
  * @author Aptitude AI Team
- * @version 1.0.0
+ * @version 1.1.0
+ * 
+ * New in 1.1.0:
+ * - Integrated milestone filtering based on user preferences.
+ * - Added global level sync logic for persistent session tracking.
  */
 
 /**
