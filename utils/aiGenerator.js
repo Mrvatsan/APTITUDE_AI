@@ -183,6 +183,10 @@ const fallbackQuestionBank = {
     'Mixture & Alligation': [
         { question: 'In what ratio must rice at $10/kg be mixed with rice at $15/kg to get $12/kg?', options: ['3:2', '2:3', '1:1', '4:1'], correctOptionIndex: 0, solution: 'Alligation: (15-12):(12-10) = 3:2', difficulty: 'medium', category: 'Mixture & Alligation' },
         { question: 'Milk and water in ratio 3:1. How much water to add to make it 1:1 if total is 40L?', options: ['10L', '20L', '30L', '5L'], correctOptionIndex: 1, solution: 'Milk=30, Water=10. New Water=30. Add 20L', difficulty: 'hard', category: 'Mixture & Alligation' }
+    ],
+    'Alphanumeric Series': [
+        { question: 'Find next: A1, C3, E5, ?', options: ['G7', 'F6', 'H8', 'G8'], correctOptionIndex: 0, solution: 'Letters +2, Numbers +2. G7', difficulty: 'easy', category: 'Alphanumeric Series' },
+        { question: 'Find next: 2B, 4C, 8E, 14H, ?', options: ['22L', '20K', '22K', '18J'], correctOptionIndex: 0, solution: 'Num: +2,+4,+6,+8 -> 22. Lett: +1,+2,+3,+4 -> L', difficulty: 'medium', category: 'Alphanumeric Series' }
     ]
 };
 
