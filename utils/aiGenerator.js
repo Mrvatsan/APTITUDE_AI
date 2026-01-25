@@ -233,6 +233,9 @@ const fallbackQuestionBank = {
     ],
     'Ranking & Ordering': [
         { question: 'A is 5th from left, 6th from right. Total?', options: ['10', '11', '9', '12'], correctOptionIndex: 0, solution: '5+6-1 = 10', difficulty: 'easy', category: 'Ranking & Ordering' }
+    ],
+    'Statement & Argument': [
+        { question: 'Should plastic be banned? Arg: Yes, protects environment.', options: ['Strong', 'Weak', 'Irrelevant', 'False'], correctOptionIndex: 0, solution: 'Valid environmental concern', difficulty: 'easy', category: 'Statement & Argument' }
     ]
 };
 
