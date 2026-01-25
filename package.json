@@ -1,6 +1,6 @@
 {
   "name": "aptitude-practice-app",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A web app for AI‑generated aptitude practice with gamified progress",
   "main": "server.js",
   "scripts": {
