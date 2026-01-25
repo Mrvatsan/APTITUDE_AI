@@ -43,7 +43,7 @@ app.use('/api/session', sessionRoutes);
  * @route GET /api/health
  */
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Aptitude Master API is running' });
+  res.json({ status: 'ok', version: '0.2.0', message: 'Aptitude Master API is running' });
 });
 
 /**
