@@ -223,6 +223,9 @@ const fallbackQuestionBank = {
     ],
     'Inequalities': [
         { question: 'If A > B and B > C, then?', options: ['A > C', 'A < C', 'A = C', 'None'], correctOptionIndex: 0, solution: 'Transitive', difficulty: 'easy', category: 'Inequalities' }
+    ],
+    'Analogy & Non-Verbal Reasoning': [
+        { question: 'Doctor : Hospital :: Teacher : ?', options: ['School', 'Class', 'Student', 'Home'], correctOptionIndex: 0, solution: 'Place of work', difficulty: 'easy', category: 'Analogy & Non-Verbal Reasoning' }
     ]
 };
 
