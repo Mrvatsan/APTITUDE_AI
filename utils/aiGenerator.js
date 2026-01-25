@@ -235,7 +235,8 @@ const fallbackQuestionBank = {
         { question: 'Train crosses platform equal to its length in 20s. Speed 72kmph. Length?', options: ['100', '200', '300', '400'], correctOptionIndex: 1, solution: 'Speed 20m/s. Dist 400m. 2L=400. L=200', difficulty: 'hard', category: 'Problems on Trains' }
     ],
     'Ranking & Ordering': [
-        { question: 'A is 5th from left, 6th from right. Total?', options: ['10', '11', '9', '12'], correctOptionIndex: 0, solution: '5+6-1 = 10', difficulty: 'easy', category: 'Ranking & Ordering' }
+        { question: 'A is 5th from left, 6th from right. Total?', options: ['10', '11', '9', '12'], correctOptionIndex: 0, solution: '5+6-1 = 10', difficulty: 'easy', category: 'Ranking & Ordering' },
+        { question: 'In a class of 40, Rahul is 15th from the top. Position from bottom?', options: ['25th', '26th', '24th', '27th'], correctOptionIndex: 1, solution: '40 - 15 + 1 = 26', difficulty: 'medium', category: 'Ranking & Ordering' }
     ],
     'Statement & Argument': [
         { question: 'Should plastic be banned? Arg: Yes, protects environment.', options: ['Strong', 'Weak', 'Irrelevant', 'False'], correctOptionIndex: 0, solution: 'Valid environmental concern', difficulty: 'easy', category: 'Statement & Argument' }
