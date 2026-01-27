@@ -283,7 +283,8 @@
 
             if (!isOpen) {
                 // Hide all milestone cards for focused view
-                document.querySelectorAll('.milestone-card').forEach(card => {
+                const allMilestoneCards = document.querySelectorAll('.milestone-card');
+                allMilestoneCards.forEach(card => {
                     card.style.display = 'none';
                 });
 
