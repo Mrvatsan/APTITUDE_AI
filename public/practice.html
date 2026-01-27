@@ -305,6 +305,7 @@
                 }
 
                 // Close all topics first to ensure only one is open at a time
+                // Select all topic containers to close them
                 document.querySelectorAll('.milestone-topics').forEach(t => t.classList.remove('open'));
                 document.querySelectorAll('.milestone-header').forEach(h => h.classList.remove('active'));
 
