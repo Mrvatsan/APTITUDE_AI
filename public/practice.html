@@ -301,7 +301,7 @@
                     selectedCard.style.display = 'block';
                 }
 
-                // Close all topics
+                // Close all topics first to ensure only one is open at a time
                 document.querySelectorAll('.milestone-topics').forEach(t => t.classList.remove('open'));
                 document.querySelectorAll('.milestone-header').forEach(h => h.classList.remove('active'));
 
