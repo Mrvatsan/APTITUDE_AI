@@ -278,6 +278,7 @@
         function toggleMilestone(id) {
             const topics = document.getElementById('topics-' + id);
             const header = topics.previousElementSibling;
+            // Check if this milestone is currently expanded
             const isOpen = topics.classList.contains('open');
 
             if (!isOpen) {
