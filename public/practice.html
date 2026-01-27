@@ -318,6 +318,7 @@
             } else {
                 // If clicking the same milestone again, restore all milestone cards to view
                 console.log('Showing all milestone cards');
+                // Remove 'open' and 'active' classes to collapse the milestone
                 topics.classList.remove('open');
                 header.classList.remove('active');
                 document.querySelectorAll('.milestone-card').forEach(card => {
