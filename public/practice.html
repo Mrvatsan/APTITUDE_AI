@@ -285,6 +285,7 @@
 
             if (!isOpen) {
                 // Hide all milestone cards for focused view
+                console.log('Hiding other milestone cards');
                 const allMilestoneCards = document.querySelectorAll('.milestone-card');
                 allMilestoneCards.forEach(card => {
                     card.style.display = 'none';
