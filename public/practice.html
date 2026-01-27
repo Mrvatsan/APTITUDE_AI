@@ -321,6 +321,7 @@
                 // Remove 'open' and 'active' classes to collapse the milestone
                 topics.classList.remove('open');
                 header.classList.remove('active');
+                // Restore visibility of all milestone cards
                 document.querySelectorAll('.milestone-card').forEach(card => {
                     card.style.display = 'block';
                 });
