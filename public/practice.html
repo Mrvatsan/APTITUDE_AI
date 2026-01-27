@@ -290,6 +290,7 @@
                 // Hide all milestone cards for focused view
                 console.log('Hiding other milestone cards');
                 const allMilestoneCards = document.querySelectorAll('.milestone-card');
+                // Using style.display to control card visibility for better UX
                 allMilestoneCards.forEach(card => {
                     card.style.display = 'none';
                 });
