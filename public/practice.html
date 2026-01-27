@@ -310,6 +310,8 @@
                 if (selectedCard) {
                     console.log('Displaying selected milestone card');
                     selectedCard.style.display = 'block';
+                } else {
+                    console.warn('Selected card parent element not found');
                 }
 
                 // Close all topics first to ensure only one is open at a time
