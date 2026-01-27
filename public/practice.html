@@ -286,7 +286,10 @@
                 return; // Early exit if topics element not found
             }
             const header = topics.previousElementSibling; // Get the milestone header element
-            if (!header) return; // Early exit if header element not found
+            if (!header) {
+                console.error('Header element not found for milestone ID:', id);
+                return; // Early exit if header element not found
+            }
             // Check if this milestone is currently expanded
             const isOpen = topics.classList.contains('open');
 
