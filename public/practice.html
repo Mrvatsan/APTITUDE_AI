@@ -280,6 +280,7 @@
             console.log('toggleMilestone called');
             console.log('Milestone ID:', id);
             const topics = document.getElementById('topics-' + id); // Get the topics container for this milestone
+            if (!topics) return; // Early exit if topics element not found
             const header = topics.previousElementSibling; // Get the milestone header element
             // Check if this milestone is currently expanded
             const isOpen = topics.classList.contains('open');
