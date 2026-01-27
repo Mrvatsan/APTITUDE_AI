@@ -210,6 +210,21 @@
                 }
 
                 renderMilestones(milestonesToDisplay);
+
+                // Check for milestone parameter in URL and auto-expand
+                const urlParams = new URLSearchParams(window.location.search);
+                const milestoneId = urlParams.get('milestone');
+                if (milestoneId) {
+                    // Slight delay to ensure DOM is ready and transitions look natural
+                    setTimeout(() => {
+                        toggleMilestone(milestoneId);
+                        // Scroll the selected milestone into view
+                        const element = document.getElementById(`topics-${milestoneId}`);
+                        if (element && element.previousElementSibling) {
+                            element.previousElementSibling.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
             } catch (err) {
                 console.error('Failed to load milestones', err);
             }
@@ -256,18 +271,39 @@
       `).join('');
         }
 
+        /**
+         * Toggles the visibility of milestone topics and manages card display
+         * Hides other milestones when one is expanded for focused viewing
+         */
         function toggleMilestone(id) {
             const topics = document.getElementById('topics-' + id);
             const header = topics.previousElementSibling;
             const isOpen = topics.classList.contains('open');
 
-            // Close all
-            document.querySelectorAll('.milestone-topics').forEach(t => t.classList.remove('open'));
-            document.querySelectorAll('.milestone-header').forEach(h => h.classList.remove('active'));
-
             if (!isOpen) {
+                // Hide all milestone cards
+                document.querySelectorAll('.milestone-card').forEach(card => {
+                    card.style.display = 'none';
+                });
+
+                // Show only the selected milestone card
+                const selectedCard = topics.parentElement;
+                selectedCard.style.display = 'block';
+
+                // Close all topics
+                document.querySelectorAll('.milestone-topics').forEach(t => t.classList.remove('open'));
+                document.querySelectorAll('.milestone-header').forEach(h => h.classList.remove('active'));
+
+                // Open selected milestone
                 topics.classList.add('open');
                 header.classList.add('active');
+            } else {
+                // If clicking the same milestone again, show all milestones
+                topics.classList.remove('open');
+                header.classList.remove('active');
+                document.querySelectorAll('.milestone-card').forEach(card => {
+                    card.style.display = 'block';
+                });
             }
         }
 
