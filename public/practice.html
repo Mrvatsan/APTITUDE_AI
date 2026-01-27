@@ -276,7 +276,7 @@
          * Hides other milestones when one is expanded for focused viewing
          */
         function toggleMilestone(id) {
-            const topics = document.getElementById('topics-' + id);
+            const topics = document.getElementById('topics-' + id); // Get the topics container for this milestone
             const header = topics.previousElementSibling;
             // Check if this milestone is currently expanded
             const isOpen = topics.classList.contains('open');
