@@ -299,6 +299,7 @@
                 console.log('Hiding other milestone cards');
                 // Selector targets all milestone card containers
                 const allMilestoneCards = document.querySelectorAll('.milestone-card');
+                console.log('Total milestone cards to hide:', allMilestoneCards.length);
                 // Using style.display to control card visibility for better UX
                 allMilestoneCards.forEach(card => {
                     card.style.display = 'none';
