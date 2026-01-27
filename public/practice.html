@@ -296,7 +296,9 @@
 
                 // Show only the selected milestone card while others remain hidden
                 const selectedCard = topics.parentElement; // Get the parent milestone-card div
-                selectedCard.style.display = 'block';
+                if (selectedCard) {
+                    selectedCard.style.display = 'block';
+                }
 
                 // Close all topics
                 document.querySelectorAll('.milestone-topics').forEach(t => t.classList.remove('open'));
