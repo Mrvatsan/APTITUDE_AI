@@ -83,26 +83,22 @@ router.post('/register', async (req, res) => {
         }
 
         const passwordHash = await bcrypt.hash(password, 10);
-        const userId = userIdCounter++;
-
-        users[userId] = {
-            id: userId,
+        // Create user in SQLite database
+        const newUser = await User.create({
             username,
             email: email || null,
             passwordHash,
             totalXP: 0,
-            currentBadge: 'Iron',
             streakCount: 0,
             lastActiveDate: null,
             preferences: {
                 goal: goal || 'placements',
                 selectedMilestones: selectedMilestones || [1, 2, 3]
-            },
-            createdAt: new Date().toISOString()
-        };
+            }
+        });
 
         const token = jwt.sign(
-            { id: userId, username },
+            { id: newUser.id, username: newUser.username },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
@@ -111,15 +107,20 @@ router.post('/register', async (req, res) => {
             message: 'Registration successful',
             token,
             user: {
-                id: userId,
-                username,
-                totalXP: 0,
-                currentBadge: 'Iron',
-                streakCount: 0
+                id: newUser.id,
+                username: newUser.username,
+                totalXP: newUser.totalXP,
+                currentBadge: getBadge(newUser.totalXP),
+                streakCount: newUser.streakCount,
+                preferences: newUser.preferences
             }
         });
         console.log(`[Auth] New user registered: ${username}`);
-    });
+    } catch (err) {
+        console.error('[Auth] Registration error:', err);
+        res.status(500).json({ error: 'Registration failed. Please try again.' });
+    }
+});
 
 /**
  * User login endpoint.
