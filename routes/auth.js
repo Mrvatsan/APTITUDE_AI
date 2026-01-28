@@ -133,7 +133,8 @@ router.post('/login', async (req, res) => {
         return res.status(400).json({ error: 'Username and password required' });
     }
 
-    const user = Object.values(users).find(u => u.username === username);
+    // Find user in database
+    const user = await User.findOne({ where: { username } });
     if (!user) {
         console.warn(`[Auth] Failed login attempt: User "${username}" not found`);
         return res.status(401).json({ error: 'Account not found. Please check your username or register.' });
