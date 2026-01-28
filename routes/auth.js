@@ -158,6 +158,7 @@ router.post('/login', async (req, res) => {
             user.streakCount = 1; // Reset streak
         }
         user.lastActiveDate = new Date().toISOString();
+        await user.save(); // Persist streak update to database
     }
 
     const token = jwt.sign(
