@@ -25,7 +25,7 @@ let userIdCounter = 1;
 // Iron: 500 XP target, Silver: 2000 XP, Gold: 4500 XP, Elite: 7000 XP, Expert: 9500 XP, Master: 12000 XP
 const BADGE_TIERS = [
     { name: 'Iron', minXP: 0, maxXP: 499 },
-    { name: 'Bronze', minXP: 500, maxXP: 1499 },
+    { name: 'Silver', minXP: 500, maxXP: 1999 },
     { name: 'Silver', minXP: 1500, maxXP: 3499 },
     { name: 'Gold', minXP: 3500, maxXP: 6999 },
     { name: 'Elite', minXP: 7000, maxXP: 11999 },
