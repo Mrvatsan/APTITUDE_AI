@@ -5,7 +5,7 @@
  * and profile retrieval.
  * 
  * @author Aptitude AI Team
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 const express = require('express');
