@@ -27,7 +27,7 @@ const BADGE_TIERS = [
     { name: 'Iron', minXP: 0, maxXP: 499 },
     { name: 'Silver', minXP: 500, maxXP: 1999 },
     { name: 'Gold', minXP: 2000, maxXP: 4499 },
-    { name: 'Gold', minXP: 3500, maxXP: 6999 },
+    { name: 'Elite', minXP: 4500, maxXP: 6999 },
     { name: 'Elite', minXP: 7000, maxXP: 11999 },
     { name: 'Expert', minXP: 12000, maxXP: 19999 },
     { name: 'Master', minXP: 20000, maxXP: Infinity }
