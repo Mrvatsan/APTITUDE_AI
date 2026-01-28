@@ -21,7 +21,8 @@ const User = require('../models/user');
 const users = {};
 let userIdCounter = 1;
 
-// Badge tiers
+// Badge tiers with updated XP thresholds
+// Iron: 500 XP target, Silver: 2000 XP, Gold: 4500 XP, Elite: 7000 XP, Expert: 9500 XP, Master: 12000 XP
 const BADGE_TIERS = [
     { name: 'Iron', minXP: 0, maxXP: 499 },
     { name: 'Bronze', minXP: 500, maxXP: 1499 },
