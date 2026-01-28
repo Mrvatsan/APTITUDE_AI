@@ -133,51 +133,56 @@ router.post('/login', async (req, res) => {
         return res.status(400).json({ error: 'Username and password required' });
     }
 
-    // Find user in database
-    const user = await User.findOne({ where: { username } });
-    if (!user) {
-        console.warn(`[Auth] Failed login attempt: User "${username}" not found`);
-        return res.status(401).json({ error: 'Account not found. Please check your username or register.' });
-    }
-
-    const validPassword = await bcrypt.compare(password, user.passwordHash);
-    if (!validPassword) {
-        console.warn(`[Auth] Failed login attempt: Incorrect password for user "${username}"`);
-        return res.status(401).json({ error: 'Incorrect password. Please try again.' });
-    }
-
-    // Update streak logic
-    const today = new Date().toDateString();
-    const lastActive = user.lastActiveDate ? new Date(user.lastActiveDate).toDateString() : null;
-
-    if (lastActive !== today) {
-        const yesterday = new Date(Date.now() - 86400000).toDateString();
-        if (lastActive === yesterday) {
-            user.streakCount++;
-        } else if (lastActive !== today) {
-            user.streakCount = 1; // Reset streak
+    try {
+        // Find user in database
+        const user = await User.findOne({ where: { username } });
+        if (!user) {
+            console.warn(`[Auth] Failed login attempt: User "${username}" not found`);
+            return res.status(401).json({ error: 'Account not found. Please check your username or register.' });
         }
-        user.lastActiveDate = new Date().toISOString();
-        await user.save(); // Persist streak update to database
-    }
 
-    const token = jwt.sign(
-        { id: user.id, username: user.username },
-        process.env.JWT_SECRET,
-        { expiresIn: '7d' }
-    );
-
-    res.json({
-        token,
-        user: {
-            id: user.id,
-            username: user.username,
-            totalXP: user.totalXP,
-            currentBadge: user.currentBadge,
-            streakCount: user.streakCount,
-            preferences: user.preferences
+        const validPassword = await bcrypt.compare(password, user.passwordHash);
+        if (!validPassword) {
+            console.warn(`[Auth] Failed login attempt: Incorrect password for user "${username}"`);
+            return res.status(401).json({ error: 'Incorrect password. Please try again.' });
         }
-    });
+
+        // Update streak logic
+        const today = new Date().toDateString();
+        const lastActive = user.lastActiveDate ? new Date(user.lastActiveDate).toDateString() : null;
+
+        if (lastActive !== today) {
+            const yesterday = new Date(Date.now() - 86400000).toDateString();
+            if (lastActive === yesterday) {
+                user.streakCount++;
+            } else if (lastActive !== today) {
+                user.streakCount = 1; // Reset streak
+            }
+            user.lastActiveDate = new Date().toISOString();
+            await user.save(); // Persist streak update to database
+        }
+
+        const token = jwt.sign(
+            { id: user.id, username: user.username },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        res.json({
+            token,
+            user: {
+                id: user.id,
+                username: user.username,
+                totalXP: user.totalXP,
+                currentBadge: getBadge(user.totalXP),
+                streakCount: user.streakCount,
+                preferences: user.preferences
+            }
+        });
+    } catch (err) {
+        console.error('[Auth] Login error:', err);
+        res.status(500).json({ error: 'Login failed. Please try again.' });
+    }
 });
 
 /**
