@@ -2,7 +2,7 @@
  * Authentication Routes
  * 
  * Provides API endpoints for user registration, login, 
- * and profile retrieval.
+ * and profile retrieval with SQLite database persistence.
  * 
  * @author Aptitude AI Team
  * @version 1.1.0
