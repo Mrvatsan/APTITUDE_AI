@@ -75,50 +75,51 @@ router.post('/register', async (req, res) => {
         return res.status(400).json({ error: 'Username and password required' });
     }
 
-    // Check if username exists
-    const existingUser = Object.values(users).find(u => u.username === username);
-    if (existingUser) {
-        return res.status(400).json({ error: 'Username already taken' });
-    }
+    try {
+        // Check if username exists in database
+        const existingUser = await User.findOne({ where: { username } });
+        if (existingUser) {
+            return res.status(400).json({ error: 'Username already taken' });
+        }
 
-    const passwordHash = await bcrypt.hash(password, 10);
-    const userId = userIdCounter++;
+        const passwordHash = await bcrypt.hash(password, 10);
+        const userId = userIdCounter++;
 
-    users[userId] = {
-        id: userId,
-        username,
-        email: email || null,
-        passwordHash,
-        totalXP: 0,
-        currentBadge: 'Iron',
-        streakCount: 0,
-        lastActiveDate: null,
-        preferences: {
-            goal: goal || 'placements',
-            selectedMilestones: selectedMilestones || [1, 2, 3]
-        },
-        createdAt: new Date().toISOString()
-    };
-
-    const token = jwt.sign(
-        { id: userId, username },
-        process.env.JWT_SECRET,
-        { expiresIn: '7d' }
-    );
-
-    res.json({
-        message: 'Registration successful',
-        token,
-        user: {
+        users[userId] = {
             id: userId,
             username,
+            email: email || null,
+            passwordHash,
             totalXP: 0,
             currentBadge: 'Iron',
-            streakCount: 0
-        }
+            streakCount: 0,
+            lastActiveDate: null,
+            preferences: {
+                goal: goal || 'placements',
+                selectedMilestones: selectedMilestones || [1, 2, 3]
+            },
+            createdAt: new Date().toISOString()
+        };
+
+        const token = jwt.sign(
+            { id: userId, username },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        res.json({
+            message: 'Registration successful',
+            token,
+            user: {
+                id: userId,
+                username,
+                totalXP: 0,
+                currentBadge: 'Iron',
+                streakCount: 0
+            }
+        });
+        console.log(`[Auth] New user registered: ${username}`);
     });
-    console.log(`[Auth] New user registered: ${username}`);
-});
 
 /**
  * User login endpoint.
