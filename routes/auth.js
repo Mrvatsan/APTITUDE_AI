@@ -16,10 +16,7 @@ require('dotenv').config();
 const authMiddleware = require('../middleware/auth');
 const User = require('../models/user');
 
-// In-memory user store
-// FIXME: Replace with persistent storage (SQLite/Sequelize) for production use
-const users = {};
-let userIdCounter = 1;
+
 
 // Badge tiers with updated XP thresholds
 // Iron: 500 XP target, Silver: 2000 XP, Gold: 4500 XP, Elite: 7000 XP, Expert: 9500 XP, Master: 12000 XP
