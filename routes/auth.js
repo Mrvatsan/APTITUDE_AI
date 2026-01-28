@@ -189,28 +189,29 @@ router.post('/login', async (req, res) => {
  * Retrieves the current authenticated user's profile.
  * @route GET /api/auth/profile
  */
-router.get('/profile', authMiddleware, (req, res) => {
-    const user = users[req.user.id];
-    if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-    }
-
-    res.json({
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        totalXP: user.totalXP,
-        currentBadge: user.currentBadge,
-        streakCount: user.streakCount,
-        preferences: user.preferences,
-        badgeProgress: {
-            current: user.currentBadge,
-            currentXP: user.totalXP,
-            nextBadge: BADGE_TIERS.find(t => t.minXP > user.totalXP)?.name || 'Master',
-            xpToNext: BADGE_TIERS.find(t => t.minXP > user.totalXP)?.minXP - user.totalXP || 0
+router.get('/profile', authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findByPk(req.user.id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
         }
+
+        res.json({
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            totalXP: user.totalXP,
+            currentBadge: user.currentBadge,
+            streakCount: user.streakCount,
+            preferences: user.preferences,
+            badgeProgress: {
+                current: user.currentBadge,
+                currentXP: user.totalXP,
+                nextBadge: BADGE_TIERS.find(t => t.minXP > user.totalXP)?.name || 'Master',
+                xpToNext: BADGE_TIERS.find(t => t.minXP > user.totalXP)?.minXP - user.totalXP || 0
+            }
+        });
     });
-});
 
 /**
  * Updates the user's total XP and checks for badge upgrades.
