@@ -44,6 +44,22 @@ function getBadge(xp) {
     return 'Iron';
 }
 
+/**
+ * Gets the next badge info for progress display.
+ * @param {number} xp - Current XP
+ * @returns {object} Next badge name and XP required
+ */
+function getNextBadgeInfo(xp) {
+    const nextTier = BADGE_TIERS.find(t => t.minXP > xp);
+    if (nextTier) {
+        return {
+            nextBadge: nextTier.name,
+            xpToNext: nextTier.minXP - xp
+        };
+    }
+    return { nextBadge: 'Master', xpToNext: 0 };
+}
+
 // ==========================================
 // Authentication Endpoints
 // ==========================================
