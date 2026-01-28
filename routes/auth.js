@@ -196,22 +196,29 @@ router.get('/profile', authMiddleware, async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
+        const currentBadge = getBadge(user.totalXP);
+        const nextBadgeInfo = getNextBadgeInfo(user.totalXP);
+
         res.json({
             id: user.id,
             username: user.username,
             email: user.email,
             totalXP: user.totalXP,
-            currentBadge: user.currentBadge,
+            currentBadge: currentBadge,
             streakCount: user.streakCount,
             preferences: user.preferences,
             badgeProgress: {
-                current: user.currentBadge,
+                current: currentBadge,
                 currentXP: user.totalXP,
-                nextBadge: BADGE_TIERS.find(t => t.minXP > user.totalXP)?.name || 'Master',
-                xpToNext: BADGE_TIERS.find(t => t.minXP > user.totalXP)?.minXP - user.totalXP || 0
+                nextBadge: nextBadgeInfo.nextBadge,
+                xpToNext: nextBadgeInfo.xpToNext
             }
         });
-    });
+    } catch (err) {
+        console.error('[Auth] Profile fetch error:', err);
+        res.status(500).json({ error: 'Failed to fetch profile' });
+    }
+});
 
 /**
  * Updates the user's total XP and checks for badge upgrades.
