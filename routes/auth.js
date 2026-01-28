@@ -224,26 +224,40 @@ router.get('/profile', authMiddleware, async (req, res) => {
  * Updates the user's total XP and checks for badge upgrades.
  * @route POST /api/auth/update-xp
  */
-router.post('/update-xp', authMiddleware, (req, res) => {
+router.post('/update-xp', authMiddleware, async (req, res) => {
     const { xpGained } = req.body;
-    const user = users[req.user.id];
 
-    if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+    try {
+        const user = await User.findByPk(req.user.id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const oldBadge = getBadge(user.totalXP);
+        user.totalXP += xpGained;
+
+        // Save updated XP to database
+        await user.save();
+
+        const newBadge = getBadge(user.totalXP);
+
+        const badgeUpgrade = oldBadge !== newBadge;
+
+        console.log(`[Auth] XP updated for user ${user.username}: +${xpGained} XP (Total: ${user.totalXP})`);
+        if (badgeUpgrade) {
+            console.log(`[Auth] Badge upgrade for ${user.username}: ${oldBadge} -> ${newBadge}`);
+        }
+
+        res.json({
+            totalXP: user.totalXP,
+            currentBadge: newBadge,
+            badgeUpgrade,
+            previousBadge: badgeUpgrade ? oldBadge : null
+        });
+    } catch (err) {
+        console.error('[Auth] XP update error:', err);
+        res.status(500).json({ error: 'Failed to update XP' });
     }
-
-    const oldBadge = user.currentBadge;
-    user.totalXP += xpGained;
-    user.currentBadge = getBadge(user.totalXP);
-
-    const badgeUpgrade = oldBadge !== user.currentBadge;
-
-    res.json({
-        totalXP: user.totalXP,
-        currentBadge: user.currentBadge,
-        badgeUpgrade,
-        previousBadge: badgeUpgrade ? oldBadge : null
-    });
 });
 
 module.exports = router;
