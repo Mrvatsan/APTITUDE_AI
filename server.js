@@ -54,13 +54,20 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Start server
-app.listen(port, () => {
-  console.log('--------------------------------------------');
-  console.log('🚀 Starting Aptitude Master Server...');
-  console.log('--------------------------------------------');
-  console.log(`\n🧠 Aptitude Master is running!`);
-  console.log(`   Local:   http://localhost:${port}`);
-  console.log(`   API:     http://localhost:${port}/api`);
-  console.log(`\n📚 Happy learning!\n`);
+// Database synchronization
+const sequelize = require('./models/index');
+
+// Sync database and start server
+sequelize.sync({ alter: true }).then(() => {
+  app.listen(port, () => {
+    console.log('--------------------------------------------');
+    console.log('🚀 Starting Aptitude Master Server...');
+    console.log('--------------------------------------------');
+    console.log(`\n🧠 Aptitude Master is running!`);
+    console.log(`   Local:   http://localhost:${port}`);
+    console.log(`   API:     http://localhost:${port}/api`);
+    console.log(`\n📚 Happy learning!\n`);
+  });
+}).catch(err => {
+  console.error('Unable to connect to the database:', err);
 });
