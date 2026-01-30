@@ -9,56 +9,179 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .question-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 1.5rem;
+            flex: 1;
+            height: calc(100vh - 64px - 80px);
+            /* Minus navbar and footer */
+            overflow: hidden;
+        }
+
+        .scrollable-panel {
+            overflow-y: auto;
+            padding: 1.5rem;
+            height: 100%;
+        }
+
+        .question-panel {
+            border-right: 1px solid var(--border-color);
+        }
+
+        .option-card {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-card:hover {
+            background: rgba(99, 102, 241, 0.05);
+            border-color: var(--color-primary);
+        }
+
+        .option-card.selected {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 1px var(--color-primary);
+        }
+
+        .option-card.correct {
+            background: rgba(0, 184, 148, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .option-card.incorrect {
+            background: rgba(214, 48, 49, 0.1);
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .sticky-footer {
+            height: 80px;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 100;
+        }
+
+        @media (max-width: 900px) {
+            .question-layout {
+                grid-template-columns: 1fr;
+                height: auto;
+                overflow: visible;
+            }
+
+            .question-panel {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .scrollable-panel {
+                height: auto;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <nav class="navbar">
-        <a href="index.html" class="logo">🧠 Aptitude Master</a>
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <span id="timer" class="text-muted">⏱️ 0:00</span>
-            <span id="progress-text" class="text-muted">1/10</span>
+    <!-- Navbar -->
+    <nav class="navbar" style="height: 64px; border-bottom: 1px solid var(--border-color);">
+        <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <a href="index.html" class="logo" style="margin-right: 1rem;">
+                    <span style="font-size: 1.5rem;">🧠</span>
+                </a>
+                <div>
+                    <h4 id="topic-label" style="margin: 0; font-size: 1rem;">Loading...</h4>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Question <span
+                            id="progress-text">1/10</span></div>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <div
+                    style="background: rgba(99, 102, 241, 0.1); padding: 0.25rem 0.75rem; border-radius: var(--radius-md); color: var(--color-primary); font-weight: 600; font-family: monospace; font-size: 1.1rem;">
+                    <span id="timer">0:00</span>
+                </div>
+                <button id="theme-toggle" class="btn btn-icon">🌙</button>
+            </div>
         </div>
     </nav>
 
-    <main class="container" style="max-width: 800px;">
-        <!-- Progress Bar -->
-        <div class="progress-bar mb-3">
-            <div class="fill" id="question-progress" style="width: 10%;"></div>
+    <!-- Main Split View -->
+    <div class="question-layout container-fluid" style="padding: 0; max-width: 100%;">
+        <!-- Left Panel: Question -->
+        <div class="scrollable-panel question-panel">
+            <div class="mb-3" style="max-width: 800px; margin: 0 auto;">
+                <span class="badge badge-silver mb-2 hidden" id="difficulty-badge">Medium</span>
+                <h2 id="question-text"
+                    style="font-size: 1.5rem; line-height: 1.6; margin-bottom: 2rem; font-weight: 500;">
+                    Loading question...
+                </h2>
+
+                <!-- Solution (Initially Hidden) -->
+                <div id="solution-card" class="card hidden"
+                    style="background: rgba(0, 184, 148, 0.05); border: 1px solid var(--success);">
+                    <div
+                        style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--success);">
+                        <span style="font-size: 1.2rem;">💡</span>
+                        <h4 style="margin: 0; color: var(--success);">Solution Explanation</h4>
+                    </div>
+                    <p id="solution-text" style="color: var(--text-primary); line-height: 1.6;"></p>
+                </div>
+            </div>
         </div>
 
-        <!-- Question Card -->
-        <div class="card mb-3" id="question-card">
-            <div class="text-muted mb-1" id="topic-label">Loading...</div>
-            <h2 id="question-text" style="font-size: 1.25rem; line-height: 1.6;">
-                Loading question...
-            </h2>
+        <!-- Right Panel: Options -->
+        <div class="scrollable-panel" style="background: var(--bg-secondary);">
+            <div style="max-width: 400px; margin: 0 auto;">
+                <h4
+                    style="margin-bottom: 1rem; color: var(--text-secondary); text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">
+                    Select Answer</h4>
+                <div id="options-container">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
         </div>
+    </div>
 
-        <!-- Options -->
-        <div id="options-container" class="mb-3">
-            <!-- Options populated by JS -->
-        </div>
-
-        <!-- Solution (hidden until answered) -->
-        <div id="solution-card" class="card hidden mb-3" style="border-left: 4px solid var(--success);">
-            <h4 class="text-success mb-1">💡 Solution</h4>
-            <p id="solution-text"></p>
-        </div>
-
-        <!-- Navigation -->
-        <div style="display: flex; gap: 1rem; justify-content: space-between;">
-            <button class="btn btn-secondary" id="skip-btn">Skip →</button>
+    <!-- Sticky Footer -->
+    <div class="sticky-footer">
+        <button class="btn btn-outline" onclick="if(confirm('Quit session?')) window.location.href='index.html'">Exit
+            Session</button>
+        <div style="display: flex; gap: 1rem;">
+            <button class="btn btn-secondary" id="skip-btn">Skip Question</button>
             <button class="btn btn-primary hidden" id="next-btn">Next Question →</button>
             <button class="btn btn-success hidden" id="finish-btn">See Results 🎉</button>
         </div>
-    </main>
+    </div>
 
+    <script src="assets/js/theme.js"></script>
     <script>
         let session = null;
         let currentQuestion = null;
         let selectedOption = null;
         let answered = false;
         let startTime = Date.now();
+        let timerInterval = null;
 
         document.addEventListener('DOMContentLoaded', () => {
             session = JSON.parse(localStorage.getItem('currentSession'));
@@ -72,12 +195,36 @@
         });
 
         function startTimer() {
-            setInterval(() => {
-                const elapsed = Math.floor((Date.now() - startTime) / 1000);
-                const mins = Math.floor(elapsed / 60);
-                const secs = elapsed % 60;
-                document.getElementById('timer').textContent = `⏱️ ${mins}:${secs.toString().padStart(2, '0')}`;
-            }, 1000);
+            const duration = session.durationSeconds || 600; // Default 10 mins if missing
+            const endTime = startTime + (duration * 1000);
+
+            if (timerInterval) clearInterval(timerInterval);
+
+            function update() {
+                const now = Date.now();
+                const remaining = Math.max(0, Math.ceil((endTime - now) / 1000));
+
+                const mins = Math.floor(remaining / 60);
+                const secs = remaining % 60;
+
+                const timerEl = document.getElementById('timer');
+                timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+
+                // Color warning
+                if (remaining < 60) {
+                    timerEl.parentElement.style.background = 'rgba(231, 76, 60, 0.1)';
+                    timerEl.parentElement.style.color = '#e74c3c';
+                }
+
+                if (remaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Time is up! Submitting your session.');
+                    window.location.href = `result.html?session=${session.sessionId}`; // Or auto-submit current q first
+                }
+            }
+
+            update(); // Initial call
+            timerInterval = setInterval(update, 1000);
         }
 
         async function loadQuestion(index) {
@@ -99,20 +246,25 @@
 
                 // Update UI
                 document.getElementById('topic-label').textContent = session.topic;
+                document.getElementById('difficulty-badge').textContent = data.difficulty || 'Medium';
+                document.getElementById('difficulty-badge').className = `badge badge-${(data.difficulty || 'medium').toLowerCase()} mb-2`; /* Assuming badge classes exist */
+                document.getElementById('difficulty-badge').classList.remove('hidden');
+
                 document.getElementById('question-text').textContent = data.question;
                 document.getElementById('progress-text').textContent = `${index + 1}/${session.totalQuestions}`;
-                document.getElementById('question-progress').style.width = `${((index + 1) / session.totalQuestions) * 100}%`;
 
                 // Render options
                 const optionsContainer = document.getElementById('options-container');
                 optionsContainer.innerHTML = data.options.map((opt, i) => `
-          <button class="option-btn" data-index="${i}" onclick="selectOption(${i})">
-            <span style="font-weight: 600; margin-right: 0.5rem;">${String.fromCharCode(65 + i)}.</span>
-            ${opt}
-          </button>
-        `).join('');
+                    <div class="option-card" data-index="${i}" onclick="selectOption(${i})">
+                        <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--bg-secondary); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.9rem; margin-right: 1rem; color: var(--text-secondary);">
+                            ${String.fromCharCode(65 + i)}
+                        </div>
+                        <div style="flex: 1;">${opt}</div>
+                    </div>
+                `).join('');
 
-                // Reset buttons
+                // Reset buttons and visibility
                 document.getElementById('solution-card').classList.add('hidden');
                 document.getElementById('next-btn').classList.add('hidden');
                 document.getElementById('finish-btn').classList.add('hidden');
@@ -127,10 +279,16 @@
             if (answered) return;
 
             selectedOption = index;
-            document.querySelectorAll('.option-btn').forEach(btn => {
-                btn.classList.remove('selected');
-                if (parseInt(btn.dataset.index) === index) {
-                    btn.classList.add('selected');
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('selected');
+                card.querySelector('div:first-child').style.borderColor = 'var(--border-color)';
+                card.querySelector('div:first-child').style.background = 'var(--bg-secondary)';
+
+                if (parseInt(card.dataset.index) === index) {
+                    card.classList.add('selected');
+                    card.querySelector('div:first-child').style.borderColor = 'var(--color-primary)';
+                    card.querySelector('div:first-child').style.background = 'var(--color-primary)';
+                    card.querySelector('div:first-child').style.color = '#fff';
                 }
             });
 
@@ -159,19 +317,30 @@
                 answered = true;
 
                 // Show correct/incorrect
-                document.querySelectorAll('.option-btn').forEach(btn => {
-                    const idx = parseInt(btn.dataset.index);
-                    btn.disabled = true;
+                document.querySelectorAll('.option-card').forEach(card => {
+                    const idx = parseInt(card.dataset.index);
+                    card.style.pointerEvents = 'none'; // Disable click
+
                     if (idx === data.correctOptionIndex) {
-                        btn.classList.add('correct');
+                        card.classList.add('correct');
+                        card.querySelector('div:first-child').textContent = '✓';
+                        card.querySelector('div:first-child').style.background = 'var(--success)';
+                        card.querySelector('div:first-child').style.borderColor = 'var(--success)';
+                        card.querySelector('div:first-child').style.color = '#fff';
                     } else if (idx === selectedOption && !data.isCorrect) {
-                        btn.classList.add('incorrect');
+                        card.classList.add('incorrect');
+                        card.querySelector('div:first-child').textContent = '✗';
+                        card.querySelector('div:first-child').style.background = 'var(--error)';
+                        card.querySelector('div:first-child').style.borderColor = 'var(--error)';
+                        card.querySelector('div:first-child').style.color = '#fff';
                     }
                 });
 
                 // Show solution
                 document.getElementById('solution-text').textContent = data.solution;
                 document.getElementById('solution-card').classList.remove('hidden');
+
+                // Add slide-in animation class if we supported it, for now just show
 
                 // Update buttons
                 document.getElementById('skip-btn').classList.add('hidden');
