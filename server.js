@@ -87,3 +87,5 @@ sequelize.sync({ alter: true }).then(() => {
 // Static file serving configuration
 
 // CORS policy setup
+
+// Route aggregation
