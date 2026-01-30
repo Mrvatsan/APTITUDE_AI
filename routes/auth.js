@@ -330,3 +330,5 @@ module.exports = router;
 // Login security checks
 
 // Profile retrieval optimization
+
+// Badge calculation logic
