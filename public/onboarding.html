@@ -12,192 +12,231 @@
 </head>
 
 <body>
+    <!-- Navbar with Theme Toggle -->
     <nav class="navbar">
-        <div class="logo">🧠 Aptitude Master</div>
+        <div class="logo">
+            <span style="font-size: 1.5rem;">🧠</span> Aptitude Master
+        </div>
+        <button id="theme-toggle" class="btn btn-icon" title="Toggle Theme" style="background: transparent;">
+            🌙
+        </button>
     </nav>
 
     <main class="container">
-        <div class="card" style="max-width: 600px; margin: 2rem auto;">
-            <!-- Step 1: Basic Info -->
-            <div id="step-1" class="step">
-                <div class="text-center mb-3">
-                    <h1>Welcome! Let's get started 🚀</h1>
-                    <p class="text-muted">Create your account and personalize your learning journey.</p>
+        <div class="card" style="max-width: 500px; margin: 4rem auto; padding: 0;">
+            <!-- Progress Stepper -->
+            <div
+                style="background: var(--bg-primary); padding: 1.5rem; text-align: center; border-bottom: 1px solid var(--border-color); border-top-left-radius: var(--radius-md); border-top-right-radius: var(--radius-md);">
+                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <div class="step-dot active" id="dot-1"
+                        style="width: 8px; height: 8px; border-radius: 50%; background: var(--color-primary);"></div>
+                    <div class="step-dot" id="dot-2"
+                        style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color);"></div>
+                    <div class="step-dot" id="dot-3"
+                        style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color);"></div>
+                </div>
+                <h4 style="margin: 0; font-size: 1rem; color: var(--text-secondary);">Account Setup</h4>
+            </div>
+
+            <div style="padding: 2rem;">
+                <!-- Step 1: Basic Info -->
+                <div id="step-1" class="step">
+                    <div class="text-center mb-3">
+                        <h2>Welcome! 👋</h2>
+                        <p>Let's personalize your learning journey.</p>
+                    </div>
+
+                    <div class="mb-2">
+                        <label
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary);">Username</label>
+                        <input type="text" id="username" class="input" placeholder="e.g., aptitude_pro">
+                    </div>
+
+                    <div class="mb-2">
+                        <label
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary);">Email
+                            <span class="text-muted">(optional)</span></label>
+                        <input type="email" id="email" class="input" placeholder="your@email.com">
+                    </div>
+
+                    <div class="mb-2">
+                        <label
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary);">Password</label>
+                        <input type="password" id="password" class="input" placeholder="Create a strong password">
+                    </div>
+
+                    <div class="mb-3">
+                        <label
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary);">What's
+                            your primary goal?</label>
+                        <div id="goal-options" class="flex-col gap-sm">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-lg" style="width: 100%;" onclick="nextStep(2)">
+                        Continue
+                    </button>
+                    <p class="text-center mt-2 text-muted" style="font-size: 0.9rem;">
+                        Already have an account? <a href="index.html">Log in</a>
+                    </p>
                 </div>
 
-                <div class="mb-2">
-                    <label class="text-muted">Choose a Username</label>
-                    <input type="text" id="username" class="input" placeholder="e.g., aptitude_pro">
-                </div>
+                <!-- Step 2: Milestone Selection -->
+                <div id="step-2" class="step hidden">
+                    <div class="text-center mb-3">
+                        <h2>Select Focus Areas</h2>
+                        <p>Pick up to 4 milestones to start with.</p>
+                    </div>
 
-                <div class="mb-2">
-                    <label class="text-muted">Email (optional)</label>
-                    <input type="email" id="email" class="input" placeholder="your@email.com">
-                </div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-muted" style="font-size: 0.9rem;">Selected:</span>
+                        <span id="milestone-count" class="badge" style="background: var(--bg-primary);">0/4</span>
+                    </div>
 
-                <div class="mb-2">
-                    <label class="text-muted">Password</label>
-                    <input type="password" id="password" class="input" placeholder="Create a strong password">
-                </div>
-                <div class="mb-3">
-                    <label class="text-muted mb-1">What's your goal?</label>
-                    <div id="goal-options" style="display: grid; grid-template-columns: 1fr; gap: 0.75rem;">
+                    <div id="milestone-options" class="mb-3" style="max-height: 300px; overflow-y: auto;">
                         <!-- Populated by JS -->
+                    </div>
+
+                    <div class="flex gap-md">
+                        <button class="btn btn-outline" style="flex: 1;" onclick="prevStep(1)">Back</button>
+                        <button class="btn btn-primary" style="flex: 2;" onclick="completeOnboarding()">Finish
+                            Setup</button>
                     </div>
                 </div>
 
-                <div class="mt-3">
-                    <button class="btn btn-primary btn-lg" style="width: 100%;" onclick="nextStep(2)">
-                        Continue →
-                    </button>
-                </div>
-            </div>
-            <!-- Step 2: Milestone Selection -->
-            <div id="step-2" class="step hidden">
-                <div class="text-center mb-3">
-                    <h2>Select Your Focus Areas 📊 <span id="milestone-count"
-                            style="font-size: 1.2rem; color: var(--primary);">(0/4)</span></h2>
-                    <p class="text-muted">Pick up to 4 milestones you want to work on.</p>
-                </div>
+                <!-- Success -->
+                <div id="step-success" class="step hidden text-center">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+                    <h2>You're all set!</h2>
+                    <p class="mb-3">Welcome to Aptitude Master. You've earned your first badge!</p>
 
-                <div id="milestone-options" class="mb-3">
-                    <!-- Populated by JS -->
-                </div>
+                    <div class="badge badge-iron"
+                        style="font-size: 1.2rem; padding: 0.75rem 1.5rem; margin-bottom: 2rem;">
+                        🛡️ Iron Badge
+                    </div>
 
-                <div style="display: flex; gap: 1rem;">
-                    <button class="btn btn-secondary" style="flex: 1;" onclick="prevStep(1)">
-                        ← Back
-                    </button>
-                    <button class="btn btn-primary" style="flex: 2;" onclick="completeOnboarding()">
-                        Complete Setup ✅
-                    </button>
+                    <a href="index.html" class="btn btn-primary btn-lg" style="width: 100%;">
+                        Go to Dashboard
+                    </a>
                 </div>
-            </div>
-            <!-- Success -->
-            <div id="step-success" class="step hidden text-center">
-                <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
-                <h2>You're all set!</h2>
-                <p class="text-muted mb-3">Welcome to Aptitude Master. You've earned your first badge!</p>
-
-                <div class="badge badge-iron" style="font-size: 1.5rem; padding: 0.75rem 1.5rem; margin-bottom: 2rem;">
-                    🛡️ Iron Badge
-                </div>
-
-                <a href="index.html" class="btn btn-primary btn-lg">
-                    Go to Dashboard →
-                </a>
             </div>
         </div>
     </main>
+
+    <script src="assets/js/theme.js"></script>
     <script>
-        const selectedMilestones = new Set(); // Default selection empty
+        const selectedMilestones = new Set();
         const MAX_MILESTONES = 4;
         let selectedGoal = null;
+        let availableMilestones = [];
 
         const goals = [
-            { id: 'placements', name: 'Campus Placements', desc: 'Prepare for top companies (3-6 months)' },
-            { id: 'bank_exam', name: 'Bank Exams', desc: 'IBPS, SBI, RBI & other banking exams' },
-            { id: 'ssc', name: 'SSC / Gov Exams', desc: 'CGL, CHSL & other government roles' },
-            { id: 'cat', name: 'CAT / MBA', desc: 'Entrance exams for top business schools' },
-            { id: 'general', name: 'General Practice', desc: 'Improve your overall aptitude skills' }
+            { id: 'placements', name: 'Campus Placements', desc: 'Prepare for top companies' },
+            { id: 'bank_exam', name: 'Bank Exams', desc: 'IBPS, SBI, RBI' },
+            { id: 'ssc', name: 'SSC / Gov Exams', desc: 'CGL, CHSL, Govt roles' },
+            { id: 'cat', name: 'CAT / MBA', desc: 'Entrance exams' },
+            { id: 'general', name: 'General Practice', desc: 'Improve overall aptitude' }
         ];
 
         document.addEventListener('DOMContentLoaded', async () => {
             renderGoalOptions();
-
-            // Load milestones for selection
             try {
                 const res = await fetch('/api/milestones');
                 const data = await res.json();
-                renderMilestoneOptions(data.milestones);
+                availableMilestones = data.milestones;
+                renderMilestoneOptions(availableMilestones);
                 updateMilestoneCount();
             } catch (err) {
                 console.error('Failed to load milestones', err);
             }
         });
+
         function renderGoalOptions() {
             const container = document.getElementById('goal-options');
             container.innerHTML = goals.map(g => `
-                <div class="goal-option ${selectedGoal === g.id ? 'selected' : ''}" onclick="selectGoal('${g.id}')">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="card interactive goal-option ${selectedGoal === g.id ? 'selected' : ''}" 
+                     style="padding: 1rem; border: ${selectedGoal === g.id ? '1px solid var(--color-primary)' : '1px solid var(--border-color)'}; background: ${selectedGoal === g.id ? 'rgba(0,184,148,0.05)' : 'var(--bg-secondary)'};"
+                     onclick="selectGoal('${g.id}')">
+                    <div class="flex items-center justify-between">
                         <div>
-                            <strong>${g.name}</strong>
-                            <div class="text-muted" style="font-size: 0.85rem;">${g.desc}</div>
+                            <div style="font-weight: 600; color: var(--text-primary);">${g.name}</div>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary);">${g.desc}</div>
                         </div>
-                        <div class="radio-circle">
-                            ${selectedGoal === g.id ? '<div class="radio-inner"></div>' : ''}
+                        <div style="width: 18px; height: 18px; border-radius: 50%; border: 2px solid ${selectedGoal === g.id ? 'var(--color-primary)' : 'var(--border-color)'}; display: flex; align-items: center; justify-content: center;">
+                            ${selectedGoal === g.id ? '<div style="width: 10px; height: 10px; background: var(--color-primary); border-radius: 50%;"></div>' : ''}
                         </div>
                     </div>
                 </div>
             `).join('');
         }
+
         function selectGoal(id) {
             selectedGoal = id;
             renderGoalOptions();
         }
+
         function renderMilestoneOptions(milestones) {
             const container = document.getElementById('milestone-options');
             container.innerHTML = milestones.map(m => `
-        <div class="milestone-option ${selectedMilestones.has(m.id) ? 'selected' : ''}" onclick="toggleMilestone(${m.id}, this)">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <strong>${m.name}</strong>
-              <div class="text-muted" style="font-size: 0.875rem;">${m.topics.map(t => t.name).slice(0, 3).join(', ')}...</div>
-            </div>
-            <span class="check-icon">${selectedMilestones.has(m.id) ? '✓' : ''}</span>
-          </div>
-        </div>
-      `).join('');
+                <div class="milestone-option ${selectedMilestones.has(m.id) ? 'selected' : ''}" 
+                     style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); cursor: pointer; display: flex; justify-content: space-between; align-items: center;"
+                     onclick="toggleMilestone(${m.id}, this)">
+                     <div>
+                        <div style="font-weight: 600; font-size: 0.95rem;">${m.name}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">${m.topics.length} topics</div>
+                     </div>
+                     <span class="check-icon" style="color: var(--success); font-weight: bold; opacity: ${selectedMilestones.has(m.id) ? '1' : '0'};">✓</span>
+                </div>
+            `).join('');
         }
+
         function updateMilestoneCount() {
             const count = selectedMilestones.size;
-            const el = document.getElementById('milestone-count');
-            el.textContent = `(${count}/${MAX_MILESTONES})`;
-
-            if (count === MAX_MILESTONES) {
-                el.style.color = 'var(--success)';
-            } else {
-                el.style.color = 'var(--primary)';
-            }
+            document.getElementById('milestone-count').textContent = `${count}/${MAX_MILESTONES}`;
         }
+
         function toggleMilestone(id, el) {
             if (selectedMilestones.has(id)) {
                 selectedMilestones.delete(id);
                 el.classList.remove('selected');
-                el.querySelector('.check-icon').textContent = '';
+                el.querySelector('.check-icon').style.opacity = '0';
             } else {
-                if (selectedMilestones.size >= MAX_MILESTONES) {
-                    // Shake animation or alert
-                    el.style.transform = 'translateX(5px)';
-                    setTimeout(() => el.style.transform = 'translateX(-5px)', 50);
-                    setTimeout(() => el.style.transform = 'translateX(5px)', 100);
-                    setTimeout(() => el.style.transform = 'translateX(0)', 150);
-                    return; // Stop selection
-                }
+                if (selectedMilestones.size >= MAX_MILESTONES) return;
                 selectedMilestones.add(id);
                 el.classList.add('selected');
-                el.querySelector('.check-icon').textContent = '✓';
+                el.querySelector('.check-icon').style.opacity = '1';
             }
             updateMilestoneCount();
         }
+
         function nextStep(step) {
             if (step === 2 && !selectedGoal) {
-                alert('Please select a goal to continue');
+                alert('Please select a goal');
                 return;
             }
             if (step === 2 && (!document.getElementById('username').value || !document.getElementById('password').value)) {
-                alert('Please enter a username and password');
+                alert('Please enter details');
                 return;
             }
 
             document.querySelectorAll('.step').forEach(s => s.classList.add('hidden'));
             document.getElementById('step-' + step).classList.remove('hidden');
+
+            // Update dots
+            document.querySelectorAll('.step-dot').forEach(d => d.style.background = 'var(--border-color)');
+            document.getElementById('dot-' + step).style.background = 'var(--color-primary)';
+            if (step === 2) document.getElementById('dot-1').style.background = 'var(--success)';
         }
 
         function prevStep(step) {
             document.querySelectorAll('.step').forEach(s => s.classList.add('hidden'));
             document.getElementById('step-' + step).classList.remove('hidden');
+
+            document.getElementById('dot-' + (step + 1)).style.background = 'var(--border-color)';
+            document.getElementById('dot-' + step).style.background = 'var(--color-primary)';
         }
+
         async function completeOnboarding() {
             const username = document.getElementById('username').value;
             const email = document.getElementById('email').value;
@@ -225,7 +264,11 @@
                 if (data.token) {
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
-                    nextStep('success');
+
+                    document.querySelectorAll('.step').forEach(s => s.classList.add('hidden'));
+                    document.getElementById('step-success').classList.remove('hidden');
+                    document.getElementById('dot-3').style.background = 'var(--success)';
+                    document.getElementById('dot-2').style.background = 'var(--success)';
                 } else {
                     alert(data.error || 'Registration failed');
                 }
@@ -234,58 +277,6 @@
             }
         }
     </script>
-    <style>
-        .milestone-option,
-        .goal-option {
-            display: block;
-            padding: 1rem;
-            background: var(--bg-glass);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: var(--radius-md);
-            margin-bottom: 0.75rem;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-
-        .milestone-option:hover,
-        .goal-option:hover {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.05);
-        }
-
-        .milestone-option.selected,
-        .goal-option.selected {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.1);
-        }
-        .check-icon {
-            font-size: 1.25rem;
-            color: var(--success);
-            font-weight: bold;
-        }
-
-        .radio-circle {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .goal-option.selected .radio-circle {
-            border-color: var(--primary);
-        }
-
-        .radio-inner {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--primary);
-        }
-    </style>
 </body>
 
 </html>
