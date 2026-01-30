@@ -9,88 +9,190 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .result-hero {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .review-card {
+            border-left: 4px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .review-card.correct {
+            border-left-color: var(--success);
+            background: rgba(0, 184, 148, 0.02);
+        }
+
+        .review-card.incorrect {
+            border-left-color: var(--error);
+            background: rgba(214, 48, 49, 0.02);
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: 0;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+    </style>
 </head>
 
 <body>
     <nav class="navbar">
-        <a href="index.html" class="logo">🧠 Aptitude Master</a>
+        <a href="index.html" class="logo">
+            <span style="font-size: 1.5rem;">🧠</span> AptiRise
+        </a>
+        <button id="theme-toggle" class="btn btn-icon" title="Toggle Theme">🌙</button>
     </nav>
 
     <!-- Confetti Container -->
-    <div id="confetti-container" class="confetti-container"></div>
+    <div id="confetti-container" class="confetti-container"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; overflow: hidden;">
+    </div>
 
-    <main class="container" style="max-width: 800px;">
-        <!-- Summary Card -->
-        <div class="card text-center mb-3" id="summary-card">
-            <h1 id="result-emoji" style="font-size: 4rem; margin-bottom: 0.5rem;">🎯</h1>
-            <h2 id="result-title">Session Complete!</h2>
-            <p class="text-muted" id="result-subtitle">Here's how you performed</p>
+    <!-- Hero Header -->
+    <div class="result-hero">
+        <div class="container">
+            <div style="font-size: 4rem; margin-bottom: 1rem; animation: bounce 1s ease;">
+                <span id="result-emoji">🎯</span>
+            </div>
+            <h1 id="result-title" style="margin-bottom: 0.5rem;">Session Complete!</h1>
+            <p class="text-muted" id="result-subtitle" style="font-size: 1.1rem;">Here is your performance summary</p>
+        </div>
+    </div>
+
+    <main class="container" style="max-width: 900px; margin-top: -2rem;">
+        <!-- Key Stats -->
+        <div class="grid grid-4 mb-3">
+            <div class="card text-center" style="padding: 2rem;">
+                <div class="stat-label">Accuracy</div>
+                <div id="accuracy" class="stat-value" style="color: var(--color-primary);">--%</div>
+            </div>
+            <div class="card text-center" style="padding: 2rem;">
+                <div class="stat-label">Score</div>
+                <div id="correct-count" class="stat-value" style="color: var(--text-primary);">-/-</div>
+            </div>
+            <div class="card text-center" style="padding: 2rem;">
+                <div class="stat-label">Time Taken</div>
+                <div id="time-taken" class="stat-value" style="color: var(--text-secondary);">--:--</div>
+            </div>
+            <div class="card text-center" style="padding: 2rem;">
+                <div class="stat-label">XP Earned</div>
+                <div id="xp-earned" class="stat-value" style="color: var(--warning);">+0</div>
+            </div>
         </div>
 
-        <!-- Stats Grid -->
-        <div class="grid grid-3 mb-3">
-            <div class="card text-center">
-                <h4 class="text-muted mb-1">Accuracy</h4>
-                <div id="accuracy" style="font-size: 2rem; font-weight: 800; color: var(--success);">--%</div>
-            </div>
-            <div class="card text-center">
-                <h4 class="text-muted mb-1">Correct</h4>
-                <div id="correct-count" style="font-size: 2rem; font-weight: 800; color: var(--primary);">-/-</div>
-            </div>
-            <div class="card text-center">
-                <h4 class="text-muted mb-1">XP Earned</h4>
-                <div id="xp-earned" style="font-size: 2rem; font-weight: 800; color: var(--warning);">+0</div>
-            </div>
-        </div>
-
-        <!-- Badge Progress -->
-        <div class="card mb-3" id="badge-section">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <div id="badge-display" class="badge badge-iron" style="font-size: 1.25rem; padding: 0.5rem 1rem;">
-                    🛡️ Iron
+        <!-- Badge Progress & Upgrade -->
+        <div class="grid mb-3" style="grid-template-columns: 1fr;">
+            <!-- Badge Upgrade Notification -->
+            <div id="badge-upgrade" class="card hidden text-center"
+                style="border: 2px solid var(--success); background: rgba(0, 184, 148, 0.05); padding: 2rem;">
+                <h2 style="color: var(--success); margin-bottom: 0.5rem;">🎉 Badge Level Up!</h2>
+                <p class="text-muted">You've reached a new rank:</p>
+                <div id="new-badge" class="badge badge-lg badge-bronze"
+                    style="font-size: 1.5rem; padding: 0.75rem 2rem; margin-top: 1rem; display: inline-block;">
+                    🥉 Bronze
                 </div>
-                <div style="flex: 1;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                        <span class="text-muted">Progress to next badge</span>
-                        <span class="text-muted" id="xp-progress">0 / 500 XP</span>
+            </div>
+
+            <!-- Standard Badge Progress -->
+            <div class="card" id="badge-section">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span style="font-size: 2rem;">🛡️</span>
+                        <div>
+                            <div class="text-muted" style="font-size: 0.85rem; text-transform: uppercase;">Current Rank
+                            </div>
+                            <div id="badge-display" style="font-weight: 700; font-size: 1.1rem;">Iron</div>
+                        </div>
                     </div>
-                    <div class="progress-bar">
-                        <div class="fill" id="badge-progress-bar" style="width: 0%;"></div>
+                    <div style="text-align: right;">
+                        <span id="xp-progress" style="font-weight: 600;">0 / 500 XP</span>
+                        <div class="text-muted" style="font-size: 0.85rem;">to next rank</div>
                     </div>
+                </div>
+                <div class="progress-bar" style="height: 8px;">
+                    <div class="fill" id="badge-progress-bar" style="width: 0%; background: var(--warning);"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Badge Upgrade Celebration -->
-        <div id="badge-upgrade" class="card hidden mb-3 text-center"
-            style="border: 2px solid var(--success); background: rgba(16, 185, 129, 0.1);">
-            <h2 style="color: var(--success);">🎉 Badge Upgrade!</h2>
-            <p>Congratulations! You've earned a new badge:</p>
-            <div id="new-badge" class="badge badge-bronze"
-                style="font-size: 1.5rem; padding: 0.75rem 1.5rem; margin: 1rem 0;">
-                🥉 Bronze
+        <!-- AI Feedback -->
+        <div class="card mb-3 hidden" id="feedback-card" style="border: 1px solid var(--color-primary);">
+            <div
+                style="background: rgba(99, 102, 241, 0.05); padding: 1rem; border-bottom: 1px solid rgba(99, 102, 241, 0.1); display: flex; align-items: center; gap: 0.75rem;">
+                <span style="font-size: 1.5rem;">🤖</span>
+                <h3 style="margin: 0; color: var(--color-primary);">AI Performance Analysis</h3>
+            </div>
+
+            <div style="padding: 1.5rem;">
+                <div class="mb-3">
+                    <h4
+                        style="font-size: 0.95rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.75rem;">
+                        Thinking Pattern</h4>
+                    <p id="feedback-pattern" style="line-height: 1.7; font-size: 1.05rem;">Analyzing your performance...
+                    </p>
+                </div>
+
+                <div class="mb-3">
+                    <h4
+                        style="font-size: 0.95rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.75rem;">
+                        Improvement Tips</h4>
+                    <ul id="feedback-tips" style="padding-left: 1.25rem; color: var(--text-muted);">
+                        <!-- Tips populated by JS -->
+                    </ul>
+                </div>
+
+                <div style="padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                    <p id="feedback-overall"
+                        style="font-weight: 500; font-style: italic; color: var(--text-primary); margin: 0;"></p>
+                </div>
             </div>
         </div>
 
         <!-- Question Review -->
         <div class="mb-3">
-            <h3 class="mb-2">📝 Question Review</h3>
-            <div id="questions-review">
+            <h3 class="mb-2">Session Review</h3>
+            <div id="questions-review" class="flex-col gap-sm">
                 <!-- Populated by JS -->
             </div>
         </div>
 
-        <!-- Action Buttons -->
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
-            <a href="practice.html" class="btn btn-primary btn-lg">
-                🎯 Practice Another Topic
-            </a>
-            <a href="index.html" class="btn btn-secondary btn-lg">
-                🏠 Back to Dashboard
-            </a>
+        <!-- Actions -->
+        <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 3rem;">
+            <a href="index.html" class="btn btn-secondary btn-lg">Back to Dashboard</a>
+            <a href="practice.html" class="btn btn-primary btn-lg">New Practice Session</a>
         </div>
     </main>
 
+    <script src="assets/js/theme.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -123,39 +225,77 @@
 
         function displayResults(data) {
             // Summary
-            document.getElementById('accuracy').textContent = data.accuracy + '%';
+            document.getElementById('accuracy').textContent = Math.round(data.accuracy) + '%';
             document.getElementById('correct-count').textContent = `${data.correct}/${data.total}`;
             document.getElementById('xp-earned').textContent = `+${data.xpEarned}`;
 
+            // Format time
+            const mins = Math.floor(data.duration / 60);
+            const secs = data.duration % 60;
+            document.getElementById('time-taken').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+
             // Result emoji based on performance
-            const emoji = data.accuracy >= 80 ? '🏆' : data.accuracy >= 60 ? '🎯' : data.accuracy >= 40 ? '💪' : '📚';
-            const title = data.accuracy >= 80 ? 'Excellent Performance!' : data.accuracy >= 60 ? 'Good Job!' : data.accuracy >= 40 ? 'Keep Practicing!' : 'Room for Improvement';
+            const emoji = data.accuracy >= 80 ? '🏆' : data.accuracy >= 60 ? '🔥' : data.accuracy >= 40 ? '💪' : '📚';
+            const title = data.accuracy >= 80 ? 'Excellent Work!' : data.accuracy >= 60 ? 'Great Job!' : data.accuracy >= 40 ? 'Good Effort!' : 'Keep Learning!';
             document.getElementById('result-emoji').textContent = emoji;
             document.getElementById('result-title').textContent = title;
 
             // Question review
             const reviewContainer = document.getElementById('questions-review');
             reviewContainer.innerHTML = data.details.map((q, i) => `
-        <div class="card mb-2" style="border-left: 4px solid ${q.isCorrect ? 'var(--success)' : 'var(--error)'};">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div style="flex: 1;">
-              <p style="font-weight: 600; margin-bottom: 0.5rem;">Q${i + 1}. ${q.question}</p>
-              <p class="text-muted" style="font-size: 0.875rem;">
-                Your answer: <span style="color: ${q.isCorrect ? 'var(--success)' : 'var(--error)'};">
-                  ${q.userAnswer !== null ? q.options[q.userAnswer] : 'Skipped'}
-                </span>
-                ${!q.isCorrect ? `<br>Correct: <span class="text-success">${q.options[q.correctOptionIndex]}</span>` : ''}
-              </p>
-              <p class="text-muted" style="font-size: 0.875rem;">💡 ${q.solution}</p>
-            </div>
-            <span style="font-size: 1.5rem;">${q.isCorrect ? '✅' : '❌'}</span>
-          </div>
-        </div>
-      `).join('');
+                <div class="card review-card ${q.isCorrect ? 'correct' : 'incorrect'}" style="padding: 1.25rem;">
+                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: ${q.isCorrect ? 'var(--success)' : 'var(--error)'}; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">
+                            ${q.isCorrect ? '✓' : '✗'}
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="margin-bottom: 0.5rem; font-weight: 500;">Q${i + 1}. ${q.question}</div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; font-size: 0.9rem;">
+                                <div style="padding: 0.5rem; background: var(--bg-primary); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                                    <span class="text-muted">Your Answer:</span><br>
+                                    <span style="color: ${q.isCorrect ? 'var(--success)' : 'var(--error)'}; font-weight: 500;">
+                                        ${q.userAnswer !== null ? q.options[q.userAnswer] : 'Skipped'}
+                                    </span>
+                                </div>
+                                ${!q.isCorrect ? `
+                                <div style="padding: 0.5rem; background: rgba(0, 184, 148, 0.05); border-radius: var(--radius-sm); border: 1px solid rgba(0, 184, 148, 0.2);">
+                                    <span class="text-muted">Correct Answer:</span><br>
+                                    <span style="color: var(--success); font-weight: 500;">
+                                        ${q.options[q.correctOptionIndex]}
+                                    </span>
+                                </div>` : ''}
+                            </div>
+                            
+                            <div class="text-muted" style="font-size: 0.9rem; line-height: 1.5;">
+                                <strong>Explanation:</strong> ${q.solution}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
 
-            // Trigger confetti for good performance
+            // Trigger confetti
             if (data.accuracy >= 60) {
                 triggerConfetti();
+            }
+
+            // Display Feedback
+            if (data.feedback) {
+                const fbCard = document.getElementById('feedback-card');
+                const fbPattern = document.getElementById('feedback-pattern');
+                const fbTips = document.getElementById('feedback-tips');
+                const fbOverall = document.getElementById('feedback-overall');
+
+                fbPattern.textContent = data.feedback.thinkingPattern || "Feedback unavailable.";
+
+                fbTips.innerHTML = (data.feedback.improvementTips || [])
+                    .map(tip => `<li style="margin-bottom: 0.5rem;">${tip}</li>`)
+                    .join('');
+
+                fbOverall.textContent = data.feedback.overallFeedback || "";
+
+                fbCard.classList.remove('hidden');
             }
         }
 
@@ -168,7 +308,7 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ xpGained: xpEarned })
+                    body: JSON.stringify({ xpGained: xpEarned, accuracy: data.accuracy })
                 });
                 const data = await res.json();
 
@@ -179,18 +319,20 @@
                 localStorage.setItem('user', JSON.stringify(user));
 
                 // Update badge display
-                const badgeEl = document.getElementById('badge-display');
-                badgeEl.className = `badge badge-${data.currentBadge.toLowerCase()}`;
-                badgeEl.innerHTML = getBadgeEmoji(data.currentBadge) + ' ' + data.currentBadge;
+                document.getElementById('badge-display').textContent = data.currentBadge + (data.badgeUpgrade ? ' (Level Up!)' : '');
 
-                // Show badge upgrade if applicable
+                // Show badge upgrade
                 if (data.badgeUpgrade) {
                     const upgradeEl = document.getElementById('badge-upgrade');
                     upgradeEl.classList.remove('hidden');
+                    document.getElementById('badge-section').classList.add('hidden'); // Hide regular badge section if upgraded
+
                     const newBadgeEl = document.getElementById('new-badge');
-                    newBadgeEl.className = `badge badge-${data.currentBadge.toLowerCase()}`;
+                    newBadgeEl.className = `badge badge-lg badge-${data.currentBadge.toLowerCase()}`;
                     newBadgeEl.innerHTML = getBadgeEmoji(data.currentBadge) + ' ' + data.currentBadge;
+
                     triggerConfetti();
+                    triggerConfetti(); // Double confetti for upgrade!
                 }
 
             } catch (err) {
@@ -208,15 +350,15 @@
 
         function triggerConfetti() {
             const container = document.getElementById('confetti-container');
-            const colors = ['#6366f1', '#22d3ee', '#f472b6', '#fbbf24', '#10b981'];
+            const colors = ['#6366f1', '#00b894', '#fdcb6e', '#e17055', '#0984e3'];
 
             for (let i = 0; i < 50; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
                 confetti.style.left = Math.random() * 100 + '%';
                 confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.animationDelay = Math.random() * 2 + 's';
-                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confetti.style.opacity = Math.random();
                 container.appendChild(confetti);
             }
 
@@ -225,7 +367,7 @@
             }, 5000);
         }
 
-        // Clear session
+        // Clear session after viewing results
         localStorage.removeItem('currentSession');
     </script>
 </body>
