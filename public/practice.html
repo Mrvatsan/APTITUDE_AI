@@ -9,168 +9,153 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Specific layouts for Practice Page */
+        .page-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: var(--space-lg);
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .page-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .milestone-nav-item {
+            width: 100%;
+            padding: 1rem;
+            text-align: left;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .milestone-nav-item:hover {
+            background: var(--bg-hover, rgba(0, 0, 0, 0.02));
+            color: var(--text-primary);
+        }
+
+        .milestone-nav-item.active {
+            background: var(--bg-secondary);
+            border-color: var(--border-color);
+            color: var(--color-primary);
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .milestone-nav-item.active::after {
+            content: '→';
+            font-family: inherit;
+        }
+    </style>
 </head>
 
 <body>
     <nav class="navbar">
-        <a href="index.html" class="logo">🧠 Aptitude Master</a>
-        <span class="streak" id="streak-display">
-            <span class="flame">🔥</span>
-            <span id="streak-count">0</span>
-        </span>
+        <a href="index.html" class="logo">
+            <span style="font-size: 1.5rem;">🧠</span> Aptitude Master
+        </a>
+        <div class="nav-user">
+            <button id="theme-toggle" class="btn btn-icon" title="Toggle Theme">🌙</button>
+            <div
+                style="display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.75rem; background: var(--bg-primary); border-radius: var(--radius-full); border: 1px solid var(--border-color);">
+                <span class="flame" style="font-size: 1.2rem;">🔥</span>
+                <span id="streak-count" style="font-weight: 700; color: var(--text-primary);">0</span>
+            </div>
+        </div>
     </nav>
 
     <main class="container">
-        <div class="text-center mb-3">
-            <h1>Choose Your Practice Topic 📚</h1>
-            <p class="text-muted">Select a milestone and topic to begin your session.</p>
+        <div class="mb-3">
+            <h1>Practice Library</h1>
+            <p class="text-muted">Select a milestone category to browse topics.</p>
         </div>
 
-        <!-- Milestone Accordion -->
-        <div id="milestones-container" class="mb-3">
-            <!-- Populated by JS -->
+        <div class="page-grid">
+            <!-- Left Sidebar: Milestones -->
+            <div class="card" style="padding: 1rem;">
+                <h4 class="text-muted"
+                    style="font-size: 0.85rem; text-transform: uppercase; margin-bottom: 1rem; padding-left: 0.5rem;">
+                    Milestones</h4>
+                <div id="milestones-sidebar" class="flex-col gap-sm">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Right Content: Topics -->
+            <div>
+                <div id="selected-milestone-header" class="mb-2 hidden">
+                    <h2 id="current-milestone-title">Select a Milestone</h2>
+                    <p class="text-muted" id="current-milestone-desc">Choose a topic below to start practicing.</p>
+                </div>
+
+                <div id="topics-grid" class="grid grid-2">
+                    <!-- Populated by JS -->
+                    <div style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary); padding: 3rem;">
+                        Select a milestone from the left menu to view topics.
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Session Config Modal -->
         <div id="config-modal" class="modal hidden">
-            <div class="modal-content card" style="max-width: 450px; margin: 2rem auto;">
-                <h2 class="mb-2" id="selected-topic-name">Topic Name</h2>
+            <div class="modal-content card" style="max-width: 450px; margin: 2rem;">
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <h2 id="selected-topic-name" style="margin-bottom: 0.5rem;">Topic Name</h2>
+                    <div class="badge badge-expert"
+                        style="font-weight: normal; background: var(--bg-primary); color: var(--text-secondary); border: 1px solid var(--border-color);">
+                        Configure Session</div>
+                </div>
 
                 <div class="mb-2">
-                    <label class="text-muted">Number of Questions</label>
-                    <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
-                        <button class="btn btn-secondary num-btn" data-num="5">5</button>
-                        <button class="btn btn-secondary num-btn selected" data-num="10">10</button>
-                        <button class="btn btn-secondary num-btn" data-num="15">15</button>
-                        <button class="btn btn-secondary num-btn" data-num="20">20</button>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Number of Questions</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-outline num-btn" style="flex: 1;" data-num="5">5</button>
+                        <button class="btn btn-outline num-btn selected" style="flex: 1;" data-num="10">10</button>
+                        <button class="btn btn-outline num-btn" style="flex: 1;" data-num="15">15</button>
+                        <button class="btn btn-outline num-btn" style="flex: 1;" data-num="20">20</button>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="text-muted">Difficulty</label>
-                    <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
-                        <button class="btn btn-secondary diff-btn" data-diff="easy">Easy</button>
-                        <button class="btn btn-secondary diff-btn selected" data-diff="medium">Medium</button>
-                        <button class="btn btn-secondary diff-btn" data-diff="hard">Hard</button>
-                        <button class="btn btn-secondary diff-btn" data-diff="mixed">Mixed</button>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Difficulty</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-outline diff-btn" style="flex: 1;" data-diff="easy">Easy</button>
+                        <button class="btn btn-outline diff-btn selected" style="flex: 1;"
+                            data-diff="medium">Medium</button>
+                        <button class="btn btn-outline diff-btn" style="flex: 1;" data-diff="hard">Hard</button>
+                        <button class="btn btn-outline diff-btn" style="flex: 1;" data-diff="mixed">Mixed</button>
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 1rem;">
+                <div class="flex gap-md">
                     <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal()">Cancel</button>
                     <button class="btn btn-primary" style="flex: 2;" id="start-session-btn">
-                        🚀 Start Practice
+                        Start Practice 🚀
                     </button>
                 </div>
             </div>
         </div>
     </main>
 
-    <style>
-        .milestone-card {
-            margin-bottom: 1rem;
-        }
-
-        .milestone-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            padding: 1rem 1.5rem;
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: var(--radius-lg);
-            transition: all var(--transition-fast);
-        }
-
-        .milestone-header:hover {
-            border-color: var(--primary);
-        }
-
-        .milestone-header.active {
-            border-color: var(--primary);
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-
-        .milestone-topics {
-            display: none;
-            padding: 1rem;
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-top: none;
-            border-bottom-left-radius: var(--radius-lg);
-            border-bottom-right-radius: var(--radius-lg);
-        }
-
-        .milestone-topics.open {
-            display: block;
-        }
-
-        .topic-btn {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            padding: 0.75rem 1rem;
-            background: var(--bg-glass);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: var(--radius-md);
-            color: var(--text-primary);
-            cursor: pointer;
-            margin-bottom: 0.5rem;
-            transition: all var(--transition-fast);
-        }
-
-        .topic-btn:hover {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.1);
-        }
-
-        .topic-weight {
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: var(--radius-full);
-            background: var(--bg-glass);
-        }
-
-        .topic-weight.easy {
-            color: var(--success);
-        }
-
-        .topic-weight.medium {
-            color: var(--warning);
-        }
-
-        .topic-weight.hard {
-            color: var(--error);
-        }
-
-        .num-btn.selected,
-        .diff-btn.selected {
-            background: var(--primary);
-            color: white;
-        }
-
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-    </style>
-
+    <script src="assets/js/theme.js"></script>
     <script>
         let selectedTopic = null;
         let selectedMilestone = null;
         let numQuestions = 10;
         let difficulty = 'medium';
+        let allMilestones = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
             // Fetch fresh user data
@@ -197,148 +182,74 @@
                 const res = await fetch('/api/milestones');
                 const data = await res.json();
 
-                // Filter milestones based on user preferences
-                let milestonesToDisplay = data.milestones;
+                // Store all milestones
+                allMilestones = data.milestones;
 
-                // Check if user has preferences and selected milestones
+                // Filter milestones based on user preferences
+                let milestonesToDisplay = allMilestones;
+
                 if (user.preferences && user.preferences.selectedMilestones &&
                     Array.isArray(user.preferences.selectedMilestones) &&
                     user.preferences.selectedMilestones.length > 0) {
-
                     const selectedIds = new Set(user.preferences.selectedMilestones.map(id => Number(id)));
-                    milestonesToDisplay = data.milestones.filter(m => selectedIds.has(m.id));
+                    milestonesToDisplay = allMilestones.filter(m => selectedIds.has(m.id));
                 }
 
-                renderMilestones(milestonesToDisplay);
+                renderMilestoneSidebar(milestonesToDisplay);
 
-                // Check for milestone parameter in URL and auto-expand
+                // Check for milestone parameter in URL
                 const urlParams = new URLSearchParams(window.location.search);
                 const milestoneId = urlParams.get('milestone');
+
                 if (milestoneId) {
-                    // Slight delay to ensure DOM is ready and transitions look natural
-                    setTimeout(() => {
-                        toggleMilestone(milestoneId);
-                        // Scroll the selected milestone into view
-                        const element = document.getElementById(`topics-${milestoneId}`);
-                        if (element && element.previousElementSibling) {
-                            element.previousElementSibling.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                    }, 100);
+                    selectMilestone(milestoneId);
+                } else if (milestonesToDisplay.length > 0) {
+                    selectMilestone(milestonesToDisplay[0].id); // Default to first
                 }
             } catch (err) {
                 console.error('Failed to load milestones', err);
             }
 
-            // Number button handlers
-            document.querySelectorAll('.num-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.num-btn').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
-                    numQuestions = parseInt(btn.dataset.num);
-                });
-            });
-
-            // Difficulty button handlers
-            document.querySelectorAll('.diff-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
-                    difficulty = btn.dataset.diff;
-                });
-            });
-
-            // Start session
+            // Buttons
+            setupConfigButtons();
             document.getElementById('start-session-btn').addEventListener('click', startSession);
         });
 
-        function renderMilestones(milestones) {
-            const container = document.getElementById('milestones-container');
+        function renderMilestoneSidebar(milestones) {
+            const container = document.getElementById('milestones-sidebar');
             container.innerHTML = milestones.map(m => `
-        <div class="milestone-card">
-          <div class="milestone-header" onclick="toggleMilestone(${m.id})">
-            <h3 style="margin: 0;">${m.name}</h3>
-            <span class="text-muted">${m.topics.length} topics ▸</span>
-          </div>
-          <div class="milestone-topics" id="topics-${m.id}">
-            ${m.topics.map(t => `
-              <button class="topic-btn" onclick="selectTopic(${t.id}, '${t.name}', ${m.id}, '${m.name}')">
-                <span>${t.name}</span>
-                <span class="topic-arrow">→</span>
-              </button>
-            `).join('')}
-          </div>
-        </div>
-      `).join('');
+                <button class="milestone-nav-item" id="nav-${m.id}" onclick="selectMilestone(${m.id})">
+                    ${m.name}
+                </button>
+            `).join('');
         }
 
-        /**
-         * Toggles the visibility of milestone topics and manages card display
-         * Hides other milestones when one is expanded for focused viewing
-         * @param {number|string} id -  The milestone ID to toggle
-         * @returns {void} No return value
-         */
-        function toggleMilestone(id) {
-            // TODO: Consider adding animation transitions for smoother UX
-            console.log('toggleMilestone called');
-            console.log('Milestone ID:', id);
-            const topics = document.getElementById('topics-' + id); // Get the topics container for this milestone
-            if (!topics) {
-                console.error('Topics element not found for milestone ID:', id);
-                return; // Early exit if topics element not found
-            }
-            const header = topics.previousElementSibling; // Get the milestone header element
-            if (!header) {
-                console.error('Header element not found for milestone ID:', id);
-                return; // Early exit if header element not found
-            }
-            // Check if this milestone is currently expanded
-            const isOpen = topics.classList.contains('open');
+        function selectMilestone(id) {
+            // Update Sidebar UI
+            document.querySelectorAll('.milestone-nav-item').forEach(el => el.classList.remove('active'));
+            const activeNav = document.getElementById(`nav-${id}`);
+            if (activeNav) activeNav.classList.add('active');
 
-            // Toggle behavior: expand if closed, collapse if already open
-            if (!isOpen) {
-                // Hide all milestone cards for focused view
-                console.log('Hiding other milestone cards');
-                // Selector targets all milestone card containers
-                const allMilestoneCards = document.querySelectorAll('.milestone-card');
-                console.log('Total milestone cards to hide:', allMilestoneCards.length);
-                // Using style.display to control card visibility for better UX
-                allMilestoneCards.forEach(card => {
-                    card.style.display = 'none';
-                });
+            // Find milestone data
+            const milestone = allMilestones.find(m => m.id == id);
+            if (!milestone) return;
 
-                // Show only the selected milestone card while others remain hidden
-                const selectedCard = topics.parentElement; // Get the parent milestone-card div
-                if (selectedCard) {
-                    console.log('Displaying selected milestone card');
-                    selectedCard.style.display = 'block';
-                } else {
-                    console.warn('Selected card parent element not found');
-                }
+            // Update Header
+            document.getElementById('selected-milestone-header').classList.remove('hidden');
+            document.getElementById('current-milestone-title').textContent = milestone.name;
 
-                // Close all topics first to ensure only one is open at a time
-                // Select all topic containers to close them
-                document.querySelectorAll('.milestone-topics').forEach(t => t.classList.remove('open'));
-                // Remove active state from all milestone headers
-                document.querySelectorAll('.milestone-header').forEach(h => h.classList.remove('active'));
-
-                // Open selected milestone
-                console.log('Expanding selected milestone');
-                // Add 'open' class to show topics, 'active' class to highlight header
-                topics.classList.add('open');
-                header.classList.add('active');
-            } else {
-                // If clicking the same milestone again, restore all milestone cards to view
-                console.log('Showing all milestone cards');
-                // Remove 'open' and 'active' classes to collapse the milestone
-                topics.classList.remove('open');
-                header.classList.remove('active');
-                // Restore visibility of all milestone cards
-                document.querySelectorAll('.milestone-card').forEach(card => {
-                    card.style.display = 'block';
-                });
-            }
-            // Summary: This function implements accordion-style milestone toggling
-            // with focused viewing - one milestone expanded at a time, hiding others
+            // Render Topics
+            const topicsContainer = document.getElementById('topics-grid');
+            topicsContainer.innerHTML = milestone.topics.map(t => `
+                <div class="card interactive" onclick="selectTopic(${t.id}, '${t.name}', ${milestone.id}, '${milestone.name}')" style="padding: 1.5rem;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">${t.name}</h3>
+                    <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 1.5rem;">Master core concepts of ${t.name.toLowerCase()}.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="badge badge-silver" style="font-weight: normal; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-secondary);">Practice</span>
+                        <span style="color: var(--color-primary);">Start →</span>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function selectTopic(topicId, topicName, milestoneId, milestoneName) {
@@ -346,10 +257,63 @@
             selectedMilestone = { id: milestoneId, name: milestoneName };
             document.getElementById('selected-topic-name').textContent = topicName;
             document.getElementById('config-modal').classList.remove('hidden');
+
+            // Reset buttons visual state
+            resetConfigVisuals();
         }
 
         function closeModal() {
             document.getElementById('config-modal').classList.add('hidden');
+        }
+
+        function setupConfigButtons() {
+            // Number buttons
+            document.querySelectorAll('.num-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.num-btn').forEach(b => {
+                        b.classList.remove('btn-primary');
+                        b.classList.add('btn-outline');
+                    });
+                    btn.classList.remove('btn-outline');
+                    btn.classList.add('btn-primary');
+                    numQuestions = parseInt(btn.dataset.num);
+                });
+            });
+
+            // Difficulty buttons
+            document.querySelectorAll('.diff-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.diff-btn').forEach(b => {
+                        b.classList.remove('btn-primary');
+                        b.classList.add('btn-outline');
+                    });
+                    btn.classList.remove('btn-outline');
+                    btn.classList.add('btn-primary');
+                    difficulty = btn.dataset.diff;
+                });
+            });
+        }
+
+        function resetConfigVisuals() {
+            // Reset to defaults visually
+            document.querySelectorAll('.num-btn').forEach(b => {
+                b.classList.remove('btn-primary');
+                b.classList.add('btn-outline');
+                if (b.dataset.num == '10') {
+                    b.classList.remove('btn-outline');
+                    b.classList.add('btn-primary');
+                    numQuestions = 10;
+                }
+            });
+            document.querySelectorAll('.diff-btn').forEach(b => {
+                b.classList.remove('btn-primary');
+                b.classList.add('btn-outline');
+                if (b.dataset.diff === 'medium') {
+                    b.classList.remove('btn-outline');
+                    b.classList.add('btn-primary');
+                    difficulty = 'medium';
+                }
+            });
         }
 
         async function startSession() {
@@ -381,7 +345,8 @@
                         sessionId: data.sessionId,
                         totalQuestions: data.totalQuestions,
                         currentIndex: 0,
-                        topic: selectedTopic.name
+                        topic: selectedTopic.name,
+                        durationSeconds: data.durationSeconds
                     }));
                     window.location.href = 'question.html';
                 } else {
