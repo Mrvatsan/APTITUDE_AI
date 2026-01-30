@@ -45,3 +45,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // LocalStorage persistence check
+
+// System preference detection
