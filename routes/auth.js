@@ -320,3 +320,5 @@ module.exports = router;
 // Registration logic validation
 
 // Login security checks
+
+// Profile retrieval optimization
