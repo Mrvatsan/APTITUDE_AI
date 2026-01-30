@@ -117,3 +117,5 @@ router.get('/topic/:topicId', (req, res) => {
 });
 
 module.exports = router;
+
+// Milestone data structure validation
