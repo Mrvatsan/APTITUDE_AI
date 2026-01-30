@@ -73,3 +73,5 @@ const User = sequelize.define('User', {
 module.exports = User;
 
 // User schema definition
+
+// Password hashing requirement
