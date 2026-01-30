@@ -73,3 +73,5 @@ sequelize.sync({ alter: true }).then(() => {
 });
 
 // Server configuration confirmed
+
+// Database connection established
