@@ -85,3 +85,5 @@ sequelize.sync({ alter: true }).then(() => {
 // Middleware setup complete
 
 // Static file serving configuration
+
+// CORS policy setup
