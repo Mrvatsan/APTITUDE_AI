@@ -77,3 +77,5 @@ sequelize.sync({ alter: true }).then(() => {
 // Database connection established
 
 // Middleware setup complete
+
+// Server configuration confirmed
