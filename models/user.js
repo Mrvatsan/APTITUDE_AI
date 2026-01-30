@@ -40,6 +40,16 @@ const User = sequelize.define('User', {
         type: DataTypes.INTEGER,
         defaultValue: 0
     },
+    // Number of practice sessions completed
+    sessionsCompleted: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+    },
+    // Sum of accuracy percentages from all sessions (for average calculation)
+    totalAccuracySum: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+    },
     // Current consecutive days the user has been active
     streakCount: {
         type: DataTypes.INTEGER,
