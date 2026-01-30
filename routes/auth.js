@@ -115,7 +115,7 @@ router.post('/register', async (req, res) => {
         console.log(`[Auth] New user registered: ${username}`);
     } catch (err) {
         console.error('[Auth] Registration error:', err);
-        res.status(500).json({ error: 'Registration failed. Please try again.' });
+        res.status(500).json({ error: 'Registration failed: ' + err.message });
     }
 });
 
@@ -196,6 +196,16 @@ router.get('/profile', authMiddleware, async (req, res) => {
         const currentBadge = getBadge(user.totalXP);
         const nextBadgeInfo = getNextBadgeInfo(user.totalXP);
 
+        // Calculate progress within current tier
+        const currentTier = BADGE_TIERS.find(t => t.name === currentBadge);
+        const xpInCurrentTier = user.totalXP - currentTier.minXP;
+        const tierRange = currentTier.maxXP === Infinity ? 10000 : (currentTier.maxXP - currentTier.minXP + 1); // +1 because inclusive
+
+        // Calculate average accuracy
+        const avgAccuracy = user.sessionsCompleted > 0
+            ? Math.round(user.totalAccuracySum / user.sessionsCompleted)
+            : 0;
+
         res.json({
             id: user.id,
             username: user.username,
@@ -204,9 +214,15 @@ router.get('/profile', authMiddleware, async (req, res) => {
             currentBadge: currentBadge,
             streakCount: user.streakCount,
             preferences: user.preferences,
+            stats: {
+                sessionsCompleted: user.sessionsCompleted,
+                avgAccuracy: avgAccuracy
+            },
             badgeProgress: {
                 current: currentBadge,
                 currentXP: user.totalXP,
+                xpInCurrentTier,
+                tierRange,
                 nextBadge: nextBadgeInfo.nextBadge,
                 xpToNext: nextBadgeInfo.xpToNext
             }
@@ -218,11 +234,47 @@ router.get('/profile', authMiddleware, async (req, res) => {
 });
 
 /**
+ * Updates user profile details.
+ * @route POST /api/auth/update-profile
+ */
+router.post('/update-profile', authMiddleware, async (req, res) => {
+    const { username, email } = req.body;
+
+    try {
+        const user = await User.findByPk(req.user.id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        if (username) user.username = username;
+        if (email) user.email = email;
+
+        await user.save();
+
+        res.json({
+            message: 'Profile updated successfully',
+            user: {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                totalXP: user.totalXP,
+                currentBadge: getBadge(user.totalXP),
+                streakCount: user.streakCount,
+                preferences: user.preferences
+            }
+        });
+    } catch (err) {
+        console.error('[Auth] Profile update error:', err);
+        res.status(500).json({ error: 'Failed to update profile' });
+    }
+});
+
+/**
  * Updates the user's total XP and checks for badge upgrades.
  * @route POST /api/auth/update-xp
  */
 router.post('/update-xp', authMiddleware, async (req, res) => {
-    const { xpGained } = req.body;
+    const { xpGained, accuracy } = req.body;
 
     try {
         const user = await User.findByPk(req.user.id);
@@ -232,6 +284,12 @@ router.post('/update-xp', authMiddleware, async (req, res) => {
 
         const oldBadge = getBadge(user.totalXP);
         user.totalXP += xpGained;
+
+        // Update session stats if accuracy is provided (implies a session finished)
+        if (accuracy !== undefined) {
+            user.sessionsCompleted = (user.sessionsCompleted || 0) + 1;
+            user.totalAccuracySum = (user.totalAccuracySum || 0) + accuracy;
+        }
 
         // Save updated XP to database
         await user.save();
