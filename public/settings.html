@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Aptitude Master</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .settings-section {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+        }
+
+        .theme-option {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .theme-option.selected {
+            border-color: var(--color-primary);
+            background: rgba(0, 184, 148, 0.05);
+        }
+
+        .theme-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 1rem;
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span style="font-size: 1.5rem;">🧠</span> Aptitude Master
+        </a>
+        <a href="index.html" class="btn btn-secondary">← Back to Dashboard</a>
+    </nav>
+
+    <main class="container" style="max-width: 800px;">
+        <h1 class="mb-3">Settings</h1>
+
+        <div class="card">
+            <!-- Profile Section -->
+            <div class="settings-section">
+                <h3 class="mb-2">Profile Operations</h3>
+                <div class="mb-2">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Display Name</label>
+                    <input type="text" id="username-input" class="input" placeholder="Enter your name">
+                </div>
+                <div class="mb-2">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Email Address</label>
+                    <input type="email" id="email-input" class="input" placeholder="Enter your email">
+                </div>
+                <button id="save-profile-btn" class="btn btn-primary">Save Changes</button>
+            </div>
+
+            <!-- Theme Section -->
+            <div class="settings-section">
+                <h3 class="mb-2">Appearance</h3>
+                <p class="text-muted">Choose your preferred interface theme.</p>
+                <div class="grid grid-2">
+                    <div class="theme-option" id="theme-light" onclick="setTheme('light')">
+                        <div class="theme-preview" style="background: #f8f9fa;"></div>
+                        <div>
+                            <div style="font-weight: 600;">Light Mode</div>
+                            <small class="text-muted">Clean and bright</small>
+                        </div>
+                    </div>
+                    <div class="theme-option" id="theme-dark" onclick="setTheme('dark')">
+                        <div class="theme-preview" style="background: #1e1e1e;"></div>
+                        <div>
+                            <div style="font-weight: 600;">Dark Mode</div>
+                            <small class="text-muted">Easy on the eyes</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Share Section -->
+            <div class="settings-section">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3 class="mb-1">Share Profile</h3>
+                        <p class="text-muted" style="margin: 0;">Share your progress with friends or recruiters.</p>
+                    </div>
+                    <button id="share-btn" class="btn btn-outline">
+                        <span style="margin-right: 0.5rem;">🔗</span> Copy Link
+                    </button>
+                </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="settings-section">
+                <h3 class="mb-2 text-error">Account Actions</h3>
+                <button id="logout-btn" class="btn btn-outline"
+                    style="border-color: var(--error); color: var(--error);">
+                    Sign Out
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script src="assets/js/theme.js"></script>
+    <script>
+        // Load initial state
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            if (!token) window.location.href = 'index.html';
+
+            // Load User Data
+            let user = JSON.parse(localStorage.getItem('user') || '{}');
+            document.getElementById('username-input').value = user.username || '';
+            document.getElementById('email-input').value = user.email || '';
+
+            // Set init theme selection UI
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            updateThemeUI(currentTheme);
+
+            // Fetch fresh data
+            try {
+                const res = await fetch('/api/auth/profile', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    user = await res.json();
+                    localStorage.setItem('user', JSON.stringify(user));
+                    document.getElementById('username-input').value = user.username || '';
+                    document.getElementById('email-input').value = user.email || '';
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        });
+
+        // Theme Handling
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+            updateThemeUI(theme);
+        }
+
+        function updateThemeUI(theme) {
+            document.getElementById('theme-light').classList.remove('selected');
+            document.getElementById('theme-dark').classList.remove('selected');
+            document.getElementById(`theme-${theme}`).classList.add('selected');
+        }
+
+        // Save Profile
+        document.getElementById('save-profile-btn').addEventListener('click', async () => {
+            const username = document.getElementById('username-input').value;
+            const email = document.getElementById('email-input').value;
+            const token = localStorage.getItem('token');
+            const btn = document.getElementById('save-profile-btn');
+
+            btn.textContent = 'Saving...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/auth/update-profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ username, email })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    alert('Profile updated successfully!');
+                } else {
+                    alert('Failed to update profile.');
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Error updating profile.');
+            } finally {
+                btn.textContent = 'Save Changes';
+                btn.disabled = false;
+            }
+        });
+
+        // Share Profile
+        document.getElementById('share-btn').addEventListener('click', () => {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const text = `Check out my Aptitude Master profile! I'm a ${user.currentBadge || 'Learner'} with ${user.totalXP || 0} XP. 🚀`;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Profile summary copied to clipboard!');
+            });
+        });
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                localStorage.removeItem('currentSession');
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+
+</html>
