@@ -326,3 +326,5 @@ module.exports = router;
 // Badge calculation logic
 
 // Registration logic validation
+
+// Login security checks
