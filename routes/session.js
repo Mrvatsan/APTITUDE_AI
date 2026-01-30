@@ -215,3 +215,5 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
 module.exports = router;
 
 // Session duration calculation
+
+// CP calculation formula
