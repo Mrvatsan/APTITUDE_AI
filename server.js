@@ -83,3 +83,5 @@ sequelize.sync({ alter: true }).then(() => {
 // Database connection established
 
 // Middleware setup complete
+
+// Static file serving configuration
