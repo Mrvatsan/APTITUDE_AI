@@ -4,9 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description"
-    content="Master aptitude with AI-powered practice questions. Track your progress, build streaks, and earn badges.">
-  <title>Aptitude Master 🧠 | The AI-Powered Preparation Platform</title>
+  <title>Dashboard - Aptitude Master</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,138 +12,164 @@
 </head>
 
 <body>
-  <!-- Navigation -->
+  <!-- Navbar -->
   <nav class="navbar">
-    <div class="logo">🧠 Aptitude Master</div>
+    <div class="logo">
+      <span style="font-size: 1.5rem;">🧠</span> Aptitude Master
+    </div>
     <div class="nav-user">
-      <span class="streak" id="streak-display">
-        <span class="flame">🔥</span>
-        <span id="streak-count">0</span> day streak
-      </span>
+      <!-- Theme Toggle -->
+      <button id="theme-toggle" class="btn btn-icon" title="Toggle Theme">🌙</button>
+
+      <div
+        style="display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.75rem; background: var(--bg-primary); border-radius: var(--radius-full); border: 1px solid var(--border-color);">
+        <span class="flame" style="font-size: 1.2rem;">🔥</span>
+        <span id="streak-count" style="font-weight: 700; color: var(--text-primary);">0</span>
+      </div>
+
+      <a href="settings.html"
+        style="color: var(--text-primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); transition: background 0.2s;"
+        onmouseover="this.style.background='var(--bg-primary)'" onmouseout="this.style.background='transparent'">
+        <span id="username" style="font-weight: 600;">Learner</span>
+        <span style="font-size: 0.8rem;">⚙️</span>
+      </a>
     </div>
   </nav>
 
   <main class="container">
-    <!-- Welcome Section -->
-    <section class="hero text-center mt-3 mb-3">
-      <h1>Welcome back, <span id="username">Learner</span>! 👋</h1>
-      <p class="text-muted">Ready to boost your aptitude skills today?</p>
-    </section>
-
-    <!-- Stats Overview -->
-    <div class="grid grid-3 mb-3">
-      <!-- Badge Card -->
-      <div class="card text-center">
-        <h4 class="text-muted mb-1">Current Badge</h4>
-        <div id="current-badge" class="badge badge-iron" style="font-size: 1.5rem; padding: 0.5rem 1rem;">
-          🛡️ Iron
-        </div>
-        <div class="mt-2">
-          <small class="text-muted">Next: <span id="next-badge">Bronze</span></small>
-          <div class="progress-bar mt-1">
-            <div class="fill" id="badge-progress" style="width: 0%;"></div>
-          </div>
-          <small class="text-muted"><span id="xp-to-next">500</span> XP to go</small>
-        </div>
-      </div>
-
-      <!-- XP Card -->
-      <div class="card text-center">
-        <h4 class="text-muted mb-1">Total XP</h4>
-        <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary);" id="total-xp">
-          0
-        </div>
-        <small class="text-muted">Keep practicing to earn more!</small>
-      </div>
-
-      <!-- Accuracy Card -->
-      <div class="card text-center">
-        <h4 class="text-muted mb-1">Average Accuracy</h4>
-        <div style="font-size: 2.5rem; font-weight: 800; color: var(--success);" id="avg-accuracy">
-          --
-        </div>
-        <small class="text-muted">Based on recent sessions</small>
-      </div>
-    </div>
-
-    <!-- Suggested Topic -->
-    <div class="card mb-3">
-      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+    <!-- Hero Section -->
+    <section class="mb-3">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
         <div>
-          <h3 style="margin-bottom: 0.25rem;">📌 Suggested for Today</h3>
-          <p class="text-muted" id="suggested-topic">Time & Work - Medium difficulty</p>
+          <h1 style="margin-bottom: 0.5rem;">Overview</h1>
+          <p class="text-muted" style="margin: 0;">Track your progress and reach your goals.</p>
         </div>
         <a href="practice.html" class="btn btn-primary btn-lg">
-          🚀 Start Practice
+          <span style="margin-right: 0.5rem;">🚀</span> Start Practice
         </a>
       </div>
+
+      <!-- Stats Grid -->
+      <div class="grid grid-3 mb-3">
+        <!-- Badge Card -->
+        <div class="card interactive">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <h4 class="text-muted" style="margin: 0; font-size: 0.9rem; text-transform: uppercase;">Current Rank</h4>
+            <span style="font-size: 1.5rem;">🏆</span>
+          </div>
+          <div id="current-badge" class="badge badge-iron"
+            style="font-size: 1.1rem; padding: 0.5rem 1rem; margin-bottom: 1rem;">
+            Iron
+          </div>
+          <div>
+            <div
+              style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">
+              <span>Progress to <span id="next-badge">Bronze</span></span>
+              <span id="xp-to-next">500 XP</span>
+            </div>
+            <div class="progress-bar">
+              <div class="fill" id="badge-progress" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- XP Card -->
+        <div class="card interactive">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <h4 class="text-muted" style="margin: 0; font-size: 0.9rem; text-transform: uppercase;">Total XP</h4>
+            <span style="font-size: 1.5rem;">⚡</span>
+          </div>
+          <div style="font-size: 2.2rem; font-weight: 700; color: var(--text-primary);" id="total-xp">
+            0
+          </div>
+          <small class="text-muted">Lifecycle accumulated XP</small>
+        </div>
+
+        <!-- Accuracy Card -->
+        <div class="card interactive">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <h4 class="text-muted" style="margin: 0; font-size: 0.9rem; text-transform: uppercase;">Accuracy</h4>
+            <span style="font-size: 1.5rem;">🎯</span>
+          </div>
+          <div style="font-size: 2.2rem; font-weight: 700; color: var(--color-primary);" id="avg-accuracy">
+            --
+          </div>
+          <small class="text-muted">Average across all sessions</small>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid" style="grid-template-columns: 2fr 1fr; gap: var(--space-lg);">
+      <!-- Left Column: Milestones -->
+      <section>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3>Milestone Progress</h3>
+          <a href="practice.html" style="font-size: 0.9rem;">View All</a>
+        </div>
+
+        <div id="milestones-grid" class="flex-col gap-md">
+          <!-- Milestones populated by JS -->
+        </div>
+      </section>
+
+      <!-- Right Column: Sidebar -->
+      <aside>
+        <!-- Daily Suggestion -->
+        <div class="card mb-2"
+          style="background: linear-gradient(135deg, var(--bg-secondary), rgba(0,184,148,0.05)); border-color: var(--color-primary);">
+          <h4 style="color: var(--color-primary-dark); margin-bottom: 0.5rem;">💡 Suggested Today</h4>
+          <p id="suggested-topic" style="font-weight: 500; margin-bottom: 1rem;">Time & Work</p>
+          <a href="practice.html" class="btn btn-outline"
+            style="width: 100%; border-color: var(--color-primary); color: var(--color-primary-dark);">Practice Now</a>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+          <h4 class="text-muted" style="font-size: 0.9rem; text-transform: uppercase; margin-bottom: 1rem;">Quick
+            Actions</h4>
+          <div class="flex-col gap-sm">
+            <a href="practice.html?random=true" class="btn btn-secondary" style="justify-content: flex-start;">
+              🎲 Random Topic
+            </a>
+            <a href="practice.html?focus=weak" class="btn btn-secondary" style="justify-content: flex-start;">
+              🎯 Focus Weak Areas
+            </a>
+            <a href="#" class="btn btn-secondary" id="review-btn" style="justify-content: flex-start;">
+              📝 Review History
+            </a>
+          </div>
+        </div>
+      </aside>
     </div>
-
-    <!-- Milestones Overview -->
-    <section class="mb-3">
-      <h2 class="mb-2">📊 Your Milestones</h2>
-      <div class="grid grid-2" id="milestones-grid">
-        <!-- Milestones will be populated by JS -->
-      </div>
-    </section>
-
-    <!-- Quick Actions -->
-    <section class="mb-3">
-      <h2 class="mb-2">⚡ Quick Actions</h2>
-      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-        <a href="practice.html?random=true" class="btn btn-secondary">
-          🎲 Random Topic
-        </a>
-        <a href="practice.html?focus=weak" class="btn btn-secondary">
-          🎯 Focus on Weak Areas
-        </a>
-        <a href="#" class="btn btn-secondary" id="review-btn">
-          📝 Review Past Sessions
-        </a>
-      </div>
-    </section>
   </main>
 
-  <!-- Login Modal (shown if not logged in) -->
+  <!-- Login Modal -->
   <div id="auth-modal" class="modal hidden">
-    <div class="modal-content card" style="max-width: 400px; margin: 2rem auto;">
-      <h2 class="text-center mb-2">Welcome to Aptitude Master</h2>
+    <div class="modal-content card" style="max-width: 400px; margin: 2rem;">
+      <div class="text-center mb-3">
+        <span style="font-size: 3rem;">👋</span>
+        <h2>Welcome Back</h2>
+        <p>Login to continue your progress</p>
+      </div>
+
       <div id="login-form">
         <div class="mb-2">
-          <label class="text-muted">Username</label>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Username</label>
           <input type="text" id="login-username" class="input" placeholder="Enter username">
         </div>
-        <div class="mb-2">
-          <label class="text-muted">Password</label>
+        <div class="mb-3">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Password</label>
           <input type="password" id="login-password" class="input" placeholder="Enter password">
         </div>
         <button class="btn btn-primary" style="width: 100%;" id="login-btn">Login</button>
-        <p class="text-center mt-2 text-muted">
+        <p class="text-center mt-2 text-muted" style="font-size: 0.9rem;">
           New here? <a href="onboarding.html">Create an account</a>
         </p>
       </div>
     </div>
   </div>
 
-  <style>
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    .hero {
-      padding: 2rem 0;
-    }
-  </style>
-
+  <script src="assets/js/theme.js"></script>
   <script src="assets/js/app.js"></script>
   <script>
     // Check auth and load dashboard
@@ -184,7 +208,6 @@
     });
 
     async function loadDashboard() {
-      // First, try to fetch fresh user data
       let user = JSON.parse(localStorage.getItem('user') || '{}');
       const token = localStorage.getItem('token');
 
@@ -212,19 +235,44 @@
       badgeEl.className = `badge badge-${badge.toLowerCase()}`;
       badgeEl.innerHTML = getBadgeEmoji(badge) + ' ' + badge;
 
+      // Update Badge Progress
+      if (user.badgeProgress) {
+        const { xpInCurrentTier = 0, tierRange = 500, nextBadge } = user.badgeProgress;
+        document.getElementById('next-badge').textContent = nextBadge;
+        document.getElementById('xp-to-next').textContent = `${xpInCurrentTier} / ${tierRange} XP`;
+
+        const progressPercent = Math.min(100, Math.max(0, (xpInCurrentTier / tierRange) * 100));
+        const barEl = document.getElementById('badge-progress');
+        barEl.style.width = `${progressPercent}%`;
+        barEl.style.backgroundColor = 'var(--success)';
+      }
+
+      // Update Accuracy
+      const accuracyEl = document.getElementById('avg-accuracy');
+      const sessionsCount = user.stats ? user.stats.sessionsCompleted : 0;
+
+      if (sessionsCount < 5) {
+        accuracyEl.style.fontSize = '1rem';
+        accuracyEl.style.color = 'var(--text-secondary)';
+        accuracyEl.style.fontWeight = 'normal';
+        accuracyEl.textContent = `Finish ${5 - sessionsCount} more assessments to display your accuracy`;
+      } else {
+        accuracyEl.style.fontSize = '2.2rem';
+        accuracyEl.style.color = 'var(--color-primary)';
+        accuracyEl.style.fontWeight = '700';
+        accuracyEl.textContent = `${user.stats.avgAccuracy || 0}%`;
+      }
+
       // Load milestones
       try {
         const res = await fetch('/api/milestones');
         const data = await res.json();
+        // ... (rest of milestone logic)
 
-        // Filter milestones based on user preferences
         let milestonesToDisplay = data.milestones;
-
-        // Check if user has preferences and selected milestones
         if (user.preferences && user.preferences.selectedMilestones &&
           Array.isArray(user.preferences.selectedMilestones) &&
           user.preferences.selectedMilestones.length > 0) {
-
           const selectedIds = new Set(user.preferences.selectedMilestones.map(id => Number(id)));
           milestonesToDisplay = data.milestones.filter(m => selectedIds.has(m.id));
         }
@@ -251,14 +299,16 @@
     function renderMilestones(milestones) {
       const grid = document.getElementById('milestones-grid');
       grid.innerHTML = milestones.map(m => `
-        <div class="card" style="cursor: pointer;" onclick="window.location='practice.html?milestone=${m.id}'">
-          <h3>${m.name}</h3>
-          <p class="text-muted">${m.topics.length} topics</p>
-          <div class="progress-bar mt-1">
-            <div class="fill" style="width: 0%;"></div>
-          </div>
-        </div>
-      `).join('');
+                <div class="card interactive" onclick="window.location='practice.html?milestone=${m.id}'" style="padding: 1.25rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <h4 style="margin: 0;">${m.name}</h4>
+                        <span class="text-muted" style="font-size: 0.8rem;">${m.topics.length} topics</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+            `).join('');
     }
   </script>
 </body>
