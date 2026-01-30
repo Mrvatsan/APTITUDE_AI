@@ -221,3 +221,5 @@ module.exports = router;
 // Session duration calculation
 
 // CP calculation formula
+
+// XP cap logic
