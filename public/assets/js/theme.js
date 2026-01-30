@@ -43,3 +43,5 @@ const ThemeManager = {
 document.addEventListener('DOMContentLoaded', () => {
     ThemeManager.init();
 });
+
+// LocalStorage persistence check
