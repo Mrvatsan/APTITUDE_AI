@@ -318,3 +318,5 @@ router.post('/update-xp', authMiddleware, async (req, res) => {
 module.exports = router;
 
 // Registration logic validation
+
+// Login security checks
