@@ -1,4 +1,4 @@
-# Aptitude Master - Test Plan Placeholder
+# AptiRise - Test Plan Placeholder
 
 This file serves as a skeleton for future testing strategies.
 
