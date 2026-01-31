@@ -14,7 +14,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
 const authMiddleware = require('../middleware/auth');
-const User = require('../models/user');
+const { User } = require('../models/index');
 
 
 
@@ -298,6 +298,11 @@ router.post('/update-xp', authMiddleware, async (req, res) => {
 
         const badgeUpgrade = oldBadge !== newBadge;
 
+        const nextBadgeInfo = getNextBadgeInfo(user.totalXP);
+        const currentTier = BADGE_TIERS.find(t => t.name === newBadge);
+        const xpInCurrentTier = user.totalXP - currentTier.minXP;
+        const tierRange = currentTier.maxXP === Infinity ? 10000 : (currentTier.maxXP - currentTier.minXP + 1);
+
         console.log(`[Auth] XP updated for user ${user.username}: +${xpGained} XP (Total: ${user.totalXP})`);
         if (badgeUpgrade) {
             console.log(`[Auth] Badge upgrade for ${user.username}: ${oldBadge} -> ${newBadge}`);
@@ -307,7 +312,15 @@ router.post('/update-xp', authMiddleware, async (req, res) => {
             totalXP: user.totalXP,
             currentBadge: newBadge,
             badgeUpgrade,
-            previousBadge: badgeUpgrade ? oldBadge : null
+            previousBadge: badgeUpgrade ? oldBadge : null,
+            badgeProgress: {
+                current: newBadge,
+                currentXP: user.totalXP,
+                xpInCurrentTier,
+                tierRange,
+                nextBadge: nextBadgeInfo.nextBadge,
+                xpToNext: nextBadgeInfo.xpToNext
+            }
         });
     } catch (err) {
         console.error('[Auth] XP update error:', err);
