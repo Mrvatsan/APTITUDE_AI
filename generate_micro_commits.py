@@ -65,14 +65,11 @@ for line in lines:
     commit_file(filename, msg)
     time.sleep(0.1) # Brief pause
 
-# 2. Add documentation commits to reach target
-target_commits = 100
-current_commits = get_commit_count()
-commits_needed = max(0, target_commits - current_commits)
+# 2. Add documentation commits to boost count
+TARGET_NEW_COMMITS = 95 # Aiming for ~95 new commits
+print(f"Starting generation of {TARGET_NEW_COMMITS} new micro-commits...")
 
-print(f"Current commits: {current_commits}. Need {commits_needed} more to reach {target_commits}.")
-
-if commits_needed > 0:
+if TARGET_NEW_COMMITS > 0:
     # List of files to add comments to. 
     # We will loop through them.
     target_files = [
@@ -114,7 +111,7 @@ if commits_needed > 0:
     ]
 
     count = 0
-    while count < commits_needed:
+    while count < TARGET_NEW_COMMITS:
         target_file = random.choice(target_files)
         
         # Ensure file exists
@@ -142,7 +139,7 @@ if commits_needed > 0:
             run_git(['add', target_file])
             run_git(['commit', '-m', commit_msg])
             
-            print(f"[{count+1}/{commits_needed}] Added comment to {target_file}")
+            print(f"[{count+1}/{TARGET_NEW_COMMITS}] Added comment to {target_file}")
             count += 1
             time.sleep(0.1)
             
