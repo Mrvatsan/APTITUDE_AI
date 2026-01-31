@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Results - Aptitude Master</title>
+    <title>Results - AptiRise</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -216,10 +216,19 @@
                 }
 
                 displayResults(data);
-                updateUserXP(data.xpEarned);
+                updateUserXP(data.xpEarned, data.accuracy);
 
             } catch (err) {
                 console.error('Failed to load results', err);
+            }
+
+            // Check if this was a suggested session
+            if (localStorage.getItem('activeSuggestedSession') === 'true') {
+                // Set 5 hour cooldown
+                const cooldownTime = Date.now() + (5 * 60 * 60 * 1000);
+                localStorage.setItem('suggestedCooldown', cooldownTime);
+                localStorage.removeItem('activeSuggestedSession');
+                console.log('Suggested session completed. Cooldown set for 5 hours.');
             }
         });
 
@@ -299,7 +308,7 @@
             }
         }
 
-        async function updateUserXP(xpEarned) {
+        async function updateUserXP(xpEarned, accuracy) {
             const token = localStorage.getItem('token');
             try {
                 const res = await fetch('/api/auth/update-xp', {
@@ -308,7 +317,7 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ xpGained: xpEarned, accuracy: data.accuracy })
+                    body: JSON.stringify({ xpGained: xpEarned, accuracy: accuracy })
                 });
                 const data = await res.json();
 
@@ -320,6 +329,15 @@
 
                 // Update badge display
                 document.getElementById('badge-display').textContent = data.currentBadge + (data.badgeUpgrade ? ' (Level Up!)' : '');
+
+                // Update Progress Bar
+                if (data.badgeProgress) {
+                    const { xpInCurrentTier, tierRange } = data.badgeProgress;
+                    document.getElementById('xp-progress').textContent = `${xpInCurrentTier} / ${tierRange} XP`;
+
+                    const progressPercent = Math.min(100, Math.max(0, (xpInCurrentTier / tierRange) * 100));
+                    document.getElementById('badge-progress-bar').style.width = `${progressPercent}%`;
+                }
 
                 // Show badge upgrade
                 if (data.badgeUpgrade) {
