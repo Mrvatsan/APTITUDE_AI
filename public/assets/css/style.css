@@ -1,4 +1,4 @@
-/* ===== Aptitude Master Design System (HackerRank Inspired) ===== */
+/* ===== AptiRise Design System (HackerRank Inspired) ===== */
 
 :root {
   /* --- Light Theme Variables --- */
@@ -491,6 +491,7 @@ p {
   background-color: var(--color-primary);
   color: white;
 }
+
 /* Primary Color Definition */
 
 /* Refund responsive grid */
