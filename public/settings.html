@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - Aptitude Master</title>
+    <title>Settings - AptiRise</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -47,7 +47,7 @@
 <body>
     <nav class="navbar">
         <a href="index.html" class="logo">
-            <span style="font-size: 1.5rem;">🧠</span> Aptitude Master
+            <span style="font-size: 1.5rem;">🧠</span> AptiRise
         </a>
         <a href="index.html" class="btn btn-secondary">← Back to Dashboard</a>
     </nav>
@@ -205,7 +205,7 @@
         // Share Profile
         document.getElementById('share-btn').addEventListener('click', () => {
             const user = JSON.parse(localStorage.getItem('user') || '{}');
-            const text = `Check out my Aptitude Master profile! I'm a ${user.currentBadge || 'Learner'} with ${user.totalXP || 0} XP. 🚀`;
+            const text = `Check out my AptiRise profile! I'm a ${user.currentBadge || 'Learner'} with ${user.totalXP || 0} XP. 🚀`;
             navigator.clipboard.writeText(text).then(() => {
                 alert('Profile summary copied to clipboard!');
             });
