@@ -1,5 +1,5 @@
 /**
- * Aptitude Master - Server Entry Point
+ * AptiRise - Server Entry Point
  * 
  * Main Express server configuration, middleware integration, 
  * and API route registration.
@@ -43,7 +43,7 @@ app.use('/api/session', sessionRoutes);
  * @route GET /api/health
  */
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', version: '0.2.0', message: 'Aptitude Master API is running' });
+  res.json({ status: 'ok', version: '0.2.0', message: 'AptiRise API is running' });
 });
 
 /**
@@ -55,15 +55,15 @@ app.get('*', (req, res) => {
 });
 
 // Database synchronization
-const sequelize = require('./models/index');
+const { sequelize } = require('./models/index');
 
 // Sync database and start server
-sequelize.sync({ alter: true }).then(() => {
+sequelize.sync().then(() => {
   app.listen(port, () => {
     console.log('--------------------------------------------');
-    console.log('🚀 Starting Aptitude Master Server...');
+    console.log('🚀 Starting AptiRise Server...');
     console.log('--------------------------------------------');
-    console.log(`\n🧠 Aptitude Master is running!`);
+    console.log(`\n🧠 AptiRise is running!`);
     console.log(`   Local:   http://localhost:${port}`);
     console.log(`   API:     http://localhost:${port}/api`);
     console.log(`\n📚 Happy learning!\n`);
