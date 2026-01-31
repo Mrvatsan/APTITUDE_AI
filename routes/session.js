@@ -12,8 +12,10 @@ const express = require('express');
 const router = express.Router();
 const aiGenerator = require('../utils/aiGenerator');
 const authMiddleware = require('../middleware/auth');
+const { Session, User } = require('../models/index');
+const { Op } = require('sequelize');
 
-// In-memory store for sessions (placeholder - will use DB in production)
+// In-memory store for active sessions (persisted to DB on completion)
 const sessions = {};
 
 /**
@@ -21,15 +23,29 @@ const sessions = {};
  * @route POST /api/session/start
  */
 router.post('/start', authMiddleware, async (req, res) => {
-    const { topicId, topicName, milestoneName, numQuestions, difficulty } = req.body;
+    let { topicId, topicName, milestoneName, numQuestions, difficulty } = req.body;
     const userId = req.user.id;
 
     try {
+        // Auto-detect session size if not specified or explicitly 'auto'
+        if (!numQuestions || numQuestions === 'auto') {
+            const historyCount = await Session.count({ where: { userId } });
+
+            if (historyCount < 10) {
+                numQuestions = 5; // Beginner
+            } else if (historyCount < 25) {
+                numQuestions = 10; // Intermediate
+            } else {
+                numQuestions = 15; // Advanced
+            }
+            console.log(`[Session] Auto-detected size for user ${userId} (${historyCount} sessions): ${numQuestions} questions`);
+        }
+
         console.log(`[Session] Starting session for Topic="${topicName}", Difficulty="${difficulty}", Questions=${numQuestions}`);
         const generated = await aiGenerator.generateQuestions({
             category: topicName || 'General Aptitude',
             milestone: milestoneName || 'Milestone 1',
-            n: numQuestions || 5,
+            n: numQuestions,
             difficulty: difficulty || 'medium'
         });
 
@@ -163,20 +179,40 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
     const baseXP = 10;
     const xpEarned = Math.round(correct * baseXP * categoryWeight);
 
+    // Save session to database
+    try {
+        // Check if session already exists to avoid duplicates on refresh
+        const existingSession = await Session.findOne({ where: { id: sessionId } });
+
+        if (!existingSession) {
+            await Session.create({
+                id: sessionId,
+                userId: req.user.id,
+                topicId: session.topicId,
+                topicName: session.questions[0].topic || 'General', // Fallback
+                milestoneName: session.questions[0].milestone || 'Unknown',
+                totalQuestions: total,
+                correctAnswers: correct,
+                accuracy, // percentage
+                xpEarned,
+                difficulty: session.questions[0].difficulty || 'medium',
+                durationSeconds: Math.round((Date.now() - session.startTime) / 1000)
+            });
+            console.log(`[Session] Persisted session ${sessionId} to DB.`);
+        }
+    } catch (dbErr) {
+        console.error('[Session] Failed to persist session:', dbErr);
+    }
+
     // Save session stats to user profile if not already saved for this session
     // Note: In a real DB we'd have a separate Sessions table and join. 
     // Here we just update aggregates on the User model.
     try {
-        const user = await require('../models/user').findByPk(req.user.id);
+        const user = await User.findByPk(req.user.id);
         if (user) {
-            // Simple check to prevent double counting if result page is refreshed (imperfect but works for MVP)
-            // Ideally we'd track processed sessions by ID
-
-            // We need a better way to ensure we don't double count. 
-            // For now, let's assume the client calls 'result' once.
-            // OR better: Update stats when submitting the LAST answer.
-            // But valid architecture would be: separate Session table.
-            // Given constraint: "server.js missing db sync", I'll do it here but handle re-reads.
+            // We rely on the Session table for uniqueness now, but for the User aggregates:
+            // A proper implementation would recalculate from Session table or just increment.
+            // We'll stick to incrementing for now, but in a real app better to recount.
         }
     } catch (e) { console.error(e); }
 
@@ -210,6 +246,72 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
         feedback, // Add feedback to response
         duration: Math.round((Date.now() - session.startTime) / 1000)
     });
+});
+
+/**
+ * Get user's assessment history.
+ * @route GET /api/session/history
+ */
+router.get('/history', authMiddleware, async (req, res) => {
+    try {
+        const history = await Session.findAll({
+            where: { userId: req.user.id },
+            order: [['createdAt', 'DESC']],
+            limit: 50 // Limit to last 50 sessions
+        });
+        res.json({ history });
+    } catch (err) {
+        console.error('Failed to fetch history:', err);
+        res.status(500).json({ error: 'Failed to fetch history' });
+    }
+});
+
+/**
+ * Identify weak areas based on past performance.
+ * @route GET /api/session/weak-areas
+ */
+router.get('/weak-areas', authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findByPk(req.user.id);
+        if (user.sessionsCompleted < 10) {
+            return res.json({
+                eligible: false,
+                message: `Complete ${10 - user.sessionsCompleted} more sessions to unlock Weak Area analysis.`
+            });
+        }
+
+        // Find topics with average accuracy < 60%
+        // We'll verify raw sessions for this logic
+        const sessions = await Session.findAll({
+            where: { userId: req.user.id }
+        });
+
+        const topicStats = {};
+        sessions.forEach(s => {
+            if (!topicStats[s.topicName]) {
+                topicStats[s.topicName] = { total: 0, accuracySum: 0, count: 0 };
+            }
+            topicStats[s.topicName].count++;
+            topicStats[s.topicName].accuracySum += s.accuracy;
+        });
+
+        const weakAreas = [];
+        for (const [name, stats] of Object.entries(topicStats)) {
+            const avg = stats.accuracySum / stats.count;
+            if (avg < 60) {
+                weakAreas.push({ name, accuracy: Math.round(avg), count: stats.count });
+            }
+        }
+
+        res.json({
+            eligible: true,
+            weakAreas: weakAreas.sort((a, b) => a.accuracy - b.accuracy)
+        });
+
+    } catch (err) {
+        console.error('Failed to fetch weak areas:', err);
+        res.status(500).json({ error: 'Failed to analyze weak areas' });
+    }
 });
 
 module.exports = router;
