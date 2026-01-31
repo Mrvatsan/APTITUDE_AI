@@ -240,6 +240,25 @@ const fallbackQuestionBank = {
     ],
     'Statement & Argument': [
         { question: 'Should plastic be banned? Arg: Yes, protects environment.', options: ['Strong', 'Weak', 'Irrelevant', 'False'], correctOptionIndex: 0, solution: 'Valid environmental concern', difficulty: 'easy', category: 'Statement & Argument' }
+    ],
+    'Profit or Loss, Discount': [
+        { question: 'A man buys a toy for $25 and sells it for $30. Find gain %.', options: ['15%', '20%', '25%', '30%'], correctOptionIndex: 1, solution: 'Gain = 5/25 * 100 = 20%', difficulty: 'easy', category: 'Profit or Loss, Discount' },
+        { question: 'By selling a watch for $1440, a man loses 10%. At what price should he sell to gain 10%?', options: ['$1584', '$1600', '$1760', '$1800'], correctOptionIndex: 2, solution: 'CP = 1440/0.9 = 1600. SP = 1600 * 1.1 = 1760', difficulty: 'medium', category: 'Profit or Loss, Discount' }
+    ],
+    'Pipes & Cisterns': [
+        { question: 'Two pipes A and B can fill a tank in 20 and 30 min respectively. Both together?', options: ['10 min', '12 min', '15 min', '20 min'], correctOptionIndex: 1, solution: '1/20 + 1/30 = 5/60 = 1/12. Time = 12 min', difficulty: 'easy', category: 'Pipes & Cisterns' },
+        { question: 'Pipe A fill in 4hr, B empty in 6hr. Both open?', options: ['8hr', '10hr', '12hr', '14hr'], correctOptionIndex: 2, solution: '1/4 - 1/6 = 1/12. Time = 12 hr', difficulty: 'medium', category: 'Pipes & Cisterns' }
+    ],
+    'Coding Decoding': [
+        { question: 'If TEARS is coded as UGBST, how is SMILE coded?', options: ['TNJMF', 'TNJLF', 'TOJMF', 'SNJMF'], correctOptionIndex: 0, solution: 'Each letter is shifted +1', difficulty: 'easy', category: 'Coding Decoding' },
+        { question: 'If CAT = 24 and DOG = 26, then RAT = ?', options: ['38', '39', '40', '42'], correctOptionIndex: 1, solution: 'Sum of positions: 18+1+20 = 39', difficulty: 'medium', category: 'Coding Decoding' }
+    ],
+    'Boats and Stream': [
+        { question: 'Speed of boat in still water is 15 km/h, stream is 3 km/h. Downstream speed?', options: ['12', '18', '15', '10'], correctOptionIndex: 1, solution: '15 + 3 = 18 km/h', difficulty: 'easy', category: 'Boats and Stream' },
+        { question: 'A boat goes 20 km downstream in 1 hr and same distance upstream in 2 hrs. Speed of boat?', options: ['10', '15', '20', '25'], correctOptionIndex: 1, solution: 'D=20, U=10. Speed = (20+10)/2 = 15', difficulty: 'medium', category: 'Boats and Stream' }
+    ],
+    'Data Sufficiency': [
+        { question: 'Is x > y? I. x=5. II. y=3.', options: ['I alone', 'II alone', 'Both required', 'Neither'], correctOptionIndex: 2, solution: 'Both needed to enable comparison', difficulty: 'easy', category: 'Data Sufficiency' }
     ]
 };
 
@@ -329,7 +348,7 @@ Return: { "sessionId": "id", "category": "${category}", "milestone": "${mileston
     try {
         // Construct the AI content generation request
         const response = await axios.post(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.OPENAI_API_KEY}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${process.env.OPENAI_API_KEY}`,
             { contents: [{ parts: [{ text: systemMessage + '\n\n' + userMessage }] }], generationConfig: { temperature: 0.9, maxOutputTokens: 6000 } },
             { headers: { 'Content-Type': 'application/json' } }
         );
@@ -350,4 +369,76 @@ Return: { "sessionId": "id", "category": "${category}", "milestone": "${mileston
     }
 }
 
-module.exports = { generateQuestions };
+
+/**
+ * Generates personalized performance feedback based on session results.
+ * 
+ * @param {Object} sessionData - The completed session details.
+ * @returns {Promise<Object>} Feedback object with thinking pattern and tips.
+ */
+async function generateFeedback(sessionData) {
+    const { questions, answers, accuracy, total } = sessionData;
+
+    // summarize performance for the prompt with detailed context
+    const summary = questions.map((q, i) => {
+        const ans = answers[i];
+        const userOptIdx = ans ? ans.selectedOption : -1;
+        const isCorrect = userOptIdx === q.correctOptionIndex;
+        const userContent = userOptIdx !== -1 ? q.options[userOptIdx] : "Skipped";
+        const correctContent = q.options[q.correctOptionIndex];
+
+        return `Q${i + 1} [${q.difficulty}]: "${q.question}"
+        - Correct: "${correctContent}"
+        - User Answer: "${userContent}" (${isCorrect ? 'Correct' : 'Incorrect'})
+        - Solution logic: "${q.solution}"`;
+    }).join('\n\n');
+
+    const systemMessage = `You are a perceptive aptitude trainer analyzing a student's quiz performance. 
+    Your goal is to identify their legitimate "Thinking Pattern" by looking at *why* they might have chosen specific wrong answers (e.g., calculation error, conceptual gap, guessing).
+    
+    Analyze the provided question logs. Look for patterns in their mistakes.
+    
+    Return JSON ONLY with this structure:
+    { 
+        "thinkingPattern": "A 1-2 sentence insights on their answering style. Do not be generic. Example: 'You tend to make calculation errors on medium difficulty questions involving ratios, often choosing the distractor that omits the final step.'", 
+        "improvementTips": [
+            "Specific tip based on their actual mistakes",
+            "Another specific tip",
+            "A general strategy tip"
+        ], 
+        "overallFeedback": "A short, encouraging summary of their performance context." 
+    }`;
+
+    const userMessage = `Student Accuracy: ${accuracy}% (${total} questions). 
+    
+    Assessment Log:
+    ${summary}`;
+
+    try {
+        console.log('[AI Feedback] Requesting detailed analysis from Gemini (gemini-flash-latest)...');
+        const response = await axios.post(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${process.env.OPENAI_API_KEY}`,
+            { contents: [{ parts: [{ text: systemMessage + '\n\n' + userMessage }] }], generationConfig: { temperature: 0.7, maxOutputTokens: 1000 } },
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+        const text = response.data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+        const jsonMatch = text.match(/```json\s*([\s\S]*?)\s*```/) || text.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) throw new Error("No JSON found in response");
+
+        return JSON.parse(jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : text);
+    } catch (err) {
+        console.error('[AI Feedback] Failed to generate feedback:', err.message);
+        if (err.response?.data) {
+            console.error('[AI Feedback] API Error Details:', JSON.stringify(err.response.data, null, 2));
+        }
+        return {
+            thinkingPattern: "We couldn't analyze the specific pattern this time, but focus on the questions you missed.",
+            improvementTips: ["Review the solution steps for incorrect answers.", "Check if you made simple calculation mistakes.", "Practice similar questions to build confidence."],
+            overallFeedback: `You scored ${accuracy}%. Keep practicing!`
+        };
+    }
+}
+
+module.exports = { generateQuestions, generateFeedback };
+
