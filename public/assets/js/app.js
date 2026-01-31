@@ -1,5 +1,5 @@
 /**
- * Aptitude Master - Core Client Application Logic
+ * AptiRise - Core Client Application Logic
  * 
  * Manages UI state, practice session flow, result processing, 
  * and persistent profile updates in the browser.
@@ -196,6 +196,45 @@ function triggerConfetti(container = document.body) {
 
     setTimeout(() => confettiContainer.remove(), 5000);
 }
+
+const SessionHelpers = {
+    async startSession(config) {
+        const token = AppState.getToken();
+        if (!token) {
+            window.location.href = 'index.html';
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/session/start', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(config)
+            });
+
+            if (!res.ok) throw new Error('Failed to start session');
+
+            const sessionData = await res.json();
+            AppState.setSession(sessionData);
+            window.location.href = 'question.html';
+            // Wait, currently session playing logic is INSIDE practice.html? No, looking at practice.html it seems to handle session view.
+            // If I separate interfaces, I need a unified "Player" page or logic. 
+            // practice.html currently switches views.
+            // I should probably make a `session.html` that is JUST the player, 
+            // OR I keep using `practice.html` as the player but with a different mode?
+            // The prompt implies "separate interfaces". 
+            // Let's assume for now I'm redirecting to `practice.html?mode=play` or just `practice.html` and it checks session state.
+        } catch (err) {
+            console.error('Session start error:', err);
+            alert('Failed to start session. Please try again.');
+        }
+    }
+};
+
+window.SessionHelpers = SessionHelpers;
 
 // Initialize state on page load
 document.addEventListener('DOMContentLoaded', () => {
