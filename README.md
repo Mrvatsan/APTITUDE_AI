@@ -1,30 +1,57 @@
-# Aptitude Master 🧠 | Elite Preparation Platform
+# AptiRise 🧠 | Elite Preparation Platform
 
 A web application for AI-generated aptitude practice designed to help college students prepare for competitive exams and placements. The platform features gamified progress, Milestone-based learning, and category-specific interactive sessions.
 
 ## ✨ Features
 
-- **32 Topic Categories** - Complete coverage from Number System to Syllogism
-- **AI-Powered Questions** - Dynamic question generation via Google Gemini
-- **Offline Fallback** - 150+ curated questions for uninterrupted practice
-- **Milestone-Based Learning** - Structured 6-milestone curriculum
-- **Gamification** - XP, Streaks, and Badge progression system
-- **Personalized Practice** - Filter milestones based on preferences
+### 🎯 Core Practice Modes
+- **Suggested Today**: Daily random topic selection with a **5-hour cooldown** mechanism to encourage disciplined practice.
+- **Focus Weak Areas**: Automatically unlocks after 10 sessions. Targets topics where your accuracy is below 60%.
+- **Random Practice**: Quick-start mode with auto-detected difficulty based on your history.
+- **Milestone Journey**: Structured curriculum with 32 topics divided into 6 progressive milestones.
 
-## 🚀 Tech Stack
+### 🧠 Intelligent Assessment
+- **AI-Powered Questions**: Dynamic question generation via **Google Gemini API** ensures endless variety.
+- **Robust Fallback System**: Local database of 150+ high-quality questions ensures the app works even offline or if the API limits are reached.
+- **Auto-Difficulty**: System adapts question count (5-15) and difficulty based on user experience level.
 
-- **Frontend**: Vanilla HTML5, CSS3, JavaScript
+### 🎮 Gamification & Progress
+- **XP System**: Earn XP for every correct answer.
+- **Badge Tiers**: Progress from **Iron** 🛡️ to **Master** 👑 based on total XP.
+- **Streaks**: Daily login streaks to build habit.
+- **Visual Feedback**: Confetti celebrations for high scores and level-ups.
+
+## 🚀 Experience Workflow
+
+1.  **Onboarding**: Create an account with your goals (Placements/Exams) and milestone preferences.
+2.  **Dashboard**: 
+    - View your "Current Rank", "Total XP", and "Streak".
+    - Check the "Suggested Today" card for your daily challenge.
+3.  **Practice**:
+    - **Suggested**: One-click start for a random topic.
+    - **Weak Areas**: Lock/Unlock mechanism guides you to improve liabilities.
+    - **Milestones**: Browse topics by category (Number System, Data Interpretation, etc.).
+4.  **Session**: 
+    - Timer-based interface.
+    - Instant feedback on submission.
+    - standard "Review" mode to learn from mistakes.
+5.  **Results**:
+    - Detailed performance analytics (Accuracy, Time Taken).
+    - AI-generated "Thinking Pattern" analysis and "Improvement Tips".
+    - XP calculation and immediate Badge updates.
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Vanilla HTML5, CSS3, JavaScript (No framework overhead)
 - **Backend**: Node.js, Express.js
-- **Database**: SQLite (via Sequelize ORM)
-- **AI**: Google Gemini API
-- **Auth**: JWT (JSON Web Tokens) & Bcrypt
+- **Database**: SQLite (via Sequelize ORM) for persistent user data & history
+- **AI**: Google Gemini API for real-time content generation
+- **Auth**: JWT (JSON Web Tokens) & Bcrypt for secure access
 
 ## ⚙️ Getting Started
 
 ### Prerequisites
-
 - Node.js (v16.x or higher)
-- npm (v8.x or higher)
 - Google Gemini API Key
 
 ### Installation
@@ -38,48 +65,15 @@ A web application for AI-generated aptitude practice designed to help college st
    ```bash
    npm install
    ```
-3. Create a `.env` file in the root directory and add your credentials:
+3. Create a `.env` file in the root directory:
    ```env
    OPENAI_API_KEY=your_gemini_api_key
    PORT=3000
    JWT_SECRET=your_secret_key
    DB_PATH=./aptitude.sqlite
    ```
-
-## 🖥️ Usage
-
-1. Start the server:
-   ```bash
-   npm start
-   ```
-2. For development with auto-reload:
+4. Start the server:
    ```bash
    npm run dev
    ```
-3. Open your browser and navigate to `http://localhost:3000`.
-
-## 🛠️ API Documentation
-
-### Authentication
-- `POST /api/auth/register` - Register a new user
-- `POST /api/auth/login` - Authenticate user and receive JWT
-- `GET /api/auth/profile` - Get current user profile (Protected)
-
-### Practice Sessions
-- `GET /api/milestones` - List all milestones and topics
-- `POST /api/session/start` - Initialize a new practice session (Protected)
-- `POST /api/session/submit` - Submit an answer and get feedback (Protected)
-- `POST /api/session/result` - Finalize session and calculate XP (Protected)
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-1. Fork the Project.
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the Branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
+5. Navigate to `http://localhost:3000`
