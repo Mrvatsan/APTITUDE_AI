@@ -86,6 +86,27 @@ router.get('/', (req, res) => {
     res.json({ milestones });
 });
 
+// Get a random topic and milestone
+router.get('/random', (req, res) => {
+    if (milestones.length === 0) return res.status(404).json({ error: 'No milestones available' });
+
+    // Pick random milestone
+    const randomMilestone = milestones[Math.floor(Math.random() * milestones.length)];
+    if (!randomMilestone.topics || randomMilestone.topics.length === 0) {
+        return res.status(404).json({ error: 'No topics available' });
+    }
+
+    // Pick random topic
+    const randomTopic = randomMilestone.topics[Math.floor(Math.random() * randomMilestone.topics.length)];
+
+    res.json({
+        milestoneId: randomMilestone.id,
+        milestoneName: randomMilestone.name,
+        topicId: randomTopic.id,
+        topicName: randomTopic.name
+    });
+});
+
 // Get topics for a specific milestone
 router.get('/topics', (req, res) => {
     const milestoneId = parseInt(req.query.milestoneId);
@@ -117,7 +138,3 @@ router.get('/topic/:topicId', (req, res) => {
 });
 
 module.exports = router;
-
-// Milestone data structure validation
-
-// Error handling for milestones
