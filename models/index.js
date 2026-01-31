@@ -17,7 +17,20 @@ const sequelize = new Sequelize({
     logging: false,
 });
 
+const User = require('./user')(sequelize);
+const Milestone = require('./milestone')(sequelize);
+const Session = require('./session')(sequelize);
+
+// Define Associations
+User.hasMany(Session, { foreignKey: 'userId', as: 'sessions' });
+Session.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
 /**
  * Central Sequelize instance for database operations.
  */
-module.exports = sequelize;
+module.exports = {
+    sequelize,
+    User,
+    Milestone,
+    Session
+};
