@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Practice - AptiRise</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span style="font-size: 1.5rem;">🎲</span> Random Practice
+        </a>
+        <div class="nav-user">
+            <a href="index.html" class="btn btn-outline" style="font-size: 0.9rem;">← Dashboard</a>
+        </div>
+    </nav>
+
+    <main class="container" style="max-width: 600px; margin-top: 4rem; text-align: center;">
+        <div class="card" style="padding: 3rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">❓</div>
+            <h1 style="margin-bottom: 0.5rem;">Feeling Lucky?</h1>
+            <p class="text-muted" style="margin-bottom: 2rem;">We'll pick a random topic for you to practice.</p>
+
+            <div id="loading-state">
+                <div class="loader" style="margin: 2rem auto;"></div>
+                <p>Spinning the wheel...</p>
+            </div>
+
+            <div id="result-state" class="hidden">
+                <hr style="margin: 2rem 0; border: 0; border-top: 1px solid var(--border-color);">
+                <span class="badge badge-gold" id="milestone-badge"
+                    style="margin-bottom: 1rem; display: inline-block;">Milestone</span>
+                <h2 id="topic-name" style="font-size: 2rem; margin-bottom: 2rem; color: var(--color-primary);">Topic
+                    Name</h2>
+
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <button class="btn btn-outline" onclick="fetchRandom()">↻ Spin Again</button>
+                    <button class="btn btn-primary" onclick="startRandomSession()">Start Practice →</button>
+                </div>
+            </div>
+            <div id="error-state" class="hidden">
+                <p style="color: red;">Could not fetch a random topic.</p>
+                <button class="btn btn-primary" onclick="window.location.reload()">Try Again</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script>
+        let currentTopic = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchRandom();
+        });
+
+        async function fetchRandom() {
+            document.getElementById('loading-state').classList.remove('hidden');
+            document.getElementById('result-state').classList.add('hidden');
+            document.getElementById('error-state').classList.add('hidden');
+
+            try {
+                // Simulate a spin delay for effect
+                await new Promise(r => setTimeout(r, 800));
+
+                const res = await fetch('/api/milestones/random');
+                if (!res.ok) throw new Error('Fetch failed');
+                const data = await res.json();
+
+                currentTopic = data;
+                document.getElementById('milestone-badge').textContent = data.milestoneName;
+                document.getElementById('topic-name').textContent = data.topicName;
+
+                document.getElementById('loading-state').classList.add('hidden');
+                document.getElementById('result-state').classList.remove('hidden');
+            } catch (err) {
+                console.error(err);
+                document.getElementById('loading-state').classList.add('hidden');
+                document.getElementById('error-state').classList.remove('hidden');
+            }
+        }
+
+        async function startRandomSession() {
+            if (!currentTopic) return;
+
+            await SessionHelpers.startSession({
+                topicId: currentTopic.topicId,
+                topicName: currentTopic.topicName,
+                milestoneName: currentTopic.milestoneName,
+                numQuestions: 'auto',
+                difficulty: 'medium' // Default for random
+            });
+        }
+    </script>
+</body>
+
+</html>
