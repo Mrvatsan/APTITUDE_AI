@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity History - AptiRise</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span style="font-size: 1.5rem;">🧠</span> AptiRise
+        </a>
+        <div class="nav-user">
+            <button id="theme-toggle" class="btn btn-icon">🌙</button>
+            <a href="index.html" class="btn btn-outline" style="font-size: 0.9rem;">← Back to Dashboard</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="mb-3">
+            <h1>Activity History</h1>
+            <p class="text-muted">Review your past practice sessions and performance.</p>
+        </div>
+
+        <div class="card" style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border-color);">
+                        <th style="padding: 1rem; color: var(--text-muted); font-weight: 500;">Date</th>
+                        <th style="padding: 1rem; color: var(--text-muted); font-weight: 500;">Topic</th>
+                        <th style="padding: 1rem; color: var(--text-muted); font-weight: 500;">Score</th>
+                        <th style="padding: 1rem; color: var(--text-muted); font-weight: 500;">Accuracy</th>
+                        <th style="padding: 1rem; color: var(--text-muted); font-weight: 500;">XP</th>
+                    </tr>
+                </thead>
+                <tbody id="history-table-body">
+                    <tr>
+                        <td colspan="5" style="padding: 2rem; text-align: center; color: var(--text-muted);">
+                            Loading history...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="assets/js/theme.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/session/history', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                const tbody = document.getElementById('history-table-body');
+
+                if (!data.history || data.history.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="padding: 3rem; text-align: center;">
+                                <div style="font-size: 2rem; margin-bottom: 1rem;">📭</div>
+                                <h4 style="margin-bottom: 0.5rem;">No History Yet</h4>
+                                <p class="text-muted">Start practicing to see your results here.</p>
+                                <a href="practice.html" class="btn btn-primary" style="display: inline-block; margin-top: 1rem;">Start Practice</a>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                tbody.innerHTML = data.history.map(session => {
+                    const date = new Date(session.createdAt).toLocaleDateString(undefined, {
+                        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                    });
+
+                    let accuracyColor = 'var(--text-primary)';
+                    if (session.accuracy >= 80) accuracyColor = 'var(--success)';
+                    else if (session.accuracy < 50) accuracyColor = '#ef4444';
+
+                    return `
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 1rem; color: var(--text-secondary);">${date}</td>
+                            <td style="padding: 1rem; font-weight: 500;">${session.topicName}</td>
+                            <td style="padding: 1rem;">${session.correctAnswers} / ${session.totalQuestions}</td>
+                            <td style="padding: 1rem; font-weight: 600; color: ${accuracyColor};">${session.accuracy}%</td>
+                            <td style="padding: 1rem; color: var(--warning);">+${session.xpEarned}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error('Failed to load history', err);
+                document.getElementById('history-table-body').innerHTML = `
+                    <tr><td colspan="5" style="padding: 1rem; text-align: center; color: #ef4444;">Failed to load history.</td></tr>
+                `;
+            }
+        });
+    </script>
+</body>
+
+</html>
