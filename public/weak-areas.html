@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Weak Areas - AptiRise</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span style="font-size: 1.5rem;">🎯</span> Focus Weak Areas
+        </a>
+        <div class="nav-user">
+            <a href="index.html" class="btn btn-outline" style="font-size: 0.9rem;">← Dashboard</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div style="margin-bottom: 2rem;">
+            <h1>Needs Improvement</h1>
+            <p class="text-muted">Topics where your accuracy is below 60%. Practice these to master them!</p>
+        </div>
+
+        <div id="weak-areas-grid"
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+            <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
+                Loading your analysis...
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal removed for simplified interface -->
+
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script>
+        let selectedTopic = null;
+        let config = { numQuestions: 'auto', difficulty: 'medium' };
+        let allMilestones = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Fetch milestones to map names to IDs if needed
+            try {
+                const mRes = await fetch('/api/milestones');
+                const mData = await mRes.json();
+                allMilestones = mData.milestones;
+            } catch (e) { console.error(e); }
+
+            try {
+                const res = await fetch('/api/session/weak-areas', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (!data.eligible) {
+                    const grid = document.getElementById('weak-areas-grid');
+                    grid.style.display = 'block'; // Remove grid layout for single card
+                    grid.innerHTML = `
+                        <div class="card" style="text-align: center; padding: 4rem 2rem; max-width: 600px; margin: 0 auto;">
+                            <div style="font-size: 4rem; margin-bottom: 1.5rem;">🔒</div>
+                            <h2 style="margin-bottom: 1rem;">Feature Locked</h2>
+                            <p class="text-muted" style="margin-bottom: 2rem; font-size: 1.1rem;">
+                                ${data.message}
+                            </p>
+                            <div class="progress-bar-container" style="background: var(--bg-secondary); height: 10px; border-radius: 5px; margin: 0 auto 2rem; max-width: 300px; overflow: hidden;">
+                                <div style="width: 0%; height: 100%; background: var(--color-primary); transition: width 0.5s ease;" id="lock-progress"></div>
+                            </div>
+                            <a href="index.html" class="btn btn-primary">Return to Dashboard</a>
+                        </div>
+                    `;
+
+                    // Animate progress bar (assuming message contains something like "Complete X more" or we can infer)
+                    // Actually, let's fetch user profile to get exact count for a nice bar, or just prompt user.
+                    // The API returns message. Let's make it simpler for now or fetch user.
+                    // Let's assume 0% visual for now or PARSE the message? 
+                    // Message: "Complete X more sessions..."
+                    // Target is 10.
+                    // Let's just fetch user profile quickly to show accurate progress.
+
+                    try {
+                        const uRes = await fetch('/api/auth/profile', { headers: { 'Authorization': `Bearer ${token}` } });
+                        const user = await uRes.json();
+                        const completed = user.sessionsCompleted || 0;
+                        const percent = Math.min(100, (completed / 10) * 100);
+                        setTimeout(() => {
+                            const bar = document.getElementById('lock-progress');
+                            if (bar) bar.style.width = percent + '%';
+                        }, 100);
+                    } catch (e) { }
+
+                    return;
+                }
+
+                const grid = document.getElementById('weak-areas-grid');
+                if (data.weakAreas && data.weakAreas.length > 0) {
+                    grid.innerHTML = data.weakAreas.map(t => {
+                        // Find meta
+
+                        let topicId = null;
+                        let milestoneName = '';
+
+                        for (const m of allMilestones) {
+                            const found = m.topics.find(top => top.name === t.name);
+                            if (found) {
+                                topicId = found.id;
+                                milestoneName = m.name;
+                                break;
+                            }
+                        }
+
+                        if (!topicId) return '';
+
+                        return `
+                        <div class="card interactive" onclick="startDirectSession(${topicId}, '${t.name}', '${milestoneName}')" style="border-left: 4px solid var(--warning);">
+                             <div style="display: flex; justify-content: space-between; align-items: start;">
+                                <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">${t.name}</h3>
+                                <span class="badge badge-iron" style="background: #fee2e2; color: #ef4444;">${t.accuracy}% Acc</span>
+                            </div>
+                            <p class="text-muted" style="margin-bottom: 1rem;">${t.count} sessions</p>
+                            <button class="btn btn-sm btn-primary" style="width: 100%;">Improve Now →</button>
+                        </div>
+                        `;
+                    }).join('');
+                } else {
+                    grid.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                            <h3>🎉 Good Job!</h3>
+                            <p class="text-muted">No weak areas detected under 60% accuracy.</p>
+                            <a href="index.html" class="btn btn-primary">Back to Dashboard</a>
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+        async function startDirectSession(id, name, msName) {
+            // Immediate start with defaults
+            await SessionHelpers.startSession({
+                topicId: id,
+                topicName: name,
+                milestoneName: msName,
+                numQuestions: 'auto',
+                difficulty: 'medium'
+            });
+        }
+    </script>
+</body>
+
+</html>
