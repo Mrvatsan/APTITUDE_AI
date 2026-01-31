@@ -1,5 +1,5 @@
 /**
- * Theme Manager for Aptitude Master
+ * Theme Manager for AptiRise
  * Handles light/dark mode toggling and persistence.
  */
 
