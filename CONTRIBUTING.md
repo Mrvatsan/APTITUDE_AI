@@ -1,6 +1,6 @@
-# Contributing to Aptitude Master
+# Contributing to AptiRise
 
-First off, thank you for considering contributing to Aptitude Master! It's people like you that make Aptitude Master such a great tool.
+First off, thank you for considering contributing to AptiRise! It's people like you that make AptiRise such a great tool.
 
 ## Code of Conduct
 By participating in this project, you are expected to uphold our Code of Conduct.
