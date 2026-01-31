@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Aptitude Master</title>
+  <title>Dashboard - AptiRise</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
   <!-- Navbar -->
   <nav class="navbar">
     <div class="logo">
-      <span style="font-size: 1.5rem;">🧠</span> Aptitude Master
+      <span style="font-size: 1.5rem;">🧠</span> AptiRise
     </div>
     <div class="nav-user">
       <!-- Theme Toggle -->
@@ -119,22 +119,26 @@
           style="background: linear-gradient(135deg, var(--bg-secondary), rgba(0,184,148,0.05)); border-color: var(--color-primary);">
           <h4 style="color: var(--color-primary-dark); margin-bottom: 0.5rem;">💡 Suggested Today</h4>
           <p id="suggested-topic" style="font-weight: 500; margin-bottom: 1rem;">Time & Work</p>
-          <a href="practice.html" class="btn btn-outline"
-            style="width: 100%; border-color: var(--color-primary); color: var(--color-primary-dark);">Practice Now</a>
+          <button onclick="startSuggestedSession()" class="btn btn-outline"
+            style="width: 100%; border-color: var(--color-primary); color: var(--color-primary-dark); background: transparent; cursor: pointer;">Practice
+            Now</button>
         </div>
 
         <!-- Quick Actions -->
         <div class="card">
           <h4 class="text-muted" style="font-size: 0.9rem; text-transform: uppercase; margin-bottom: 1rem;">Quick
             Actions</h4>
-          <div class="flex-col gap-sm">
-            <a href="practice.html?random=true" class="btn btn-secondary" style="justify-content: flex-start;">
+          <div class="list-group">
+            <button onclick="handleRandomClick()" class="btn btn-secondary"
+              style="justify-content: flex-start; width: 100%; text-align: left; margin-bottom: 0.5rem;">
               🎲 Random Topic
-            </a>
-            <a href="practice.html?focus=weak" class="btn btn-secondary" style="justify-content: flex-start;">
+            </button>
+            <button onclick="window.location.href='weak-areas.html'" class="btn btn-secondary"
+              style="justify-content: flex-start; width: 100%; text-align: left; margin-bottom: 0.5rem;">
               🎯 Focus Weak Areas
-            </a>
-            <a href="#" class="btn btn-secondary" id="review-btn" style="justify-content: flex-start;">
+            </button>
+            <a href="history.html" class="btn btn-secondary" id="review-btn"
+              style="justify-content: flex-start; width: 100%;">
               📝 Review History
             </a>
           </div>
@@ -171,8 +175,18 @@
 
   <script src="assets/js/theme.js"></script>
   <script src="assets/js/app.js"></script>
+  <script src="assets/js/dashboard.js"></script>
+  <script>
+    function handleRandomClick() {
+      window.location.href = 'random-practice.html';
+    }
+
+  </script>
   <script>
     // Check auth and load dashboard
+    let allMilestones = [];
+    let currentSuggested = null;
+
     document.addEventListener('DOMContentLoaded', () => {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -264,10 +278,16 @@
       }
 
       // Load milestones
+      // Load milestones
       try {
         const res = await fetch('/api/milestones');
         const data = await res.json();
-        // ... (rest of milestone logic)
+
+        // Store for global access
+        allMilestones = data.milestones;
+
+        // Pick Suggested Topic
+        pickDailySuggestion();
 
         let milestonesToDisplay = data.milestones;
         if (user.preferences && user.preferences.selectedMilestones &&
@@ -281,6 +301,77 @@
       } catch (err) {
         console.error('Failed to load milestones', err);
       }
+    }
+
+    function pickDailySuggestion() {
+      const suggestedCard = document.getElementById('suggested-topic').parentElement;
+      const practiceBtn = suggestedCard.querySelector('button');
+      const topicNameEl = document.getElementById('suggested-topic');
+
+      // Check for cooldown
+      const cooldown = localStorage.getItem('suggestedCooldown');
+      if (cooldown && parseInt(cooldown) > Date.now()) {
+        const remaining = parseInt(cooldown) - Date.now();
+        const hrs = Math.floor(remaining / 3600000);
+        const mins = Math.floor((remaining % 3600000) / 60000);
+
+        topicNameEl.textContent = 'Come back later!';
+        topicNameEl.style.color = 'var(--text-muted)';
+
+        practiceBtn.disabled = true;
+        practiceBtn.style.opacity = '0.7';
+        practiceBtn.style.cursor = 'not-allowed';
+        practiceBtn.textContent = `Next in ${hrs}h ${mins}m`;
+        return;
+      } else {
+        // Clear expired cooldown
+        if (cooldown) localStorage.removeItem('suggestedCooldown');
+
+        practiceBtn.disabled = false;
+        practiceBtn.style.opacity = '1';
+        practiceBtn.style.cursor = 'pointer';
+        practiceBtn.textContent = 'Practice Now';
+        topicNameEl.style.color = 'var(--text-primary)';
+      }
+
+      if (!allMilestones || allMilestones.length === 0) return;
+
+      // Flatten all topics
+      const allTopics = [];
+      allMilestones.forEach(m => {
+        if (m.topics) {
+          m.topics.forEach(t => {
+            allTopics.push({ ...t, milestoneName: m.name });
+          });
+        }
+      });
+
+      if (allTopics.length === 0) return;
+
+      // Pick random topic
+      const randomIndex = Math.floor(Math.random() * allTopics.length);
+      currentSuggested = allTopics[randomIndex];
+
+      // Update UI
+      if (topicNameEl) topicNameEl.textContent = currentSuggested.name;
+    }
+
+    async function startSuggestedSession() {
+      if (!currentSuggested) return;
+
+      // Flag this as a suggested session start
+      localStorage.setItem('activeSuggestedSession', 'true');
+
+      // Random questions between 5 and 20
+      const randomCount = Math.floor(Math.random() * 16) + 5; // 0-15 + 5 = 5-20
+
+      await SessionHelpers.startSession({
+        topicId: currentSuggested.id,
+        topicName: currentSuggested.name,
+        milestoneName: currentSuggested.milestoneName,
+        numQuestions: randomCount,
+        difficulty: 'medium' // Defaulting to medium for suggested
+      });
     }
 
     function getBadgeEmoji(badge) {
