@@ -204,3 +204,14 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
         console.error('[Session] Failed to persist session:', dbErr);
     }
 
+    // Save session stats to user profile if not already saved for this session
+    // Note: In a real DB we'd have a separate Sessions table and join. 
+    // Here we just update aggregates on the User model.
+    try {
+        const user = await User.findByPk(req.user.id);
+        if (user) {
+            // Update Aggregate Stats
+            user.totalXP += xpEarned;
+            user.sessionsCompleted += 1;
+            user.totalAccuracySum += accuracy;
+
