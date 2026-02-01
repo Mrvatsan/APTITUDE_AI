@@ -331,3 +331,11 @@ router.get('/weak-areas', authMiddleware, async (req, res) => {
             topicStats[s.topicName].accuracySum += s.accuracy;
         });
 
+        const weakAreas = [];
+        for (const [name, stats] of Object.entries(topicStats)) {
+            const avg = stats.accuracySum / stats.count;
+            if (avg < 60) {
+                weakAreas.push({ name, accuracy: Math.round(avg), count: stats.count });
+            }
+        }
+
