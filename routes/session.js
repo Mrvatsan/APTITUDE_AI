@@ -302,3 +302,17 @@ router.get('/history', authMiddleware, async (req, res) => {
     }
 });
 
+/**
+ * Identify weak areas based on past performance.
+ * @route GET /api/session/weak-areas
+ */
+router.get('/weak-areas', authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findByPk(req.user.id);
+        if (user.sessionsCompleted < 10) {
+            return res.json({
+                eligible: false,
+                message: `Complete ${10 - user.sessionsCompleted} more sessions to unlock Weak Area analysis.`
+            });
+        }
+
