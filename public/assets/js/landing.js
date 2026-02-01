@@ -51,3 +51,47 @@ function checkAuth() {
 }
 
 /* ===== Scroll Animations ===== */
+function initScrollAnimations() {
+    // Add fade-in class to elements we want to animate
+    const animatedElements = document.querySelectorAll('.card, .feature-box, .milestone-card, .hero-content, .hero-visual');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target); // Animate once
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    animatedElements.forEach(el => {
+        el.classList.add('fade-in-section');
+        observer.observe(el);
+    });
+}
+
+// Additional CSS for animations (injected dynamically or assume in CSS)
+// Since I cannot edit CSS easily right now without another step, 
+// I will inject the animation styles here for completeness if they aren't in CSS.
+// But `landing.css` didn't have specific animation classes.
+// I will add a style block to head.
+
+const style = document.createElement('style');
+style.textContent = `
+    .fade-in-section {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    
+    .fade-in-section.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Staggered delays if needed, but per-element observation handles basic stagger by scroll position */
+`;
+document.head.appendChild(style);
