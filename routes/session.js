@@ -91,3 +91,7 @@ router.get('/question/:sessionId/:index', authMiddleware, (req, res) => {
     const { sessionId, index } = req.params;
     const session = sessions[sessionId];
 
+    if (!session) {
+        return res.status(404).json({ error: 'Session not found' });
+    }
+
