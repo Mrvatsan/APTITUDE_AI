@@ -26,3 +26,8 @@ router.post('/start', authMiddleware, async (req, res) => {
     let { topicId, topicName, milestoneName, numQuestions, difficulty } = req.body;
     const userId = req.user.id;
 
+    try {
+        // Auto-detect session size if not specified or explicitly 'auto'
+        if (!numQuestions || numQuestions === 'auto') {
+            const historyCount = await Session.count({ where: { userId } });
+
