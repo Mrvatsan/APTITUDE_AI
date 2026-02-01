@@ -151,3 +151,7 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
     const { sessionId } = req.params;
     const session = sessions[sessionId];
 
+    if (!session) {
+        return res.status(404).json({ error: 'Session not found' });
+    }
+
