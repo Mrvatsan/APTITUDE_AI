@@ -171,3 +171,6 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
         };
     });
 
+    // Calculate accuracy percentage
+    const accuracy = Math.round((correct / total) * 100);
+
