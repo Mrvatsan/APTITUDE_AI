@@ -344,3 +344,9 @@ router.get('/weak-areas', authMiddleware, async (req, res) => {
             weakAreas: weakAreas.sort((a, b) => a.accuracy - b.accuracy)
         });
 
+    } catch (err) {
+        console.error('Failed to fetch weak areas:', err);
+        res.status(500).json({ error: 'Failed to analyze weak areas' });
+    }
+});
+
