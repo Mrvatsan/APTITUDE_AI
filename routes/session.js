@@ -110,3 +110,11 @@ router.get('/question/:sessionId/:index', authMiddleware, (req, res) => {
     });
 });
 
+/**
+ * Records a user's answer and provides immediate correctness feedback.
+ * @route POST /api/session/answer
+ */
+router.post('/answer', authMiddleware, (req, res) => {
+    const { sessionId, questionIndex, selectedOption } = req.body;
+    const session = sessions[sessionId];
+
