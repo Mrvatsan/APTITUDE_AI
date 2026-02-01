@@ -179,3 +179,8 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
     const baseXP = 10;
     const xpEarned = Math.round(correct * baseXP * categoryWeight);
 
+    // Save session to database
+    try {
+        // Check if session already exists to avoid duplicates on refresh
+        const existingSession = await Session.findOne({ where: { id: sessionId } });
+
