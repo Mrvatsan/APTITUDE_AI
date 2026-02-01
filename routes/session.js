@@ -70,3 +70,16 @@ router.post('/start', authMiddleware, async (req, res) => {
             durationSeconds: durationSeconds // Store expected duration
         };
 
+        res.json({
+            sessionId,
+            totalQuestions: generated.questions.length,
+            currentQuestion: generated.questions[0],
+            currentIndex: 0,
+            durationSeconds
+        });
+    } catch (err) {
+        console.error('Session start error:', err);
+        res.status(500).json({ error: 'Failed to start session' });
+    }
+});
+
