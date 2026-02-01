@@ -133,3 +133,13 @@ router.post('/answer', authMiddleware, (req, res) => {
     const question = session.questions[questionIndex];
     const isCorrect = selectedOption === question.correctOptionIndex;
 
+    res.json({
+        message: 'Answer recorded',
+        isCorrect,
+        correctOptionIndex: question.correctOptionIndex,
+        solution: question.solution,
+        nextIndex: session.currentIndex,
+        isComplete: session.currentIndex >= session.questions.length
+    });
+});
+
