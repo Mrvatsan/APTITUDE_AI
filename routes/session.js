@@ -233,3 +233,17 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
                 const diffTime = Math.abs(today - lastActive);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+                if (diffDays === 1) {
+                    // Consecutive day
+                    user.streakCount += 1;
+                    user.lastActiveDate = new Date();
+                } else if (diffDays > 1) {
+                    // Break in streak
+                    user.streakCount = 1;
+                    user.lastActiveDate = new Date();
+                } else {
+                    // Same day (diffDays === 0) - streak remains same, just update timestamp if needed
+                    user.lastActiveDate = new Date();
+                }
+            }
+
