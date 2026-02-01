@@ -269,3 +269,5 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
         console.error('Error getting feedback:', err);
     }
 
+    console.log(`[Session] Session completed: User=${req.user.id}, Accuracy=${accuracy}%, XP=${xpEarned}`);
+
