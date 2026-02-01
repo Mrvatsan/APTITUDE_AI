@@ -376,3 +376,43 @@ body.dark .theme-toggle:hover {
     min-height: 300px;
 }
 
+/* ===== Problem / Solution ===== */
+.problem-solution {
+    background: var(--bg-secondary);
+}
+
+.bg-secondary {
+    background: var(--bg-secondary);
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+}
+
+.card {
+    background: var(--bg-primary);
+    padding: 32px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease;
+}
+
+.problem-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(14, 165, 233, 0.1);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+}
+
