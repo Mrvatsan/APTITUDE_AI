@@ -49,3 +49,5 @@ router.post('/start', authMiddleware, async (req, res) => {
             difficulty: difficulty || 'medium'
         });
 
+        console.log(`[Session] Questions successfully fetched/generated for ${topicName}`);
+
