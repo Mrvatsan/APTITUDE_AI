@@ -271,3 +271,16 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
 
     console.log(`[Session] Session completed: User=${req.user.id}, Accuracy=${accuracy}%, XP=${xpEarned}`);
 
+    res.json({
+        sessionId,
+        total,
+        correct,
+        accuracy,
+        xpEarned,
+        progressPercent,
+        details,
+        feedback, // Add feedback to response
+        duration: Math.round((Date.now() - session.startTime) / 1000)
+    });
+});
+
