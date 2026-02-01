@@ -416,3 +416,45 @@ body.dark .theme-toggle:hover {
     margin-bottom: 24px;
 }
 
+/* ===== Milestones ===== */
+.milestones-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-top: 48px;
+}
+
+.milestone-card {
+    background: var(--bg-secondary);
+    padding: 24px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.milestone-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--border-color);
+}
+
+.milestone-card:hover::before {
+    background: var(--primary);
+}
+
+.milestone-badge {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    background: var(--bg-primary);
+    border-radius: 4px;
+    color: var(--text-secondary);
+}
+
