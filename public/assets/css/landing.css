@@ -510,3 +510,39 @@ body.dark .theme-toggle:hover {
     border: 1px solid var(--border-color);
 }
 
+/* ===== Pricing ===== */
+.pricing-card {
+    max-width: 500px;
+    margin: 0 auto;
+    background: var(--bg-secondary);
+    padding: 48px;
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--primary);
+    box-shadow: 0 20px 40px -10px rgba(14, 165, 233, 0.2);
+    text-align: center;
+}
+
+.price {
+    font-size: 4rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 24px 0;
+}
+
+.pricing-features {
+    text-align: left;
+    margin: 32px 0;
+}
+
+.pricing-features li {
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.check-icon {
+    color: var(--primary);
+    font-weight: bold;
+}
+
