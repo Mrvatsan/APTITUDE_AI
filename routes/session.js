@@ -322,3 +322,12 @@ router.get('/weak-areas', authMiddleware, async (req, res) => {
             where: { userId: req.user.id }
         });
 
+        const topicStats = {};
+        sessions.forEach(s => {
+            if (!topicStats[s.topicName]) {
+                topicStats[s.topicName] = { total: 0, accuracySum: 0, count: 0 };
+            }
+            topicStats[s.topicName].count++;
+            topicStats[s.topicName].accuracySum += s.accuracy;
+        });
+
