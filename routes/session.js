@@ -15,3 +15,6 @@ const authMiddleware = require('../middleware/auth');
 const { Session, User } = require('../models/index');
 const { Op } = require('sequelize');
 
+// In-memory store for active sessions (persisted to DB on completion)
+const sessions = {};
+
