@@ -129,3 +129,7 @@ router.post('/answer', authMiddleware, (req, res) => {
     };
     session.currentIndex = questionIndex + 1;
 
+    // Check if immediate feedback mode
+    const question = session.questions[questionIndex];
+    const isCorrect = selectedOption === question.correctOptionIndex;
+
