@@ -220,3 +220,8 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
             // Reset time part to ensure we strictly compare dates
             today.setHours(0, 0, 0, 0);
 
+            let lastActive = user.lastActiveDate ? new Date(user.lastActiveDate) : null;
+            if (lastActive) {
+                lastActive.setHours(0, 0, 0, 0);
+            }
+
