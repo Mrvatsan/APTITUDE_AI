@@ -31,3 +31,13 @@ router.post('/start', authMiddleware, async (req, res) => {
         if (!numQuestions || numQuestions === 'auto') {
             const historyCount = await Session.count({ where: { userId } });
 
+            if (historyCount < 10) {
+                numQuestions = 5; // Beginner
+            } else if (historyCount < 25) {
+                numQuestions = 10; // Intermediate
+            } else {
+                numQuestions = 15; // Advanced
+            }
+            console.log(`[Session] Auto-detected size for user ${userId} (${historyCount} sessions): ${numQuestions} questions`);
+        }
+
