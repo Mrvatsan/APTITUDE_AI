@@ -350,3 +350,6 @@ router.get('/weak-areas', authMiddleware, async (req, res) => {
     }
 });
 
+module.exports = router;
+
+
