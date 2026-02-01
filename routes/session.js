@@ -143,3 +143,11 @@ router.post('/answer', authMiddleware, (req, res) => {
     });
 });
 
+/**
+ * Compiles and returns the final statistics for a completed session.
+ * @route GET /api/session/result/:sessionId
+ */
+router.get('/result/:sessionId', authMiddleware, async (req, res) => {
+    const { sessionId } = req.params;
+    const session = sessions[sessionId];
+
