@@ -339,3 +339,8 @@ router.get('/weak-areas', authMiddleware, async (req, res) => {
             }
         }
 
+        res.json({
+            eligible: true,
+            weakAreas: weakAreas.sort((a, b) => a.accuracy - b.accuracy)
+        });
+
