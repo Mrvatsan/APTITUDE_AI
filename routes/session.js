@@ -100,3 +100,13 @@ router.get('/question/:sessionId/:index', authMiddleware, (req, res) => {
         return res.status(400).json({ error: 'Invalid question index' });
     }
 
+    const question = session.questions[idx];
+    res.json({
+        question: question.question,
+        options: question.options,
+        currentIndex: idx,
+        totalQuestions: session.questions.length,
+        isLast: idx === session.questions.length - 1
+    });
+});
+
