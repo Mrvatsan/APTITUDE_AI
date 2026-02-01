@@ -18,3 +18,11 @@ const { Op } = require('sequelize');
 // In-memory store for active sessions (persisted to DB on completion)
 const sessions = {};
 
+/**
+ * Initializes a new practice session for a specific topic.
+ * @route POST /api/session/start
+ */
+router.post('/start', authMiddleware, async (req, res) => {
+    let { topicId, topicName, milestoneName, numQuestions, difficulty } = req.body;
+    const userId = req.user.id;
+
