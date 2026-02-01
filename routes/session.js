@@ -51,3 +51,11 @@ router.post('/start', authMiddleware, async (req, res) => {
 
         console.log(`[Session] Questions successfully fetched/generated for ${topicName}`);
 
+        const durationMap = {
+            5: 8 * 60,
+            10: 15 * 60,
+            15: 23 * 60,
+            20: 30 * 60
+        };
+        const durationSeconds = durationMap[numQuestions] || (numQuestions * 90); // Fallback 1.5 min per q
+
