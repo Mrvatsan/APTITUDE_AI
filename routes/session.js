@@ -316,3 +316,9 @@ router.get('/weak-areas', authMiddleware, async (req, res) => {
             });
         }
 
+        // Find topics with average accuracy < 60%
+        // We'll verify raw sessions for this logic
+        const sessions = await Session.findAll({
+            where: { userId: req.user.id }
+        });
+
