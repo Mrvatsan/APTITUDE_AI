@@ -184,3 +184,23 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
         // Check if session already exists to avoid duplicates on refresh
         const existingSession = await Session.findOne({ where: { id: sessionId } });
 
+        if (!existingSession) {
+            await Session.create({
+                id: sessionId,
+                userId: req.user.id,
+                topicId: session.topicId,
+                topicName: session.questions[0].topic || 'General', // Fallback
+                milestoneName: session.questions[0].milestone || 'Unknown',
+                totalQuestions: total,
+                correctAnswers: correct,
+                accuracy, // percentage
+                xpEarned,
+                difficulty: session.questions[0].difficulty || 'medium',
+                durationSeconds: Math.round((Date.now() - session.startTime) / 1000)
+            });
+            console.log(`[Session] Persisted session ${sessionId} to DB.`);
+        }
+    } catch (dbErr) {
+        console.error('[Session] Failed to persist session:', dbErr);
+    }
+
