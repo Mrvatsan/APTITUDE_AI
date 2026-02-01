@@ -225,3 +225,11 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
                 lastActive.setHours(0, 0, 0, 0);
             }
 
+            if (!lastActive) {
+                // First session ever
+                user.streakCount = 1;
+                user.lastActiveDate = new Date();
+            } else {
+                const diffTime = Math.abs(today - lastActive);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
