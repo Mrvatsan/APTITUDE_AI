@@ -215,3 +215,8 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
             user.sessionsCompleted += 1;
             user.totalAccuracySum += accuracy;
 
+            // --- Streak Logic ---
+            const today = new Date();
+            // Reset time part to ensure we strictly compare dates
+            today.setHours(0, 0, 0, 0);
+
