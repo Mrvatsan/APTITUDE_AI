@@ -41,3 +41,11 @@ router.post('/start', authMiddleware, async (req, res) => {
             console.log(`[Session] Auto-detected size for user ${userId} (${historyCount} sessions): ${numQuestions} questions`);
         }
 
+        console.log(`[Session] Starting session for Topic="${topicName}", Difficulty="${difficulty}", Questions=${numQuestions}`);
+        const generated = await aiGenerator.generateQuestions({
+            category: topicName || 'General Aptitude',
+            milestone: milestoneName || 'Milestone 1',
+            n: numQuestions,
+            difficulty: difficulty || 'medium'
+        });
+
