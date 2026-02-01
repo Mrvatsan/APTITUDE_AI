@@ -252,3 +252,6 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
         }
     } catch (e) { console.error(e); }
 
+    // Progress is capped at 100%
+    const progressPercent = Math.min(accuracy * categoryWeight, 100);
+
