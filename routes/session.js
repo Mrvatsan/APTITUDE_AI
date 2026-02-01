@@ -95,3 +95,8 @@ router.get('/question/:sessionId/:index', authMiddleware, (req, res) => {
         return res.status(404).json({ error: 'Session not found' });
     }
 
+    const idx = parseInt(index);
+    if (idx < 0 || idx >= session.questions.length) {
+        return res.status(400).json({ error: 'Invalid question index' });
+    }
+
