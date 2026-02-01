@@ -122,3 +122,10 @@ router.post('/answer', authMiddleware, (req, res) => {
         return res.status(404).json({ error: 'Session not found' });
     }
 
+    // Record answer
+    session.answers[questionIndex] = {
+        selectedOption,
+        timestamp: Date.now()
+    };
+    session.currentIndex = questionIndex + 1;
+
