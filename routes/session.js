@@ -118,3 +118,7 @@ router.post('/answer', authMiddleware, (req, res) => {
     const { sessionId, questionIndex, selectedOption } = req.body;
     const session = sessions[sessionId];
 
+    if (!session) {
+        return res.status(404).json({ error: 'Session not found' });
+    }
+
