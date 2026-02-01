@@ -284,3 +284,21 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
     });
 });
 
+/**
+ * Get user's assessment history.
+ * @route GET /api/session/history
+ */
+router.get('/history', authMiddleware, async (req, res) => {
+    try {
+        const history = await Session.findAll({
+            where: { userId: req.user.id },
+            order: [['createdAt', 'DESC']],
+            limit: 50 // Limit to last 50 sessions
+        });
+        res.json({ history });
+    } catch (err) {
+        console.error('Failed to fetch history:', err);
+        res.status(500).json({ error: 'Failed to fetch history' });
+    }
+});
+
