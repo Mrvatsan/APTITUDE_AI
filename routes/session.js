@@ -155,3 +155,19 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
         return res.status(404).json({ error: 'Session not found' });
     }
 
+    const total = session.questions.length;
+    let correct = 0;
+    const details = session.questions.map((q, idx) => {
+        const ans = session.answers[idx];
+        const isCorrect = ans && ans.selectedOption === q.correctOptionIndex;
+        if (isCorrect) correct++;
+        return {
+            question: q.question,
+            options: q.options,
+            correctOptionIndex: q.correctOptionIndex,
+            userAnswer: ans ? ans.selectedOption : null,
+            isCorrect,
+            solution: q.solution
+        };
+    });
+
