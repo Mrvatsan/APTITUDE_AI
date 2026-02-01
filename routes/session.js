@@ -59,3 +59,14 @@ router.post('/start', authMiddleware, async (req, res) => {
         };
         const durationSeconds = durationMap[numQuestions] || (numQuestions * 90); // Fallback 1.5 min per q
 
+        const sessionId = `sess_${Date.now()}_${userId}`;
+        sessions[sessionId] = {
+            userId,
+            topicId,
+            questions: generated.questions,
+            answers: [],
+            currentIndex: 0,
+            startTime: Date.now(),
+            durationSeconds: durationSeconds // Store expected duration
+        };
+
