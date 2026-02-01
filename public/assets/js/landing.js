@@ -39,3 +39,15 @@ function initTheme() {
 }
 
 /* ===== Auth Check ===== */
+function checkAuth() {
+    const token = localStorage.getItem('token');
+    if (token) {
+        // User is logged in
+        const dashboardBtn = document.getElementById('dashboard-link');
+        if (dashboardBtn) {
+            dashboardBtn.style.display = 'inline-flex';
+        }
+    }
+}
+
+/* ===== Scroll Animations ===== */
