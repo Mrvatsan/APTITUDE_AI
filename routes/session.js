@@ -174,3 +174,8 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
     // Calculate accuracy percentage
     const accuracy = Math.round((correct / total) * 100);
 
+    // XP calculation: Accuracy * baseXP * category specific weight
+    const categoryWeight = 1.0; // TODO: Fetch weight from topic configuration
+    const baseXP = 10;
+    const xpEarned = Math.round(correct * baseXP * categoryWeight);
+
