@@ -255,3 +255,17 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
     // Progress is capped at 100%
     const progressPercent = Math.min(accuracy * categoryWeight, 100);
 
+    // Generate AI Feedback
+    let feedback = null;
+    try {
+        console.log(`[Session] Generating feedback for session ${sessionId}...`);
+        feedback = await aiGenerator.generateFeedback({
+            questions: session.questions,
+            answers: session.answers,
+            accuracy,
+            total
+        });
+    } catch (err) {
+        console.error('Error getting feedback:', err);
+    }
+
