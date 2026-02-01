@@ -247,3 +247,8 @@ router.get('/result/:sessionId', authMiddleware, async (req, res) => {
                 }
             }
 
+            await user.save();
+            console.log(`[Session] User stats updated. Streak: ${user.streakCount}, XP: ${user.totalXP}`);
+        }
+    } catch (e) { console.error(e); }
+
