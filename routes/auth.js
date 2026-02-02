@@ -155,6 +155,8 @@ router.post('/login/step1', async (req, res) => {
         const validPassword = await bcrypt.compare(password, user.passwordHash);
         if (!validPassword) {
             console.warn(`[Auth] Step 1 failed: Incorrect password for "${email}"`);
+        // Generate cryptographically random OTP
+
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
