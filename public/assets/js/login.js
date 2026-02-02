@@ -42,6 +42,8 @@ async function sendOTP() {
     // Validation
     if (!username || !email || !password) {
         showError('Please fill in all fields');
+        // Verify OTP with backend
+
         return;
     }
 
