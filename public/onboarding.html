@@ -78,7 +78,7 @@
                         Continue
                     </button>
                     <p class="text-center mt-2 text-muted" style="font-size: 0.9rem;">
-                        Already have an account? <a href="index.html">Log in</a>
+                        Already have an account? <a href="login.html">Log in</a>
                     </p>
                 </div>
 
@@ -94,7 +94,8 @@
                         <span id="milestone-count" class="badge" style="background: var(--bg-primary);">0/4</span>
                     </div>
 
-                    <div id="milestone-options" class="mb-3" style="max-height: 300px; overflow-y: auto;">
+                    <div id="milestone-options" class="mb-3"
+                        style="max-height: 400px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
                         <!-- Populated by JS -->
                     </div>
 
@@ -178,15 +179,36 @@
 
         function renderMilestoneOptions(milestones) {
             const container = document.getElementById('milestone-options');
+
+            // Difficulty badge colors
+            const difficultyColors = {
+                'easy': 'var(--success)',
+                'medium': 'var(--warning)',
+                'hard': 'var(--error)'
+            };
+
             container.innerHTML = milestones.map(m => `
                 <div class="milestone-option ${selectedMilestones.has(m.id) ? 'selected' : ''}" 
-                     style="padding: 0.75rem; border-bottom: 1px solid var(--border-color); cursor: pointer; display: flex; justify-content: space-between; align-items: center;"
+                     style="padding: 1rem; border-bottom: 1px solid var(--border-color); cursor: pointer; background: ${selectedMilestones.has(m.id) ? 'rgba(0,184,148,0.03)' : 'transparent'}; transition: all 0.2s ease;"
                      onclick="toggleMilestone(${m.id}, this)">
-                     <div>
-                        <div style="font-weight: 600; font-size: 0.95rem;">${m.name}</div>
-                        <div style="font-size: 0.8rem; color: var(--text-muted);">${m.topics.length} topics</div>
-                     </div>
-                     <span class="check-icon" style="color: var(--success); font-weight: bold; opacity: ${selectedMilestones.has(m.id) ? '1' : '0'};">✓</span>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; font-size: 0.95rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                ${m.name}
+                                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 400;">(${m.topics.length} topics)</span>
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6;">
+                                ${m.topics.map(t => `
+                                    <div style="padding: 0.15rem 0; display: flex; align-items: center; gap: 0.3rem;">
+                                        <span style="color: var(--text-muted);">•</span>
+                                        <span>${t.name}</span>
+                                        <span style="font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 3px; background: ${difficultyColors[t.difficultyTag] || 'var(--bg-secondary)'}; color: white; font-weight: 500;">${t.difficultyTag}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <span class="check-icon" style="color: var(--success); font-weight: bold; font-size: 1.2rem; margin-left: 1rem; opacity: ${selectedMilestones.has(m.id) ? '1' : '0'}; transition: opacity 0.2s ease;">✓</span>
+                    </div>
                 </div>
             `).join('');
         }
