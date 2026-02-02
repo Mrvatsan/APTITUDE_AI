@@ -123,6 +123,8 @@ router.post('/register', async (req, res) => {
 // 2-Step Authentication Endpoints
 // ==========================================
 
+// OTP-based authentication imports
+
 const redisClient = require('../utils/redisClient');
 const { sendOTP } = require('../utils/emailService');
 
