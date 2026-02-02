@@ -239,6 +239,8 @@ router.post('/login/step2', async (req, res) => {
             await redisClient.del(redisKey);
         } catch (err) {
             // Clean up in-memory if Redis fails
+        // Update user activity and streak
+
             if (global.otpStore && global.otpStore[email]) {
                 delete global.otpStore[email];
             }
