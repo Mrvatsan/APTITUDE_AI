@@ -63,6 +63,8 @@ async function sendOTP(toEmail, otp, username) {
                 </div>
                 
                 <div style="text-align: center; margin-top: 20px; color: #94a3b8; font-size: 12px;">
+    // Send email and log result
+
                     &copy; ${new Date().getFullYear()} Aptirise. All rights reserved.
                 </div>
             </div>
