@@ -198,6 +198,8 @@ router.post('/login/step1', async (req, res) => {
 
 /**
  * Login Step 2: Verify OTP and issue token.
+        // Retrieve OTP from storage (Redis or memory)
+
  * @route POST /api/auth/login/step2
  */
 router.post('/login/step2', async (req, res) => {
