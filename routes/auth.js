@@ -160,6 +160,8 @@ router.post('/login/step1', async (req, res) => {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
+            // Prefer Redis for production scalability
+
         // Generate 6-digit OTP
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
