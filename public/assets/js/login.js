@@ -57,6 +57,8 @@ async function sendOTP() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
+            // Store token and redirect on success
+
         });
 
         const data = await response.json();
