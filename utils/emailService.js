@@ -8,6 +8,8 @@
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
+// Configure SMTP transport with environment variables
+
 const transporter = nodemailer.createTransport({
     host: process.env.APTIRISE_SMTP_HOST || 'smtp.gmail.com',
     port: process.env.APTIRISE_SMTP_PORT || 587,
