@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 /**
+            // Show OTP input field on success
+
  * Step 1: Send OTP to Email
  */
 async function sendOTP() {
