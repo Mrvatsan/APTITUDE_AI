@@ -119,32 +119,126 @@ router.post('/register', async (req, res) => {
     }
 });
 
-/**
- * User login endpoint.
- * @route POST /api/auth/login
- */
-router.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+// ==========================================
+// 2-Step Authentication Endpoints
+// ==========================================
 
-    if (!username || !password) {
-        return res.status(400).json({ error: 'Username and password required' });
+const redisClient = require('../utils/redisClient');
+const { sendOTP } = require('../utils/emailService');
+
+/**
+ * Login Step 1: Validate credentials and send OTP.
+ * @route POST /api/auth/login/step1
+ */
+router.post('/login/step1', async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password required' });
     }
 
     try {
-        // Find user in database
-        const user = await User.findOne({ where: { username } });
+        // Find user by EMAIL (mandatory for OTP)
+        const user = await User.findOne({ where: { email } });
+
         if (!user) {
-            console.warn(`[Auth] Failed login attempt: User "${username}" not found`);
-            return res.status(401).json({ error: 'Account not found. Please check your username or register.' });
+            // Security: Don't reveal if user exists or not, but for UX we might need to be specific?
+            // "Accept Aptirise email + Aptirise password"
+            console.warn(`[Auth] Step 1 failed: Email "${email}" not found`);
+            return res.status(401).json({ error: 'Invalid credentials' });
         }
 
         const validPassword = await bcrypt.compare(password, user.passwordHash);
         if (!validPassword) {
-            console.warn(`[Auth] Failed login attempt: Incorrect password for user "${username}"`);
-            return res.status(401).json({ error: 'Incorrect password. Please try again.' });
+            console.warn(`[Auth] Step 1 failed: Incorrect password for "${email}"`);
+            return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        // Update streak logic
+        // Generate 6-digit OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        // Store in Redis (Expires in 5 minutes = 300 seconds)
+        // If Redis unavailable, use in-memory fallback
+        const redisKey = `otp:${email}`;
+        try {
+            await redisClient.setEx(redisKey, 300, otp);
+            console.log(`[Auth] OTP stored in Redis for ${email}`);
+        } catch (redisErr) {
+            console.warn('[Auth] Redis unavailable, using in-memory OTP storage');
+            if (!global.otpStore) global.otpStore = {};
+            global.otpStore[email] = { otp, expiresAt: Date.now() + 300000 };
+        }
+
+        // Send OTP Email
+        try {
+            await sendOTP(email, otp, user.username);
+        } catch (emailErr) {
+            console.error('[Auth] Failed to send email:', emailErr);
+            return res.status(500).json({ error: 'Failed to send verification code. Please try again.' });
+        }
+
+        console.log(`[Auth] OTP sent to ${email}`);
+        res.json({ message: 'Verification code sent to your email' });
+
+    } catch (err) {
+        console.error('[Auth] Login Step 1 error:', err);
+        res.status(500).json({ error: 'Login failed. Please try again.' });
+    }
+});
+
+/**
+ * Login Step 2: Verify OTP and issue token.
+ * @route POST /api/auth/login/step2
+ */
+router.post('/login/step2', async (req, res) => {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+        return res.status(400).json({ error: 'Email and valid OTP required' });
+    }
+
+    try {
+        const redisKey = `otp:${email}`;
+        let storedOtp;
+
+        // Try Redis first, fallback to in-memory
+        try {
+            storedOtp = await redisClient.get(redisKey);
+        } catch (redisErr) {
+            console.warn('[Auth] Redis unavailable, checking in-memory store');
+            const memStore = global.otpStore && global.otpStore[email];
+            if (memStore && memStore.expiresAt > Date.now()) {
+                storedOtp = memStore.otp;
+            }
+        }
+
+        if (!storedOtp) {
+            return res.status(400).json({ error: 'Verification code expired or invalid' });
+        }
+
+        if (storedOtp !== otp) {
+            return res.status(400).json({ error: 'Invalid verification code' });
+        }
+
+        // OTP Valid - Clean up
+        try {
+            await redisClient.del(redisKey);
+        } catch (err) {
+            // Clean up in-memory if Redis fails
+            if (global.otpStore && global.otpStore[email]) {
+                delete global.otpStore[email];
+            }
+        }
+
+        // Fetch user to generate token
+        const user = await User.findOne({ where: { email } });
+
+        if (!user) {
+            // Should not happen if Step 1 passed and data integrity holds
+            return res.status(500).json({ error: 'User record not found' });
+        }
+
+        // Update functionality (Streaks etc) matches original login flow
         const today = new Date().toDateString();
         const lastActive = user.lastActiveDate ? new Date(user.lastActiveDate).toDateString() : null;
 
@@ -156,7 +250,7 @@ router.post('/login', async (req, res) => {
                 user.streakCount = 1; // Reset streak
             }
             user.lastActiveDate = new Date().toISOString();
-            await user.save(); // Persist streak update to database
+            await user.save();
         }
 
         const token = jwt.sign(
@@ -164,6 +258,8 @@ router.post('/login', async (req, res) => {
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
+
+        console.log(`[Auth] User ${user.username} logged in successfully via 2FA`);
 
         res.json({
             token,
@@ -176,9 +272,10 @@ router.post('/login', async (req, res) => {
                 preferences: user.preferences
             }
         });
+
     } catch (err) {
-        console.error('[Auth] Login error:', err);
-        res.status(500).json({ error: 'Login failed. Please try again.' });
+        console.error('[Auth] Login Step 2 error:', err);
+        res.status(500).json({ error: 'Verification failed. Please try again.' });
     }
 });
 
