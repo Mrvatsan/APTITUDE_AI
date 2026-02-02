@@ -139,6 +139,8 @@ router.post('/login/step1', async (req, res) => {
         return res.status(400).json({ error: 'Email and password required' });
     }
 
+        // Validate required fields for Step 1
+
     try {
         // Find user by EMAIL (mandatory for OTP)
         const user = await User.findOne({ where: { email } });
