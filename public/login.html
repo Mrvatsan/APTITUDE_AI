@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AptiRise</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .otp-section,
+        .milestone-section {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .otp-section.visible,
+        .milestone-section.visible {
+            opacity: 1;
+            max-height: 500px;
+            margin-top: 1rem;
+        }
+
+        .otp-input {
+            font-size: 1.5rem;
+            letter-spacing: 0.3rem;
+            text-align: center;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo" style="text-decoration: none;">
+            <span style="font-size: 1.5rem;">🧠</span> AptiRise
+        </a>
+        <button id="theme-toggle" class="btn btn-icon" title="Toggle Theme" style="background: transparent;">
+            🌙
+        </button>
+    </nav>
+
+    <main class="container">
+        <div class="card" style="max-width: 500px; margin: 4rem auto; padding: 2.5rem;">
+            <div class="text-center mb-4">
+                <h2>Welcome Back</h2>
+                <p class="text-muted">Enter your credentials to continue.</p>
+            </div>
+
+            <div id="error-msg" class="notification error mb-3" style="display: none;"></div>
+            <div id="success-msg" class="notification success mb-3" style="display: none;"></div>
+
+            <!-- Credentials Section -->
+            <div id="credentials-section">
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" id="username" class="input" placeholder="Enter your username" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="email" class="input" placeholder="name@example.com" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="password" class="input" placeholder="••••••••" required>
+                </div>
+
+                <button id="send-otp-btn" class="btn btn-primary btn-lg" style="width: 100%;" onclick="sendOTP()">
+                    Send OTP
+                </button>
+            </div>
+
+            <!-- OTP Verification Section (Hidden Initially) -->
+            <div id="otp-section" class="otp-section">
+                <div class="mb-3">
+                    <label class="form-label">Enter 6-Digit OTP</label>
+                    <input type="text" id="otp" class="input otp-input" placeholder="000000" maxlength="6"
+                        pattern="\d{6}" autocomplete="one-time-code">
+                </div>
+
+                <button id="verify-otp-btn" class="btn btn-primary btn-lg" style="width: 100%;" onclick="verifyOTP()">
+                    Verify OTP
+                </button>
+
+                <div class="text-center mt-3">
+                    <p class="text-muted" style="font-size: 0.9rem;">
+                        Didn't receive code? <span id="timer" style="font-weight: 600;">60s</span>
+                    </p>
+                    <button id="resend-btn" class="btn-link" style="display: none; font-size: 0.9rem;"
+                        onclick="sendOTP()">
+                        Resend OTP
+                    </button>
+                </div>
+            </div>
+
+            <!-- Milestone Selection Section (Hidden Initially) -->
+            <div id="milestone-section" class="milestone-section">
+                <div class="text-center mb-3">
+                    <h3 style="font-size: 1.2rem;">Select Your Focus Areas</h3>
+                    <p class="text-muted" style="font-size: 0.9rem;">Pick up to 4 milestones to start with.</p>
+                </div>
+
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-muted" style="font-size: 0.9rem;">Selected:</span>
+                    <span id="milestone-count" class="badge" style="background: var(--bg-primary);">0/4</span>
+                </div>
+
+                <div id="milestone-options" class="mb-3" style="max-height: 300px; overflow-y: auto;">
+                    <!-- Populated by JS -->
+                </div>
+
+                <button id="complete-login-btn" class="btn btn-primary btn-lg" style="width: 100%;"
+                    onclick="completeLogin()">
+                    Complete Login
+                </button>
+            </div>
+
+            <p class="text-center mt-4 text-muted" style="font-size: 0.9rem;">
+                Don't have an account? <a href="onboarding.html">Sign up</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/login.js"></script>
+</body>
+
+</html>
