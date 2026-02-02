@@ -196,6 +196,8 @@
             container.innerHTML = milestones.map(m => `
                 <div class="milestone-option ${selectedMilestones.has(m.id) ? 'selected' : ''}" 
                      style="padding: 1rem; border-bottom: 1px solid var(--border-color); cursor: pointer; background: ${selectedMilestones.has(m.id) ? 'rgba(0,184,148,0.03)' : 'transparent'}; transition: all 0.2s ease;"
+        // Update milestone selection state
+
                      onclick="toggleMilestone(${m.id}, this)">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <div style="flex: 1;">
