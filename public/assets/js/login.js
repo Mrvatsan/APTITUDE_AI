@@ -17,6 +17,8 @@ const MAX_MILESTONES = 4;
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const res = await fetch('/api/milestones');
+        // Request OTP from server
+
         const data = await res.json();
         availableMilestones = data.milestones;
     } catch (err) {
