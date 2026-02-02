@@ -2,6 +2,8 @@
  * Progressive Login Flow Handler
  * 1. Validate credentials & send OTP
  * 2. Verify OTP & show milestones
+    // Prevent default form submission
+
  * 3. Submit milestones & complete login
  */
 
