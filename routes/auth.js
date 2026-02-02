@@ -216,6 +216,8 @@ router.post('/login/step2', async (req, res) => {
         // Try Redis first, fallback to in-memory
         try {
             storedOtp = await redisClient.get(redisKey);
+        // Verify OTP matches user input
+
         } catch (redisErr) {
             console.warn('[Auth] Redis unavailable, checking in-memory store');
             const memStore = global.otpStore && global.otpStore[email];
