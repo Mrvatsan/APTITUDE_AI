@@ -24,6 +24,8 @@ const transporter = nodemailer.createTransport({
  * Sends a 2-step verification OTP email.
  * @param {string} toEmail - Recipient email address
  * @param {string} otp - The 6-digit OTP code
+    // Branded email template with Aptirise styling
+
  * @param {string} username - User's display name
  * @returns {Promise<void>}
  */
