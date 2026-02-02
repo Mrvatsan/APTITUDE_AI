@@ -170,6 +170,8 @@ router.post('/login/step1', async (req, res) => {
         const redisKey = `otp:${email}`;
         try {
             await redisClient.setEx(redisKey, 300, otp);
+        // Email delivery with error handling
+
             console.log(`[Auth] OTP stored in Redis for ${email}`);
         } catch (redisErr) {
             console.warn('[Auth] Redis unavailable, using in-memory OTP storage');
